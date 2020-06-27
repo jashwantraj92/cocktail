@@ -69,18 +69,22 @@ def spot_test(region):
                 'TerminateInstancesWithExpiration': True,
                 'ValidFrom': datetime(2018, 1, 1),
                 'ValidUntil': datetime(2019, 1, 1),
-                'IamFleetRole': 'arn:aws:iam::906727922743:role/aws-ec2-spot-fleet-role',
+                'IamFleetRole': 'arn:aws:iam::824426748887:role/aws-ec2-spot-fleet-tagging-role',
                 'LaunchSpecifications': [{
-                    'ImageId': info[0],
-                    'KeyName': info[2],
-                    'InstanceType': typ,
-                    'BlockDeviceMappings': [{
-                        'VirtualName': 'Root',
-                        'DeviceName': '/dev/sda1',
-                        'Ebs': {
-                            'VolumeSize': 500,
-                            'VolumeType': 'gp2',
-                            'DeleteOnTermination': True
+                    'ImageId': 'ami-04fe13c834f9bc166',
+                    "KeyName": "aws-infaas",
+                    "BlockDeviceMappings": [
+                    {
+                    "DeviceName": "/dev/sda1",
+                    "Ebs": {
+                        "DeleteOnTermination": true,
+                        "SnapshotId": "snap-049068c87907d9c42",
+                        "VolumeSize": 10,
+                        "Encrypted": false,
+                        "VolumeType": "gp2"
+                          }
+                   }
+                  'InstanceType': typ,
                         }
                     }],
                     'Monitoring': {

@@ -12,7 +12,7 @@ from functools import reduce
 from .constants import * 
 from .data_accessor import aws_accessor, instance_accessor
 
-KEY_FILE = '~/.ssh/id_rsa.pub'
+KEY_FILE = "/home/cc/aws-cocktail.pem"
 
 upper_folder = dirname(dirname(abspath(__file__)))
 
@@ -42,7 +42,7 @@ def load_cluster_instances(name):
         [ instances.append(ec2.Instance(i)) for i in id['instance_id_list'] ]
     return instances
 
-get_ins = lambda instance, region: Instance(instance.public_ip_address, instance.instance_type, region)
+get_ins = lambda instance, region: Instance(instance.public_dns_name, instance.instance_type, region)
 get_ins_from_id = lambda ec2, region, id: get_ins(ec2.Instance(id), region)
 
 def get_ins_from_ids(region, instance_id_list):
@@ -79,6 +79,7 @@ def get_session(ip):
     ssh = paramiko.client.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.client.AutoAddPolicy())
     key_name = get_key_path()
+    logging.info(f'ssk key is : {key_name}')
     ssh.connect(ip, username='ubuntu', key_filename=key_name)
     # sftp = ssh.open_sftp()
     return ssh

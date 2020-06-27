@@ -1,4 +1,4 @@
-# coding: utf-8
+#coding: utf-8
 
 
 UPPER_LATENCY_BOUND = 200
@@ -16,7 +16,7 @@ HANDLE_SIZE_C54X = 2
 #proactive scheduler update interval
 UPDATER_INTERVAL = 600
 
-SERVING_PORT = 7001
+SERVING_PORT = 7002
 API_PORT = 8301
 
 API_TIMEOUT = 10.0
@@ -29,7 +29,7 @@ DB_HOST = 'localhost'
 # REDIS_PORT = 6379
 MONGO_PORT = 27017
 
-# DB configs
+#DB configs
 ON_DEMAND_PRIZE_DB = 'on_demand'
 SPOT_PRIZE_DB = 'spot'
 AWS_DB = 'aws'
@@ -51,10 +51,10 @@ PREDICTOR_WINDOW = 5
 SECURITY_GROUPS = {
     'us-west-2': ['sg-xxx'],
     'us-west-1': ['sg-xxx'],
-    'us-east-1': ['sg-xxx']
+    'us-east-1': ['sg-8c34ddfc']
 }
 KEYS = {
-    'us-east-1': 'xxx',
+    'us-east-1': '/home/cc/aws-cocktail.pem',
     'us-west-1': 'xxx',
     'us-west-2': 'xxx'
 }
@@ -67,7 +67,7 @@ MODEL = 'tf'
 
 # AMIs for each model
 AMIS_TF = {
-    'us-east-1': {'CPU': 'ami-xxx', 'GPU': 'ami-xxx'}
+    'us-east-1': {'CPU': 'ami-025926d54d6497531', 'GPU': 'ami-0edeb7664ef2967e7'}
 }
 AMIS_KR = {
     'us-east-1': {'CPU': 'ami-xxx', 'GPU': 'ami-xxx'}
@@ -122,21 +122,17 @@ Instance_Weights = {}
 # AWS credentials
 DEFAULT_REGION = 'us-east-1'
 CREDENTIALS = {
-    'aws_access_key_id' : 'xxx',
-    'aws_secret_access_key' : 'xxx'
+    'aws_access_key_id' : 'AKIA3745J3PL3FATPEH4',
+    'aws_secret_access_key' : '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'
 }
+models="MobileNet ResNet50"
 
 # model deploy cmd
 TF_DEPLOY_CMD ={
-    'CPU': f'nohup /home/ubuntu/serving/bazel-bin/tensorflow_serving/model_servers/tensorflow_model_server --port=8500 \
-            --rest_api_port={API_PORT} --model_name=inception --model_base_path=/home/ubuntu/model > server.log 2>&1 &',
-    'GPU': f'nohup docker run -p {API_PORT}:{API_PORT} --runtime=nvidia \
-            --mount type=bind,source=/home/ubuntu/mymodel/,target=/models \
-            -e MODEL_NAME=inception -t \
-            --entrypoint tensorflow_model_server \
-            tensorflow/serving:latest-gpu --rest_api_port={API_PORT} --model_name=inception --model_base_path=/models/inception \
-            --enable_batching=false --rest_api_timeout_in_ms=10000 > server.log 2>&1 &'
-}
+    'cpu': f'nohup sudo docker run -p 8501:8501 --name TFserving_resnet --mount type=bind,source=/home/ubuntu/resnet,target=/models/resnet -e MODEL_NAME=resnet -t tensorflow/serving  > server.log 2>&1 &',
+    'CPU': f'nohup sudo python server.py {models} 50055 &  > server.log 2>&1 &',
+    'GPU': f'nohup sudo docker run -p 8501:8501 --runtime=nvidia --name tfserving_resnet --mount type=bind,source=/home/ubuntu/resnet,target=/models/resnet -e MODEL_NAME=resnet -t tensorflow/serving:latest-gpu > server.log 2>&1 &',
+    }
 
 
 ITEM_DELIMITER = ','

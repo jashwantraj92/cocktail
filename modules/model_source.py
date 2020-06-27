@@ -75,7 +75,7 @@ class MXNetSource(_ModelSource):
                 time.sleep(10)
 
     def get_lambda_req(self):
-        return 'https://example'
+        return 
 
     def collect_result(self, res):
         return [res['prediction']]
@@ -90,15 +90,25 @@ class TensorFlowSource(_ModelSource):
             self.test_data = base64_bytes.decode('utf-8')
 
     def get_request(self, data, ip):
-      
-        dct = {'url': url, 'headers': headers, 'data': data, 'timeout': 2}
+        url = f'http://{ip}:8000/predict'
+        headers = "{\"Content-type\": \"application/json\"}"
+        #image_data=json.dumps({ 
+        #                       'instances': data
+        #                      })
+        url_data = json.dumps({'data':data[0]
+	})
+        dct = {'url': url, 'data': data[0], 'timeout': 2, 'headers':headers}
         return dct
 
     def setup_config(self, ins, region, typ):
-        self. _start_nginx(ins)
-        logging.info('Nginx started')
-        cmd = TF_DEPLOY_CMD['GPU'] if typ.startswith('p2') else TF_DEPLOY_CMD['CPU']
-        self._deploy_model(region, [ i.ip for i in ins ], cmd)
+        #self. _start_nginx(ins)
+        #logging.info('Nginx started')
+        #cmd = TF_DEPLOY_CMD['GPU'] if typ.startswith('p2') else TF_DEPLOY_CMD['CPU']
+        models = "\"MobileNet InceptionV3\""
+        for i in ins:
+            cmd = f'nohup python3.6 sanic-server.py 0.0.0.0 8000 4 {models} > server.log 2>&1 &'
+            utils.check_command(utils.get_session(i.ip), cmd, debug=True)
+        #self._deploy_model(region, [ i.ip for i in ins ], cmd)
         logging.info('Models are Deployed now')
 
         image_data = [{ "b64": self.test_data},]
@@ -106,26 +116,24 @@ class TensorFlowSource(_ModelSource):
         if typ.startswith('p2'):
             image_data = image_data * HANDLE_SIZE_P2
 
-        for i in ins:
+        """for i in ins:
             while True:
                 try:
-                    response = requests.post(url=f'http://{i.ip}:8080/invocations', 
-                                            headers = {"Content-type": "application/json"},
-                                            data=json.dumps({ 
-                                                'signature_name':'predict_images',
-                                                'instances': image_data
-                                            }),
+                    response = requests.post(url=f'http://{i.ip}:8501/v1/models/resnet:predict',
+                                            data=image_data,
                                             timeout=3)
                     if response.status_code == 200:
                         logging.info(f'Successful warm up for ip: {i.ip}')
                         break
                     logging.info(f'Warming up for ip: {i.ip}')
+                    logging.info("response received",response)
                 except requests.exceptions.RequestException as e:
-                    print(e)
-                time.sleep(5)
+                    logging.info(f'no response: {e}')
+                time.sleep(5)"""
 
     def get_lambda_req(self):
-        return 'https://example'
+        cmd = "aws lambda invoke --invocation-type RequestResponse --function-name lambda-resnet --region us-east-1 --payload \'{\"url\": \"https://s3.amazonaws.com/mxnet-tests/images/dog3.jpg\"}\' output_file "
+        return cmd
 
     def _start_nginx(self, instances):
         for i in instances:
@@ -238,4 +246,4 @@ all_source = {
     'nmt': NMTSource()
 }
 
-mdl_source = all_source[MODEL]
+mdl_source = all_source['tf']

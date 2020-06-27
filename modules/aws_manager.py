@@ -24,6 +24,7 @@ app = Celery(
 @app.task
 def check_spot_states():
     all_info = aws_accessor.get_all_cluster()
+    logging.info("**************",all_info)
     if all_info:
         client = get_client()
         spot_list = []
@@ -36,7 +37,7 @@ def check_spot_states():
             for req, i in info['info'].items():
                 res = client.describe_spot_fleet_requests(SpotFleetRequestIds=[req])
                 if res['SpotFleetRequestConfigs'][0]['SpotFleetRequestState'] != 'active':
-                    logging.info(f'Inactive spot request detected: {req}')
+                    logging.info("Inactive spot request detected: ",req)
                     num += len(i['instance_id_list'])
                     cancel_reqs.append(req)
                     start_on_demand_instances(name)
@@ -207,8 +208,7 @@ def launch_spot_instances(name, params):
     """
     params['region'] = params['region'] if 'region' in params else DEFAULT_REGION
     client = get_client(params['region'])
-
-    logging.info(f'Launch {params["targetCapacity"]} {params["instanceType"]} instances')
+    logging.info(f'Launch {params["targetCapacity"]} {params["instanceType"]} instances',client)
     request_id = _send_request(client, params)
     pre_info = {
         request_id : {
@@ -217,6 +217,7 @@ def launch_spot_instances(name, params):
             'num' : params['targetCapacity']
         }
     }
+    logging.info("Waiting for spot fleet instances")
     pre_aws_accessor.save_cluster(name, pre_info)
 
     instance_id_list = _wait_active(client, request_id, params['targetCapacity'])
@@ -226,7 +227,7 @@ def launch_spot_instances(name, params):
     _set_security_group(client, instance_id_list, SECURITY_GROUPS[params['region']])
 
     ins = utils.get_ins_from_ids(params['region'], instance_id_list)
-
+    
     # check the state of instances by trying ssh
     while True:
         logging.info('Checking SSH connection')
@@ -250,7 +251,9 @@ def launch_spot_instances(name, params):
     }
     aws_accessor.save_cluster(name, info)
     instances_json = [ i.__dict__ for i in ins ]
+    print("adding update instances")
     instance_accessor.update_instances(name, instances_json)
+    print("finished update instances")
 
 def _check_ssh(ip):
     try:
@@ -299,8 +302,8 @@ def cancel_spot_instances(name, request_ids):
         )
         if 'SuccessfulFleetRequests' in res:
             logging.info('Successful cancel spot fleet request {}'.format(i))
-            instance_accessor.del_instance(name, [ i.__dict__ for i in utils.get_ins_from_ids(region, instance_id_list)])
             aws_accessor.del_request(name, i)
+            instance_accessor.del_instance(name, [ i.__dict__ for i in utils.get_ins_from_ids(region, instance_id_list)])
 
 def cancel_all_instances(name):
     requests = aws_accessor.get_requests(name)
@@ -315,12 +318,12 @@ def _get_request_config(params):
     base = {
         'TargetCapacity': params['targetCapacity'],
         'TerminateInstancesWithExpiration': True,
-        'ValidFrom': datetime(2018, 1, 1),
-        'ValidUntil': datetime(2019, 1, 1),
-        'IamFleetRole': 'arn:aws:iam::906727922743:role/aws-ec2-spot-fleet-role',
+        'ValidFrom': datetime(2020, 5, 10),
+        'ValidUntil': datetime(2020, 10, 10),
+        'IamFleetRole': 'arn:aws:iam::824426748887:role/aws-ec2-spot-fleet-tagging-role',
         'LaunchSpecifications': [{
             'ImageId': params['imageId'],
-            'KeyName': KEYS[params['region']],
+            'KeyName': 'aws-cocktail',
             'InstanceType': params['instanceType'],
             'BlockDeviceMappings': [{
                 'VirtualName': 'Root',
@@ -338,6 +341,7 @@ def _get_request_config(params):
         'AllocationStrategy': 'lowestPrice',
         'Type': 'maintain'
     }
+    logging.info("get request config",params)
     return base
 
 def _send_request(client, params):
@@ -348,6 +352,7 @@ def _send_request(client, params):
     :rtype: str
     """
     # Note: We cannot set SecurityGroup here in that it will cause an error.
+    logging.info("Successful spot fleet request imageid",params)
     res = client.request_spot_fleet(
         SpotFleetRequestConfig=_get_request_config(params)
     )

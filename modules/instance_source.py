@@ -45,16 +45,16 @@ class OnDemandSource(_InstanceSource):
     def get_ins_alloc(self, name, balancer):
         ins_json = demand_aws_accessor.get_cluster(name)
         if ins_json:
-            intance_list = [ utils.dict2Instance(i) for i in ins_json['info'].values() ]
-            return balancer.next_ip(name, intance_list)
+            instance_list = [ utils.dict2Instance(i) for i in ins_json['info'].values() ]
+            return balancer.next_ip(name, instance_list)
 
     def get_current_ins_and_prize(self, name, index_type):
         aws_info = demand_aws_accessor.get_cluster(name)
-        intance_list = []
+        instance_list = []
         if aws_info:
-            intance_list = [utils.dict2Instance(i) for i in aws_info['info'].values()]
+            instance_list = [utils.dict2Instance(i) for i in aws_info['info'].values()]
         currentInstance = []
-        [ currentInstance.append(len([ i for i in intance_list if i.typ == typ and i.region == DEFAULT_REGION])) for typ in index_type ]
+        [ currentInstance.append(len([ i for i in instance_list if i.typ == typ and i.region == DEFAULT_REGION])) for typ in index_type ]
 
         info = pre_demand_aws_accessor.get_cluster(name)
         if info and info['info']:
@@ -92,21 +92,22 @@ class SpotSource(_InstanceSource):
     def get_ins_alloc(self, name, balancer):
         ins_json = instance_accessor.get_instances(name)
         backup_ins = backup_ins_accessor.get_instances(name)
-
+        instance_list = []
+        logging.info(f'existing spot instances json is : {ins_json}')
         if ins_json:
-            intance_list = [ utils.dict2Instance(i) for i in ins_json ]
+            instance_list = [ utils.dict2Instance(i) for i in ins_json ]
 
         if backup_ins:
             backup_instance_list = [ utils.Instance(i.ip, 'c5.large', i.region) for i in [ utils.dict2Instance(i) for i in backup_ins ]]
-            intance_list += backup_instance_list
+            instance_list += backup_instance_list
         
-        return balancer.next_ip(name, intance_list)
+        return balancer.next_ip(name, instance_list)
 
     def get_current_ins_and_prize(self, name, index_type):
         # filter the instances by type and region(Default region: us-east-1)
-        intance_list = [ utils.dict2Instance(i) for i in instance_accessor.get_instances(name) ]
+        instance_list = [ utils.dict2Instance(i) for i in instance_accessor.get_instances(name) ]
         currentInstance = []
-        [ currentInstance.append(len([ i for i in intance_list if i.typ == typ and i.region == DEFAULT_REGION])) for typ in index_type ]
+        [ currentInstance.append(len([ i for i in instance_list if i.typ == typ and i.region == DEFAULT_REGION])) for typ in index_type ]
 
         info = pre_aws_accessor.get_cluster(name)
         if info['info']:
@@ -138,7 +139,8 @@ class SpotSource(_InstanceSource):
     def initial_ins(self, name, tag):
         # aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['CPU'], 'instanceType':'c5.large', 'targetCapacity':1, 'key_value':[('exp_round', tag)] })
         # aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['CPU'], 'instanceType':'c5.xlarge', 'targetCapacity':10, 'key_value':[('exp_round', tag)] })
-        aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['CPU'], 'instanceType':'c5.large', 'targetCapacity':10, 'key_value':[('exp_round', tag)] })
+        logging.info('Initiating spot instance launch **********')
+        aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['CPU'], 'instanceType':'c5.large', 'targetCapacity':2, 'key_value':[('exp_round', tag)] })
         aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['GPU'], 'instanceType':'p2.xlarge', 'targetCapacity':1, 'key_value':[('exp_round', tag)] })
         # aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['CPU'], 'instanceType':'c5.large', 'targetCapacity':8, 'key_value':[('exp_round', tag)] })
         # aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['GPU'], 'instanceType':'p2.xlarge', 'targetCapacity':1, 'key_value':[('exp_round', tag)] })

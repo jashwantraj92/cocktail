@@ -1,0 +1,31 @@
+{
+    "IamFleetRole": "arn:aws:iam::824426748887:role/aws-ec2-spot-fleet-tagging-role",
+    "AllocationStrategy": "capacityOptimized",
+    "TargetCapacity": 1,
+    "ValidFrom": "2020-06-09T16:17:50Z",
+    "ValidUntil": "2021-06-09T16:17:50Z",
+    "SpotPrice": "0.085",
+    "TerminateInstancesWithExpiration": true,
+    "LaunchSpecifications": [
+        {
+            "ImageId": "ami-04fe13c834f9bc166",
+            "InstanceType": "c5.large",
+            "SubnetId": "subnet-692c4133",
+            "KeyName": "aws-infaas",
+            "BlockDeviceMappings": [
+                {
+                    "DeviceName": "/dev/sda1",
+                    "Ebs": {
+                        "DeleteOnTermination": true,
+                        "SnapshotId": "snap-049068c87907d9c42",
+                        "VolumeSize": 10,
+                        "Encrypted": false,
+                        "VolumeType": "gp2"
+                    }
+                }
+            ],
+            "SpotPrice": "0.085"
+        }
+           ],
+    "Type": "request"
+}

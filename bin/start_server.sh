@@ -79,7 +79,7 @@ start_all() {
     start_mongodb
     start_celery
 
-    nohup python3 main.py --signal=0 --need-updater=${UPDATER} --tag=${TAG} > ${LOG_DIR}/serving.log 2>&1 &
+    nohup python3.6 main.py --signal=0 --need-updater=${UPDATER} --tag=${TAG} > ${LOG_DIR}/serving.log 2>&1 &
     MAIN_PID="$!"
     echo "serving system started! PID : ${MAIN_PID}"
     echo "$MAIN_PID " >> ${PID_FILE}
@@ -89,27 +89,28 @@ start_all() {
 
 launch() {
     start_mongodb
-    python3 main.py --signal=1 --tag=${TAG} &
+    #python3.6 main.py --signal=1 --tag=${TAG} &
+    nohup python3.6 main.py --signal=1 --need-updater=${UPDATER} --tag=${TAG} > ${LOG_DIR}/instances.log 2>&1 &
 }
 
 backup() {
     start_mongodb
-    python3 main.py --signal=3 --tag=${TAG} &
+    python3.6 main.py --signal=3 --tag=${TAG} &
 }
 
 stopback() {
     start_mongodb
-    python3 main.py --signal=4 &
+    python3.6 main.py --signal=4 &
 }
 
 destroy() {
     start_mongodb
-    python3 main.py --signal=2 &
+    python3.6 main.py --signal=2 &
 }
 
 send_request() {
     if [[ `cat ${STATE_FILE}` != "0" ]]; then
-        nohup python3 experiment/request_sender.py --burst ${TAG} >${LOG_DIR}/sender.log 2>&1 &
+        nohup python3.6 /home/cc/MArk-Project/experiments/request_sender.py --burst ${TAG} >${LOG_DIR}/sender.log 2>&1 &
         SENDER_PID="$!"
         echo "sender started! PID : ${SENDER_PID}"
         echo "$SENDER_PID " >> ${PID_FILE}
@@ -120,7 +121,7 @@ send_request() {
 
 sagemaker_request() {
     mkdir -p ${LOG_DIR}
-    nohup python3 experiment/request_sender_post.py --burst ${TAG} >${LOG_DIR}/sender.log 2>&1 &
+    nohup python3.6 experiment/request_sender_post.py --burst ${TAG} >${LOG_DIR}/sender.log 2>&1 &
     SENDER_PID="$!"
     echo "sender started! PID : ${SENDER_PID}"
     echo "$SENDER_PID " >> ${PID_FILE}

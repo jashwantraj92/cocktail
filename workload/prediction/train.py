@@ -9,7 +9,8 @@ from pandas import read_csv
 from pandas import datetime
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.externals import joblib
+#from sklearn.externals import joblib
+import joblib
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
@@ -218,7 +219,7 @@ def plot_forecasts(series, forecasts, n_test):
 
 # load dataset
 print('starting loading data\n')
-series = read_csv('tweet_load.csv', header=0, parse_dates=[0], index_col=0, squeeze=True, date_parser=parser)
+series = read_csv('/home/cc/MArk-Project/workload/tweet_load.csv', header=0, parse_dates=[0], index_col=0, squeeze=True, date_parser=parser)
 series = series[pd.notnull(series)]
 print('data loaded\n')
 # configure
@@ -228,6 +229,7 @@ n_test = 1000 #size of test set
 n_epochs = 50
 n_batch = 1 #must be 1 because we want online prediction
 n_neurons = 32
+nb_epoch = 1
 # prepare data
 scaler, train, test = prepare_data(series, n_test, n_lag, n_seq)
 # fit model

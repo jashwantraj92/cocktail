@@ -35,9 +35,10 @@ async def predict(request, model_name):
         # use a general decoder to handle different types
         # data =  utils.decode_image(request.json['data']) if typ == 'image' else request.json['data']
         data = request.json['data']
-
+        print("data is ",data)
         sch.record_request(model_name)
         res, typ, handel_time = await processor.send_query(model_name, receive_time, data)
+        logging.info(f'Processed request for model: {model_name} {res}')
 
         if (typ > 3):
             scheduler.Scheduler.failed_rate = scheduler.Scheduler.failed_rate * 0.999 + 0.001
@@ -50,7 +51,7 @@ async def predict(request, model_name):
             sch.launch_standby('c5.xlarge', 1, model_name)
             scheduler.Scheduler.failed_rate = 0.0
 
-        
+        print("response received",res) 
         logging.info(f'Model: {model_name}; typ: {typ}; handel_time: {handel_time}; failed_rate: {scheduler.Scheduler.failed_rate}')
         return json({
             'res' : res,

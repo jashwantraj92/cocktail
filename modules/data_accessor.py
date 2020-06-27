@@ -2,12 +2,12 @@
 import json
 from pymongo import MongoClient
 from .constants import *
-
+import logging
 class _BaseAccessor():
     def __init__(self, host_, port_, col):
         self.client = MongoClient(host=host_, port=port_, connect=False)
         self.collection = self.client.serving[col]
-
+        logging.info(f'initiating collection : {self.client} {self.collection}')
     def subscribe(self, func):
         """
         subscribe to the change of DB
@@ -67,12 +67,14 @@ class AWSAccessor(_BaseAccessor):
 
 class InstanceAccessor(_BaseAccessor):
     def update_instances(self, name, instance_list):
+        logging.info(f'updateinstance {instance_list} {self.collection}')
         doc = self.collection.find_one({'name' : name})
         if doc:
             doc['instances'] += instance_list
         else:
             doc = {'name' : name, 'instances' : instance_list} 
         self.collection.update({'name' : name}, doc, upsert=True)
+        logging.info(f'updateinstance {instance_list} {self.collection}')
 
     def get_instances(self, name):
         record = self.collection.find_one({'name' : name})

@@ -42,6 +42,7 @@ class QueryProcessor():
 
     async def send_query(self, name, time, data):
         future = asyncio.Future()
+        logging.info("adding query to queue")
         await self.query_queue.put(future, name, time, data)
         await future
         return future.result()
@@ -52,11 +53,13 @@ class QueryProcessor():
             batch requests for p2 instances, batch size = 16
             """
 
+            logging.info("waiting for querys\n")
             info = await self.query_queue.get()
             name = info[0][1]
             fu, times, data = [i[0] for i in info], [i[2] for i in info], [i[3] for i in info]
-            
+             
             alloc_info = ins_source.get_ins_alloc(name, self.balancer)
+            logging.info(f'sending query to VM &&&&&&&&&&&&&: {alloc_info}')
             if alloc_info:
                 ip, typ = alloc_info[0], alloc_info[1]
                 if typ.startswith('p2'):
@@ -75,6 +78,7 @@ class QueryProcessor():
                     other_info = await self.query_queue.get(HANDLE_SIZE_C5 - 1)
                     [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
 
+                logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip}')
                 self.loop.create_task(self._get_result(fu, name, times, data, ip))
             else:
                 [ f.set_result(('No resources available', -1, utils.gap_time(t))) for f, t in zip(fu, times) ]
@@ -87,21 +91,26 @@ class QueryProcessor():
 
         is_gpu = len(data) > 2
         req_type = [REQ_GPU for _ in data] if is_gpu else [REQ_CPU for _ in data]
+        req = mdl_source.get_request(data, ip)
 
-        logging.info(f'Send request to ip: {ip}; batch_size:{len(data)}')
-        async with self.session.post(**mdl_source.get_request(data, ip)) as resp:
-            if resp.status == 200:
-                r = await resp.json()
-                return (mdl_source.collect_result(r), req_type)
-            else:
-                logging.info(f'Request rejected. ip: {ip}; status: {resp.status}')
-                return ([ r for _ in data ], req_typ)
-                async with self.session.get(mdl_source.get_lambda_req()) as res_lam:
-                    if res_lam.status == 200:
+        logging.info(f'Send request to ip: {ip}; batch_size:{len(data)}; req {req}')
+        
+        data = json.dumps({'data':f'{data[0]}'})
+        #resp = await self.session.post(mdl_source.get_request(data, ip))
+        resp = await self.session.post(f'http://{ip}:8000/predict', data=data, headers={"Content-type": "application/json"})
+        logging.info(f'the posted response is : {resp}')
+        if resp.status == 200:
+            r = await resp.json()
+            return (mdl_source.collect_result(r), req_type)
+        else:
+            logging.info(f'Request rejected. ip: {ip}; status: {resp.status}')
+            return ([ r for _ in data ], req_typ)
+            async with self.session.get(mdl_source.get_lambda_req()) as res_lam:
+                if res_lam.status == 200:
                         r = await res_lam.text()
                         req_typ = [REQ_LAMBDA_GPU for _ in data] if is_gpu else [REQ_LAMBDA_CPU for _ in data]
                         return ([ r for _ in data ], req_typ)
-                    else:
+                else:
                         logging.info(f'Lambda rejected. status: {res_lam.status}')
                         req_typ = [REQ_FAIL_GPU for _ in data] if is_gpu else [REQ_FAIL_CPU for _ in data]
                         return ([ f'Error code : {res_lam.status}' for _ in data ], req_typ)

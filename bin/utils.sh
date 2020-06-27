@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PAST_LOGS=/home/ubuntu/logs
+PAST_LOGS=/home/cc/logs
 mkdir -p ${PAST_LOGS}
 
 get_log_dir_name() {

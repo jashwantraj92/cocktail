@@ -7,7 +7,8 @@ from pandas import read_csv
 from pandas import datetime
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.externals import joblib
+#from sklearn.utils import joblib
+import joblib
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
@@ -23,7 +24,7 @@ class Predictor:
     Just init this class and use predict function to predict
     """
 
-    def __init__(self, init_load, model_path='/home/ubuntu/my_model.h5', scaler_path='/home/ubuntu/my_scaler.save', n_out=50):
+    def __init__(self, init_load, model_path='/home/cc/MArk-Project/resources/my_model.h5', scaler_path='/home/cc/MArk-Project/resources/my_scaler.save', n_out=50):
         self.last_step = init_load
         self.model = ks.models.load_model(model_path)
         self.scaler = joblib.load(scaler_path) 

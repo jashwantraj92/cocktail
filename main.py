@@ -14,7 +14,6 @@ from modules import query_processor
 from modules import utils
 from modules.instance_source import ins_source
 from modules.constants import *
-
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--port', type=int, default=SERVING_PORT)
@@ -40,13 +39,13 @@ def main():
     if params['signal'] == 0:
         frontend.main(params['port'], params['tag'])
     elif params['signal'] == 1:
-        ins_source.initial_ins('mx', params['tag'])
+        ins_source.initial_ins('tf', params['tag'])
     elif params['signal'] == 2:
-        ins_source.kill_all_ins('mx')
+        ins_source.kill_all_ins('tf')
     elif params['signal'] == 3:
-        ins_source.launch_backup('mx', params['tag'])
+        ins_source.launch_backup('tf', params['tag'])
     elif params['signal'] == 4:
-        ins_source.stop_backup('mx')
+        ins_source.stop_backup('tf')
 
 if __name__ == '__main__':
     main()
