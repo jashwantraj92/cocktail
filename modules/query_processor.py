@@ -85,6 +85,7 @@ class QueryProcessor():
 
     async def _get_result(self, futures, name, times, data, ip):
         results, req_type = await self._serve(name, data, ip)
+        logging.info("predicted result is ",results)
         [ f.set_result((r, typ, utils.gap_time(t))) for f, t, r, typ in zip(futures, times, results, req_type) ]
 
     async def _serve(self, name, data, ip):

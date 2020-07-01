@@ -110,7 +110,7 @@ destroy() {
 
 send_request() {
     if [[ `cat ${STATE_FILE}` != "0" ]]; then
-        nohup python3.6 /home/cc/MArk-Project/experiments/request_sender.py --burst ${TAG} >${LOG_DIR}/sender.log 2>&1 &
+        nohup python3.6 /home/cc/ensembling/experiments/request_sender.py --burst ${TAG} >${LOG_DIR}/sender.log 2>&1 &
         SENDER_PID="$!"
         echo "sender started! PID : ${SENDER_PID}"
         echo "$SENDER_PID " >> ${PID_FILE}

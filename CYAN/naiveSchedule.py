@@ -193,7 +193,7 @@ class instance:
 		else: 
 			#forceIt = 1;
 			print("cannot add more models ", self.my_latency, slo_latency)
-			return 0;
+			return 0
 	
 	def my_info(self):
 		print(self.my_model_list)

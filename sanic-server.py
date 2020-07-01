@@ -8,21 +8,26 @@ import asyncio
 from concurrent import futures
 from threading import current_thread
 from collections import defaultdict
-
+import threading
 import tensorflow as tf
 import numpy as np
 
-
+#tf.enable_eager_execution()
 from sanic import Sanic
 from sanic.response import json
 import time
+votearray = []
+voteclasses =[] 
+maxVoteLabel=None
+maxVoteClass=None
+threads = []
 pretrained_models = []
 app = Sanic(__name__)
 sem = None
 models = []
 @app.listener('before_server_start')
 def init(sanic, loop):
-    global sem,models,pretrained_models
+    global sem,models,pretrained_models,maxVoteLabel,maxVoteClass
     print("listener function")
     #concurrency_per_worker = 4
     for model in models:
@@ -37,39 +42,57 @@ def init(sanic, loop):
         x = tf.keras.preprocessing.image.img_to_array(img)
         x = tf.keras.applications.mobilenet.preprocess_input(np.array(img)[tf.newaxis,...])
     #print("preductingfor url ",url, model)
-        print(pretrained_model)
+        #print(pretrained_model)
         result_before_save = pretrained_model(x)
-        print("Result before saving",
+        print(pretrained_model, "Result before saving",
               tf.keras.applications.mobilenet.decode_predictions(
                  result_before_save.numpy())[0][0])
     #sem = asyncio.Semaphore(concurrency_per_worker, loop=loop)
 
 
 @app.route('/predict',methods=['POST'])
+ 
 async def test(request):
-    global pretrained_models 
+    global threads,pretrained_models,maxVoteLabel,maxVoteClass
     if request.method == 'POST':
         receive_time = time.time()
         print(f'Received request',receive_time)
         #question = request.json['data'].split(',')
-        data = request.json['data'].split(',')
+        data = request.json['data']
         file = tf.keras.utils.get_file(
-            "grace_hopper.jpg",data)
+            str(receive_time)+".jpg",data)
         img = tf.keras.preprocessing.image.load_img(file, target_size=[224, 224])
         x = tf.keras.preprocessing.image.img_to_array(img)
         x = tf.keras.applications.mobilenet.preprocess_input(np.array(img)[tf.newaxis,...])
         #model = int(question[1])
-        print(pretrained_models,data)
-        for model in pretrained_models:
-            result_before_save = model(x)
-            print("Result before saving",
-              tf.keras.applications.mobilenet.decode_predictions(
-                  result_before_save.numpy())[0][0])
-            end_time = time.time()
-            print("query respone time ",end_time)
-            results.append(result_before_save.numpy())[0][0])
+        for i in range(len(pretrained_models)):
+            tid = threading.Thread(target=predict, args=(pretrained_models[i],x,))
+            threads.append(tid)
+            tid.start()
+        for thread in threads:
+            thread.join()
+        end_time = time.time()
+        print(pretrained_models,data,threads)
+        threads.clear() 
 
-    return json({'hello': 'world'})
+        print("query respone time ",end_time, maxVoteLabel, maxVoteClass)
+        return json({'image': maxVoteLabel, 'class': maxVoteClass})
+
+def predict(model,x):
+    votearray=[]
+    voteclasses= []
+    global maxVoteLabel, maxVoteClass
+    receive_time = time.time()
+    print(f'Thread Start {receive_time}')
+    result_before_save = model(x)
+    print("Result before saving",
+    tf.keras.applications.mobilenet.decode_predictions(
+        result_before_save.numpy())[0][0])
+    votearray.append(tf.keras.applications.mobilenet.decode_predictions(result_before_save.numpy())[0][0][1])
+    voteclasses.append(tf.keras.applications.mobilenet.decode_predictions(result_before_save.numpy())[0][0][0])
+    maxVoteLabel	=	max(set(votearray), key = votearray.count)
+    maxVoteClass	=	max(set(voteclasses), key = voteclasses.count)
+
 
 
 async def compute(request):

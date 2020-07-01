@@ -8,10 +8,9 @@
     "TerminateInstancesWithExpiration": true,
     "LaunchSpecifications": [
         {
-            "ImageId": "ami-04fe13c834f9bc166",
+            "ImageId": "ami-084e787069ee27fb7",
             "InstanceType": "c5.large",
-            "SubnetId": "subnet-692c4133",
-            "KeyName": "aws-infaas",
+            "KeyName": "aws-cocktail",
             "BlockDeviceMappings": [
                 {
                     "DeviceName": "/dev/sda1",

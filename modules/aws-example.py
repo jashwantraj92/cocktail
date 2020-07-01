@@ -9,17 +9,20 @@ import boto3
 import requests
 from celery import Celery, task
 
-
+filepath='/home/cc/aws-keys'
+with open(filepath) as fp:
+   access_key = fp.readline().strip()
+   secret_key = fp.readline().strip()
 CREDENTIALS = {
-    'aws_access_key_id' : 'AKIA3745J3PL3FATPEH4',
-    'aws_secret_access_key' : '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'
+    'aws_access_key_id' : access_key,
+    'aws_secret_access_key' : secret_key
 }
-
+print(access_key,secret_key)
 
 def get_client(region='us-east-1'):
     return boto3.client('ec2', region_name=region, **CREDENTIALS)
 
-params={'imageId':'ami-04fe13c834f9bc166', 'instanceType':'c5.large', 'targetCapacity':1, 'key_value':[('exp_round', 0)] }
+params={'imageId':'ami-084e787069ee27fb7', 'instanceType':'c5.large', 'targetCapacity':1, 'key_value':[('exp_round', 0)] }
 
 base = {
         'TargetCapacity': params['targetCapacity'],
@@ -53,9 +56,7 @@ res = client.request_spot_fleet(
 
         SpotFleetRequestConfig=base
     )
-info = aws_accessor.get_cluster(name)
-    instances = []
-    for _, id in info['info'].items():
+instances = []
+for _, id in info['info'].items():
         ec2 = boto3.resource('ec2', region_name=id['region'], **CREDENTIALS)
         [ instances.append(ec2.Instance(i)) for i in id['instance_id_list'] ]
-    return instances

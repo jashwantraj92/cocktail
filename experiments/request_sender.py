@@ -12,7 +12,7 @@ import base64
 
 import numpy as np
 
-upper_folder = "/home/cc/MArk-Project"
+upper_folder = "/home/cc/ensembling"
 
 sender = lambda data: requests.post(
     f'http://{args.host}:{args.port}/predict/{args.name}',
@@ -35,7 +35,7 @@ def get_args():
 def get_data():
     with open(f'{upper_folder}/resources/test.jpg', 'rb') as f:
 
-        IMAGE_URL = 'https://tensorflow.org/images/blogs/serving/cat.jpg'
+        IMAGE_URL = 'http://farm4.static.flickr.com/3088/2573194878_7be4b14d7f.jpg'
         dl_request = requests.get(IMAGE_URL, stream=True)
         dl_request.raise_for_status()
         jpeg_bytes = b64encode(dl_request.content).decode('utf-8')
@@ -49,7 +49,7 @@ def get_data():
 def send_data(args, reader):
     pool = ThreadPoolExecutor(5000)
     data = get_data()
-    df = pd.read_csv('/home/cc/MArk-Project/workload/test_interval.csv', delimiter=',')
+    df = pd.read_csv('/home/cc/ensembling/workload/test_interval.csv', delimiter=',')
 # User list comprehension to create a list of lists from Dataframe rows
     list_of_rows = [list(row) for row in df.values]
 # Print list of lists i.e. rows

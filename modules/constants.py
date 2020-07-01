@@ -67,7 +67,7 @@ MODEL = 'tf'
 
 # AMIs for each model
 AMIS_TF = {
-    'us-east-1': {'CPU': 'ami-025926d54d6497531', 'GPU': 'ami-0edeb7664ef2967e7'}
+    'us-east-1': {'CPU': 'ami-084e787069ee27fb7', 'GPU': 'ami-0edeb7664ef2967e7'}
 }
 AMIS_KR = {
     'us-east-1': {'CPU': 'ami-xxx', 'GPU': 'ami-xxx'}
@@ -90,7 +90,7 @@ AMIS = AMIS_MODEL[MODEL]
 
 # the instances to use in each model
 AllIndexType = {
-    'tf': ['c5.large', 'c5.xlarge', 'c5.2xlarge', 'c5.4xlarge', 'p2.xlarge'],
+    'tf': ['c5.large', 'c5.xlarge', 'c5.2xlarge', 'c5.4xlarge'],
     'kr': ['c5.xlarge', 'c5.2xlarge', 'c5.4xlarge', 'p2.xlarge'],
     'mx': ['c5.xlarge', 'c5.2xlarge', 'c5.4xlarge', 'p2.xlarge'],
     'nmt': ['c5.xlarge', 'c5.2xlarge', 'c5.4xlarge', 'p2.xlarge']
@@ -120,10 +120,15 @@ Instance_Weights = {}
 [ Instance_Weights.update({t: w}) for t, w in zip(IndexType, Weights) ]
 
 # AWS credentials
+filepath='/home/cc/aws-keys'
+with open(filepath) as fp:
+   access_key = fp.readline().strip()
+   secret_key = fp.readline().strip()
+
 DEFAULT_REGION = 'us-east-1'
 CREDENTIALS = {
-    'aws_access_key_id' : 'AKIA3745J3PL3FATPEH4',
-    'aws_secret_access_key' : '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'
+    'aws_access_key_id' : access_key,
+    'aws_secret_access_key' : secret_key
 }
 models="MobileNet ResNet50"
 
