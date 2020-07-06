@@ -2,29 +2,87 @@
     "IamFleetRole": "arn:aws:iam::824426748887:role/aws-ec2-spot-fleet-tagging-role",
     "AllocationStrategy": "capacityOptimized",
     "TargetCapacity": 1,
-    "ValidFrom": "2020-06-09T16:17:50Z",
-    "ValidUntil": "2021-06-09T16:17:50Z",
-    "SpotPrice": "0.085",
+    "ValidFrom": "2020-07-01T15:15:21Z",
+    "ValidUntil": "2021-07-01T15:15:21Z",
+    "SpotPrice": "0.101",
     "TerminateInstancesWithExpiration": true,
     "LaunchSpecifications": [
         {
-            "ImageId": "ami-084e787069ee27fb7",
+            "ImageId": "ami-000037ee86985ff3b",
             "InstanceType": "c5.large",
+            "SubnetId": "subnet-d3c8fa99, subnet-686e7110, subnet-81cf34e8",
             "KeyName": "aws-cocktail",
             "BlockDeviceMappings": [
                 {
-                    "DeviceName": "/dev/sda1",
+                    "DeviceName": "/dev/xvda",
                     "Ebs": {
                         "DeleteOnTermination": true,
-                        "SnapshotId": "snap-049068c87907d9c42",
-                        "VolumeSize": 10,
-                        "Encrypted": false,
-                        "VolumeType": "gp2"
+                        "SnapshotId": "snap-072931ecebd3d1c1f",
+                        "VolumeSize": 75,
+                        "VolumeType": "gp2",
+                        "Encrypted": false
                     }
                 }
             ],
-            "SpotPrice": "0.085"
+            "SpotPrice": "0.101"
+        },
+        {
+            "ImageId": "ami-000037ee86985ff3b",
+            "InstanceType": "t3.medium",
+            "SubnetId": "subnet-d3c8fa99, subnet-686e7110, subnet-81cf34e8",
+            "KeyName": "aws-cocktail",
+            "BlockDeviceMappings": [
+                {
+                    "DeviceName": "/dev/xvda",
+                    "Ebs": {
+                        "DeleteOnTermination": true,
+                        "SnapshotId": "snap-072931ecebd3d1c1f",
+                        "VolumeSize": 75,
+                        "VolumeType": "gp2",
+                        "Encrypted": false
+                    }
+                }
+            ],
+            "SpotPrice": "0.0472"
+        },
+        {
+            "ImageId": "ami-000037ee86985ff3b",
+            "InstanceType": "t2.medium",
+            "SubnetId": "subnet-d3c8fa99, subnet-686e7110, subnet-81cf34e8",
+            "KeyName": "aws-cocktail",
+            "BlockDeviceMappings": [
+                {
+                    "DeviceName": "/dev/xvda",
+                    "Ebs": {
+                        "DeleteOnTermination": true,
+                        "SnapshotId": "snap-072931ecebd3d1c1f",
+                        "VolumeSize": 75,
+                        "VolumeType": "gp2",
+                        "Encrypted": false
+                    }
+                }
+            ],
+            "SpotPrice": "0.0528"
+        },
+        {
+            "ImageId": "ami-000037ee86985ff3b",
+            "InstanceType": "t3.large",
+            "SubnetId": "subnet-d3c8fa99, subnet-686e7110, subnet-81cf34e8",
+            "KeyName": "aws-cocktail",
+            "BlockDeviceMappings": [
+                {
+                    "DeviceName": "/dev/xvda",
+                    "Ebs": {
+                        "DeleteOnTermination": true,
+                        "SnapshotId": "snap-072931ecebd3d1c1f",
+                        "VolumeSize": 75,
+                        "VolumeType": "gp2",
+                        "Encrypted": false
+                    }
+                }
+            ],
+            "SpotPrice": "0.0944"
         }
-           ],
+    ],
     "Type": "request"
 }

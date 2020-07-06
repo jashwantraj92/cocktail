@@ -46,7 +46,9 @@ class QueryProcessor():
         await self.query_queue.put(future, name, time, data)
         await future
         return future.result()
-
+    def get_models():
+        return "MobileNet InceptionV3"
+      
     async def _manage_queue(self):
         while True:
             """
@@ -57,7 +59,7 @@ class QueryProcessor():
             info = await self.query_queue.get()
             name = info[0][1]
             fu, times, data = [i[0] for i in info], [i[2] for i in info], [i[3] for i in info]
-             
+            models = get_models() 
             alloc_info = ins_source.get_ins_alloc(name, self.balancer)
             logging.info(f'sending query to VM &&&&&&&&&&&&&: {alloc_info}')
             if alloc_info:
@@ -83,6 +85,7 @@ class QueryProcessor():
             else:
                 [ f.set_result(('No resources available', -1, utils.gap_time(t))) for f, t in zip(fu, times) ]
 
+   
     async def _get_result(self, futures, name, times, data, ip):
         results, req_type = await self._serve(name, data, ip)
         logging.info("predicted result is ",results)

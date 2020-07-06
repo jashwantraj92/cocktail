@@ -51,10 +51,12 @@ PREDICTOR_WINDOW = 5
 SECURITY_GROUPS = {
     'us-west-2': ['sg-xxx'],
     'us-west-1': ['sg-xxx'],
-    'us-east-1': ['sg-8c34ddfc']
+    'us-east-1': ['sg-8c34ddfc'],
+    'eu-west-3': ['sg-6c538705']
 }
 KEYS = {
     'us-east-1': '/home/cc/aws-cocktail.pem',
+    'eu-west-3': '/home/cc/aws-cocktail.pem',
     'us-west-1': 'xxx',
     'us-west-2': 'xxx'
 }
@@ -67,7 +69,8 @@ MODEL = 'tf'
 
 # AMIs for each model
 AMIS_TF = {
-    'us-east-1': {'CPU': 'ami-084e787069ee27fb7', 'GPU': 'ami-0edeb7664ef2967e7'}
+    'us-east-1': {'CPU': 'ami-0d97a358db413f1e8', 'GPU': 'ami-0edeb7664ef2967e7'},
+    'eu-west-3': {'CPU': 'ami-0d97a358db413f1e8', 'GPU': 'ami-0edeb7664ef2967e7'}
 }
 AMIS_KR = {
     'us-east-1': {'CPU': 'ami-xxx', 'GPU': 'ami-xxx'}
@@ -125,7 +128,7 @@ with open(filepath) as fp:
    access_key = fp.readline().strip()
    secret_key = fp.readline().strip()
 
-DEFAULT_REGION = 'us-east-1'
+DEFAULT_REGION = 'eu-west-3'
 CREDENTIALS = {
     'aws_access_key_id' : access_key,
     'aws_secret_access_key' : secret_key
