@@ -46,8 +46,9 @@ class QueryProcessor():
         await self.query_queue.put(future, name, time, data)
         await future
         return future.result()
-    def get_models():
-        return "MobileNet InceptionV3"
+
+    def get_models(self):
+        return "MobileNetV2 MobileNet"
       
     async def _manage_queue(self):
         while True:
@@ -59,36 +60,38 @@ class QueryProcessor():
             info = await self.query_queue.get()
             name = info[0][1]
             fu, times, data = [i[0] for i in info], [i[2] for i in info], [i[3] for i in info]
-            models = get_models() 
-            alloc_info = ins_source.get_ins_alloc(name, self.balancer)
-            logging.info(f'sending query to VM &&&&&&&&&&&&&: {alloc_info}')
-            if alloc_info:
-                ip, typ = alloc_info[0], alloc_info[1]
-                if typ.startswith('p2'):
-                    other_info = await self.query_queue.get(HANDLE_SIZE_P2 - 1)
-                    [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
-                elif typ.startswith('c5.x'):
-                    other_info = await self.query_queue.get(HANDLE_SIZE_C5X - 1)
-                    [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
-                elif typ.startswith('c5.2x'):
-                    other_info = await self.query_queue.get(HANDLE_SIZE_C52X - 1)
-                    [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
-                elif typ.startswith('c5.4x'):
-                    other_info = await self.query_queue.get(HANDLE_SIZE_C54X - 1)
-                    [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
-                elif typ.startswith('c5.'):
-                    other_info = await self.query_queue.get(HANDLE_SIZE_C5 - 1)
-                    [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
+            models = self.get_models().split()
+            for i in range(len(models)):
+                alloc_info = ins_source.get_ins_alloc(name, models[i], self.balancer)
+                logging.info(f'sending query to VM &&&&&&&&&&&&&: {alloc_info} {fu} {times}')
+                if alloc_info:
+                    ip, typ = alloc_info[0], alloc_info[1]
+                    if typ.startswith('p2'):
+                        other_info = await self.query_queue.get(HANDLE_SIZE_P2 - 1)
+                        [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
+                    elif typ.startswith('c5.x'):
+                        other_info = await self.query_queue.get(HANDLE_SIZE_C5X - 1)
+                        [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
+                    elif typ.startswith('c5.2x'):
+                        other_info = await self.query_queue.get(HANDLE_SIZE_C52X - 1)
+                        [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
+                    elif typ.startswith('c5.4x'):
+                        other_info = await self.query_queue.get(HANDLE_SIZE_C54X - 1)
+                        [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
+                    elif typ.startswith('c5.'):
+                        other_info = await self.query_queue.get(HANDLE_SIZE_C5 - 1)
+                        [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
 
-                logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip}')
-                self.loop.create_task(self._get_result(fu, name, times, data, ip))
+                    #data =  data[0] + "," + models[i]
+                    logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is {data}')
+                    self.loop.create_task(self._get_result(fu, name, times, data, ip))
             else:
                 [ f.set_result(('No resources available', -1, utils.gap_time(t))) for f, t in zip(fu, times) ]
 
    
     async def _get_result(self, futures, name, times, data, ip):
         results, req_type = await self._serve(name, data, ip)
-        logging.info("predicted result is ",results)
+        logging.info(f'predicted result is {results}')
         [ f.set_result((r, typ, utils.gap_time(t))) for f, t, r, typ in zip(futures, times, results, req_type) ]
 
     async def _serve(self, name, data, ip):
@@ -98,7 +101,6 @@ class QueryProcessor():
         req = mdl_source.get_request(data, ip)
 
         logging.info(f'Send request to ip: {ip}; batch_size:{len(data)}; req {req}')
-        
         data = json.dumps({'data':f'{data[0]}'})
         #resp = await self.session.post(mdl_source.get_request(data, ip))
         resp = await self.session.post(f'http://{ip}:8000/predict', data=data, headers={"Content-type": "application/json"})

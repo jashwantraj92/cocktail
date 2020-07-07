@@ -100,11 +100,10 @@ class TensorFlowSource(_ModelSource):
         dct = {'url': url, 'data': data[0], 'timeout': 2, 'headers':headers}
         return dct
 
-    def setup_config(self, ins, region, typ):
+    def setup_config(self, ins, region, typ,models):
         #self. _start_nginx(ins)
         #logging.info('Nginx started')
         #cmd = TF_DEPLOY_CMD['GPU'] if typ.startswith('p2') else TF_DEPLOY_CMD['CPU']
-        models = "\"MobileNet InceptionV3\""
         for i in ins:
             cmd = f'nohup python3.6 sanic-server.py 0.0.0.0 8000 4 {models} > server.log 2>&1 &'
             utils.check_command(utils.get_session(i.ip), cmd, debug=True)

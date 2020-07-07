@@ -20,6 +20,7 @@ logging.basicConfig(format = '%(asctime)s %(message)s',
 
 Tag = 0
 Times = 1.2
+models = ["MobileNetV2"]
 
 class Scheduler():
 
@@ -50,7 +51,7 @@ class Scheduler():
         logging.info(f': Launch {count} {instance_type} instances for model: {model_name}')
         ami = AMIS[DEFAULT_REGION]['GPU'] if instance_type.startswith('p2') else AMIS[DEFAULT_REGION]['CPU']
         params = {'imageId':ami, 'instanceType':instance_type, 'targetCapacity': count, 'key_value':[('exp_round', Tag)] }
-        ins_source.launch_ins(model_name, params)
+        ins_source.launch_ins(model_name, params,models)
         Scheduler.cool_down = 5
             
     async def schedule(self):

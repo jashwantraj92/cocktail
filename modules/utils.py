@@ -42,20 +42,22 @@ def load_cluster_instances(name):
         [ instances.append(ec2.Instance(i)) for i in id['instance_id_list'] ]
     return instances
 
-get_ins = lambda instance, region: Instance(instance.public_dns_name, instance.instance_type, region)
+get_ins = lambda instance, region, model: Instance(instance.public_dns_name, instance.instance_type, region, model)
 get_ins_from_id = lambda ec2, region, id: get_ins(ec2.Instance(id), region)
 
-def get_ins_from_ids(region, instance_id_list):
+def get_ins_from_ids(region, instance_id_list, models):
     ins = []
     ec2 = boto3.resource('ec2', region_name=region, **CREDENTIALS)
-    [ ins.append(get_ins(ec2.Instance(i), region)) for i in instance_id_list ]
+    logging.info(f'models are {models}')
+    [ ins.append(get_ins(ec2.Instance(i), region, models)) for i in instance_id_list ]
     return ins
 
 class Instance:
-    def __init__(self, ip, typ, region):
+    def __init__(self, ip, typ, region, model):
         self.ip = ip
         self.typ = typ
         self.region = region
+        self.model = model
 
     def __repr__(self):
         return f'Instance({self.ip}, {self.typ}, {self.region})'
@@ -65,7 +67,7 @@ class Instance:
 
 def dict2Instance(dct):
     if 'ip' in dct and 'typ' in dct and 'region' in dct:
-        return Instance(dct['ip'], dct['typ'], dct['region'])
+        return Instance(dct['ip'], dct['typ'], dct['region'], dct['model'])
         
 def parse_instances(cursor):
     lst = []

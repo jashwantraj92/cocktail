@@ -47,11 +47,12 @@ def check_spot_states():
             logging.info('Cancel inactive requests')
             cancel_spot_instances(name, cancel_reqs)
 
+            models = "\"MobileNet InceptionV3\""
             # interrupt recovery test
             time.sleep(100)
             logging.info(f'Monitor launching {num} spot instances')
             name = 'inception'
-            launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['CPU'], 'instanceType':'c5.large', 'targetCapacity':num, 'key_value':[('exp_round', 0)] })
+            launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['CPU'], 'instanceType':'c5.large', 'targetCapacity':num, 'key_value':[('exp_round', 0)] }, models)
             stop_on_demand_instances(name)
 
 @app.task
@@ -146,7 +147,7 @@ def start_on_demand_instances(name, typ='t2.medium' , region=DEFAULT_REGION):
         if len(ins) > 0:
             logging.info(f'Start {len(ins)} {typ} on demand instances')
             res = client.start_instances(InstanceIds=ins)
-            instances = utils.get_ins_from_ids(region, ins)
+            instances = utils.get_ins_from_ids(region, ins, models)
 
             while True:
                 logging.info('Checking SSH connection')
@@ -196,7 +197,7 @@ def kill_all_on_demand_ins(name, region):
             demand_aws_accessor.del_requests(name, ids)
 
 @app.task
-def launch_spot_instances(name, params):
+def launch_spot_instances(name, params, models):
     """
     params :
         - 'imageId'
@@ -226,7 +227,7 @@ def launch_spot_instances(name, params):
         _add_tags(client, instance_id_list, params['key_value'])
     _set_security_group(client, instance_id_list, SECURITY_GROUPS[params['region']])
 
-    ins = utils.get_ins_from_ids(params['region'], instance_id_list)
+    ins = utils.get_ins_from_ids(params['region'], instance_id_list, models)
     
     # check the state of instances by trying ssh
     while True:
@@ -236,7 +237,8 @@ def launch_spot_instances(name, params):
             break
         time.sleep(10)
 
-    mdl_source.setup_config(ins, params['region'], params['instanceType'])
+    mdl_source.setup_config(ins, params['region'], params['instanceType'],models) 
+    #str(models).strip('[]'))
 
     # make the instances configured
     time.sleep(3)
@@ -287,7 +289,7 @@ def kill_spot_instances_by_num(name, region, typ, num):
     if len(cancel_req_ids) > 0:
         cancel_spot_instances(name, cancel_req_ids)
 
-def cancel_spot_instances(name, request_ids):
+def cancel_spot_instances(name, request_ids, models):
     info = aws_accessor.get_cluster(name)['info']
     for i in request_ids:
         if i not in info:
@@ -303,12 +305,12 @@ def cancel_spot_instances(name, request_ids):
         if 'SuccessfulFleetRequests' in res:
             logging.info('Successful cancel spot fleet request {}'.format(i))
             aws_accessor.del_request(name, i)
-            instance_accessor.del_instance(name, [ i.__dict__ for i in utils.get_ins_from_ids(region, instance_id_list)])
+            instance_accessor.del_instance(name, [ i.__dict__ for i in utils.get_ins_from_ids(region, instance_id_list, models)])
 
-def cancel_all_instances(name):
+def cancel_all_instances(name, models):
     requests = aws_accessor.get_requests(name)
     if requests:
-        cancel_spot_instances(name, requests)
+        cancel_spot_instances(name, requests, models)
 
 
 def get_client(region=DEFAULT_REGION):

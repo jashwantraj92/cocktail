@@ -57,8 +57,9 @@ async def test(request):
     if request.method == 'POST':
         receive_time = time.time()
         print(f'Received request',receive_time)
-        #question = request.json['data'].split(',')
-        data = request.json['data']
+        question = request.json['data'].split(',')
+        data = question[0]
+	#data = request.json['data']
         file = tf.keras.utils.get_file(
             str(receive_time)+".jpg",data)
         img = tf.keras.preprocessing.image.load_img(file, target_size=[224, 224])

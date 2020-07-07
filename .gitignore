@@ -1,1 +1,3 @@
 *.pyc
+*.gz
+aws-keys
