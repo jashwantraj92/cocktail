@@ -152,5 +152,5 @@ all_ins_sources = {
     'spot': SpotSource(),
     'ondemand': OnDemandSource()
 }
-models = ["MobileNetV2", "ResNetV2", "InceptionV2"]
+models = ["MobileNetV2", "ResNet50V2", "InceptionV3"]
 ins_source = all_ins_sources[INS_SOURCE]
