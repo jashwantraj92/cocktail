@@ -95,7 +95,7 @@ launch() {
 
 backup() {
     start_mongodb
-    python3.6 main.py --signal=3 --tag=${TAG} &
+    python3.6 main.py --signal=3 --need-updater=${UPDATER} --tag=${TAG} >> ${LOG_DIR}/instances.log 2>&1 &
 }
 
 stopback() {

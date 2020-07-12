@@ -9,7 +9,7 @@
     "LaunchSpecifications": [
         {
             "ImageId": "ami-000037ee86985ff3b",
-            "InstanceType": "c5.large",
+            "InstanceType": "['c5.large', 'c5.xlarge', 'c5.2xlarge', 'c5.4xlarge', 'p2.xlarge']",
             "SubnetId": "subnet-d3c8fa99, subnet-686e7110, subnet-81cf34e8",
             "KeyName": "aws-cocktail",
             "BlockDeviceMappings": [
@@ -28,7 +28,7 @@
         },
         {
             "ImageId": "ami-000037ee86985ff3b",
-            "InstanceType": "t3.medium",
+            "InstanceType": "['c5.large', 'c5.xlarge', 'c5.2xlarge', 'c5.4xlarge', 'p2.xlarge']",
             "SubnetId": "subnet-d3c8fa99, subnet-686e7110, subnet-81cf34e8",
             "KeyName": "aws-cocktail",
             "BlockDeviceMappings": [
@@ -47,7 +47,7 @@
         },
         {
             "ImageId": "ami-000037ee86985ff3b",
-            "InstanceType": "t2.medium",
+            "InstanceType": "['c5.large', 'c5.xlarge', 'c5.2xlarge', 'c5.4xlarge', 'p2.xlarge']",
             "SubnetId": "subnet-d3c8fa99, subnet-686e7110, subnet-81cf34e8",
             "KeyName": "aws-cocktail",
             "BlockDeviceMappings": [
@@ -66,7 +66,7 @@
         },
         {
             "ImageId": "ami-000037ee86985ff3b",
-            "InstanceType": "t3.large",
+            "InstanceType": "['c5.large', 'c5.xlarge', 'c5.2xlarge', 'c5.4xlarge', 'p2.xlarge']",
             "SubnetId": "subnet-d3c8fa99, subnet-686e7110, subnet-81cf34e8",
             "KeyName": "aws-cocktail",
             "BlockDeviceMappings": [

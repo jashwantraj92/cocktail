@@ -16,13 +16,13 @@ logging.basicConfig(
 
 class ReactiveController:
 
-    def __init__(self, interval=5, instance_info):
+    def __init__(self, interval=5, instance_info=None):
         """
         interval: the interval between every decision
         instance_info: instance information in list form, instance i capacity price and launch overhead. The first 6 instances types are t2 instances, 
                         on demand and spot instances
         """
-        self.step = step
+        #self.step = step
         self.n_instance = len(instance_info)
         self.instance_info = instance_info
         self.interval = interval
@@ -30,7 +30,7 @@ class ReactiveController:
     def calculateCapacity(self, current_instances):
         totalCapa = 0
         for i in range(len(current_instances)):
-            totalCapa += instance_info[i][0] * current_instances[i]
+            totalCapa += self.instance_info[i][0] * current_instances[i]
         return totalCapa
 
     def findCheap(self, surplus):
@@ -47,17 +47,17 @@ class ReactiveController:
 
 
     def greedyFind(self, residual_requests, current_instances, instance_info):
-        totalCapa = calculateCapacity(current_instances)
-        surplus = totalCapa - residual_requests
+        totalCapa = self.calculateCapacity(current_instances)
+        surplus = totalCapa - len(residual_requests)
         if (surplus > 0) :
-            cheapest_i, num_i = findCheap(surplus)
+            cheapest_i, num_i = self.findCheap(surplus)
             current_instances[cheapest_i] += num_i
 
 
 
     def schedule(self, residual_requests, current_instances, instance_info):
         self.instance_info = instance_info
-        greedyFind(residual_requests, current_instances, instance_info)
+        self.greedyFind(residual_requests, current_instances, instance_info)
        
 
 

@@ -8,10 +8,10 @@ HANDLE_SIZE = 8
 
 #batch size config
 HANDLE_SIZE_P2 = 8
-HANDLE_SIZE_C5=1
-HANDLE_SIZE_C5X = 2
-HANDLE_SIZE_C52X = 2
-HANDLE_SIZE_C54X = 2
+HANDLE_SIZE_C5=4
+HANDLE_SIZE_C5X = 6
+HANDLE_SIZE_C52X = 8
+HANDLE_SIZE_C54X = 12
 
 #proactive scheduler update interval
 UPDATER_INTERVAL = 600
@@ -43,7 +43,7 @@ SPOT_PRIZE_URL = 'http://spot-price.s3.amazonaws.com/spot.js'
 ON_DEMAND_PRIZE_URL = 'http://a0.awsstatic.com/pricing/1/ec2/linux-od.js'
 
 # the data amount to warm up predictor, the re-schedule period(seconds)
-PREDICTOR_PARAM = [5, 60]
+PREDICTOR_PARAM = [2, 30]
 
 # the arrival rate smaple window
 PREDICTOR_WINDOW = 5
@@ -55,8 +55,8 @@ SECURITY_GROUPS = {
     'eu-west-3': ['sg-6c538705']
 }
 KEYS = {
-    'us-east-1': '/home/cc/aws-cocktail.pem',
-    'eu-west-3': '/home/cc/aws-cocktail.pem',
+    'us-east-1': 'aws-cocktail',
+    'eu-west-3': 'aws-cocktail',
     'us-west-1': 'xxx',
     'us-west-2': 'xxx'
 }

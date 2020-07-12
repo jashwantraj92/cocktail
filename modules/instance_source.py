@@ -26,7 +26,7 @@ class _InstanceSource():
     def get_ins_alloc(self, name, balancer):
         pass
 
-    def get_current_ins_and_prize(self, name, index_type):
+    def get_current_ins_and_prize(self, name, index_type, model):
         pass
 
     def launch_ins(self, name, params):
@@ -103,9 +103,9 @@ class SpotSource(_InstanceSource):
         
         return balancer.next_ip(name, instance_list)
 
-    def get_current_ins_and_prize(self, name, index_type):
+    def get_current_ins_and_prize(self, name, index_type, model):
         # filter the instances by type and region(Default region: us-east-1)
-        instance_list = [ utils.dict2Instance(i) for i in instance_accessor.get_instances(name) ]
+        instance_list = [ utils.dict2Instance(i) for i in instance_accessor.get_instances(name, model) ]
         currentInstance = []
         [ currentInstance.append(len([ i for i in instance_list if i.typ == typ and i.region == DEFAULT_REGION])) for typ in index_type ]
 
@@ -129,8 +129,9 @@ class SpotSource(_InstanceSource):
 
     def launch_backup(self, name, tag):
         # launch on demand ins for fault tolerance
-        aws_manager.launch_on_demand_instances(name, {'imageId':AMIS[DEFAULT_REGION]['CPU'], 'instanceType':'t2.medium', 'targetCapacity':10, 'key_value':[('exp_round', tag)] })
-        aws_manager.stop_on_demand_instances(name)
+        for model in models:
+            aws_manager.launch_on_demand_instances(name, {'imageId':AMIS[DEFAULT_REGION]['CPU'], 'instanceType':'t2.medium', 'targetCapacity':2, 'key_value':[('exp_round', tag)] }, model)
+        #aws_manager.stop_on_demand_instances(name)
         # aws_manager.start_on_demand_instances(name)
 
     def stop_backup(self, name):
@@ -142,7 +143,7 @@ class SpotSource(_InstanceSource):
 
         logging.info('Initiating spot instance launch **********')
         for model in models:
-            aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['CPU'], 'instanceType':'c5.large', 'targetCapacity':1, 'key_value':[('exp_round', tag)] }, model)
+            aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['CPU'], 'instanceType':'c5.xlarge', 'targetCapacity':1, 'key_value':[('exp_round', tag)] }, model)
             #aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['GPU'], 'instanceType':'p2.xlarge', 'targetCapacity':1, 'key_value':[('exp_round', tag)] }, models)
         # aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['CPU'], 'instanceType':'c5.large', 'targetCapacity':8, 'key_value':[('exp_round', tag)] })
         # aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['GPU'], 'instanceType':'p2.xlarge', 'targetCapacity':1, 'key_value':[('exp_round', tag)] })
@@ -152,5 +153,6 @@ all_ins_sources = {
     'spot': SpotSource(),
     'ondemand': OnDemandSource()
 }
-models = ["MobileNetV2", "ResNet50V2", "InceptionV3"]
+models = ["MobileNetV2", "MobileNet", "InceptionV3"]
+#models = ["MobileNetV2", "ResNet50V2"]
 ins_source = all_ins_sources[INS_SOURCE]

@@ -56,13 +56,14 @@ def check_spot_states():
             stop_on_demand_instances(name)
 
 @app.task
-def launch_on_demand_instances(name, params):
+def launch_on_demand_instances(name, params,model):
     params['region'] = params['region'] if 'region' in params else DEFAULT_REGION
     ec2 = boto3.resource('ec2', region_name=params['region'], **CREDENTIALS)
+    logging.info(f"before OD launch******  {params['imageId']}")
     instances = ec2.create_instances(
         ImageId=params['imageId'],
         InstanceType=params['instanceType'],
-        KeyName=KEYS[params['region']],
+        KeyName="aws-cocktail",
         MinCount=params['targetCapacity'],
         MaxCount=params['targetCapacity'], 
         SecurityGroupIds=SECURITY_GROUPS[params['region']],
@@ -71,17 +72,17 @@ def launch_on_demand_instances(name, params):
                 'VirtualName': 'Root',
                 'DeviceName': '/dev/sda1',
                 'Ebs': {
-                    'VolumeSize': 51,
+                    'VolumeSize': 75,
                     'VolumeType': 'gp2',
                     'DeleteOnTermination': True
                 }
             }
         ],
     )
-
+    
     time.sleep(10)
     ids = [ i.id for i in instances]
-
+    logging.info(f"instances ids are {ids}")
     pre_info = {}
     single_info = {
         'region' : params['region'],
@@ -95,7 +96,7 @@ def launch_on_demand_instances(name, params):
         _add_tags(ec2.meta.client, ids, params['key_value'])
     
 
-    ins_list = utils.get_ins_from_ids(params['region'], ids)
+    ins_list = utils.get_ins_from_ids(params['region'], ids, model)
     # check the state of instances by trying ssh
     while True:
         logging.info('Checking SSH connection')
@@ -105,7 +106,7 @@ def launch_on_demand_instances(name, params):
         time.sleep(10)
         ins_list = utils.get_ins_from_ids(params['region'], ids)
 
-    mdl_source.setup_config(ins_list, params['region'], params['instanceType'])
+    mdl_source.setup_config(ins_list, params['region'], params['instanceType'], model)
     
     ins_dict = {}
     [ ins_dict.update( {i: utils.get_ins_from_id(ec2, params['region'], i)} ) for i in ids]
@@ -291,6 +292,7 @@ def kill_spot_instances_by_num(name, region, typ, num):
 
 def cancel_spot_instances(name, request_ids, models):
     info = aws_accessor.get_cluster(name)['info']
+    j=0
     for i in request_ids:
         if i not in info:
             logging.info('Request ID : {} not found'.format(i))
@@ -305,9 +307,8 @@ def cancel_spot_instances(name, request_ids, models):
         if 'SuccessfulFleetRequests' in res:
             logging.info('Successful cancel spot fleet request {}'.format(i))
             aws_accessor.del_request(name, i)
-            for model in models:
-                instance_accessor.del_instance(name, [ i.__dict__ for i in utils.get_ins_from_ids(region, instance_id_list, model)])
-
+            instance_accessor.del_instance(name, [ i.__dict__ for i in utils.get_ins_from_ids(region, instance_id_list, models[j])])
+        j+=1
 def cancel_all_instances(name, models):
     requests = aws_accessor.get_requests(name)
     if requests:

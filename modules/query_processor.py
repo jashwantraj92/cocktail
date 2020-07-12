@@ -10,7 +10,7 @@ import requests
 import aiohttp
 import tensorflow as tf
 
-from . import aws_manager, utils
+from . import aws_manager, utils, naiveSchedule
 from .model_source import mdl_source
 from .load_balancer import get_balancer
 from .data_accessor import instance_accessor, demand_aws_accessor
@@ -39,7 +39,7 @@ class QueryProcessor():
         # instance_accessor.subscribe(self.update_instances)
         self.session = aiohttp.ClientSession(loop=self.loop)
         self.loop.create_task(self._manage_queue())
-
+         
     async def send_query(self, name, time, data):
         future = asyncio.Future()
         logging.info("adding query to queue")
@@ -48,7 +48,12 @@ class QueryProcessor():
         return future.result()
 
     def get_models(self):
-        return "MobileNetV2 ResNet50V2 InceptionV3"
+        global inst_list, current_latency, current_cost
+        print('main invoked') 
+        models = naiveSchedule.select_models()
+        logging.info(f"selected models are {models}")
+        return models
+        #return "MobileNetV2 ResNet50V2 InceptionV3"
       
     async def _manage_queue(self):
         while True:
@@ -60,11 +65,11 @@ class QueryProcessor():
             info = await self.query_queue.get()
             name = info[0][1]
             fu, times, data = [i[0] for i in info], [i[2] for i in info], [i[3] for i in info]
-            models = self.get_models().split()
+            models = self.get_models()
             statements = []
             for i in range(len(models)):
                 alloc_info = ins_source.get_ins_alloc(name, models[i], self.balancer)
-                #logging.info(f'sending query to VM &&&&&&&&&&&&&: {alloc_info} {fu} {times}')
+                logging.info(f'sending query to VM &&&&&&&&&&&&&: {alloc_info} {fu} {times}')
                 if alloc_info:
                     ip, typ = alloc_info[0], alloc_info[1]
                     if typ.startswith('p2'):
@@ -84,20 +89,31 @@ class QueryProcessor():
                         [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
 
                     #data =  data[0] + "," + models[i]
-                    logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is {data}')
-                    statements.append((self._get_result(fu, name, times, data, ip)))
+                    logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is {data} {other_info}')
+                    statements.append(self.loop.create_task(self._get_result(fu, name, times, data, ip)))
                 else:
                     [ f.set_result(('No resources available', -1, utils.gap_time(t))) for f, t in zip(fu, times) ]
-            print(f'**************** waiting for results ********************')
-            results = await asyncio.wait(statements,return_when=asyncio.ALL_COMPLETED)
-            #await self.loop.create_task(results)
-            print(f'**************** gather results are {results} ********************')
+            logging.info(f'**************** waiting for results ********************') 
+            self.loop.create_task(self.ensemble_result(statements))
 
-   
+  
+    async def ensemble_result(self, statements): 
+        predictions = []
+        votearray=[]    
+        voteclasses= []
+        results,failed = await asyncio.wait(statements,return_when=asyncio.ALL_COMPLETED)
+        for result in results:
+            votearray.append(result.result().split()[0])
+            voteclasses.append(result.result().split()[1])
+            predictions.append(result.result())
+        maxVoteLabel        =       max(set(votearray), key = votearray.count) 
+        maxVoteClass        =       max(set(voteclasses), key = voteclasses.count)
+        logging.info(f'**************** gather results are {maxVoteClass}, {maxVoteLabel} ********************')
+       
     async def _get_result(self, futures, name, times, data, ip):
         results, req_type = await self._serve(name, data, ip)
         logging.info(f'predicted result is {results}')
-        [ f.set_result((r, typ, utils.gap_time(t))) for f, t, r, typ in zip(futures, times, results, req_type) ]
+        #[ f.set_result((r, typ, utils.gap_time(t))) for f, t, r, typ in zip(futures, times, results, req_type) ]
         return str(results)
 
     async def _serve(self, name, data, ip):

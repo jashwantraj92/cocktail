@@ -7,12 +7,12 @@ from datetime import datetime
 from functools import reduce
 
 from . import (aws_manager, load_predictor, prize_request,
-               proactive_controller2, utils)
+               proactive_controller2, reactive_controller, utils)
 from .constants import *
 from .data_accessor import (demand_aws_accessor, instance_accessor,
                             pre_aws_accessor, pre_demand_aws_accessor)
 from .instance_source import ins_source
-
+from . import instance_source
 logging.basicConfig(format = '%(asctime)s %(message)s',
                     datefmt = '%m/%d/%Y %I:%M:%S %p',
                     filename = 'scheduler_test.log',
@@ -20,7 +20,6 @@ logging.basicConfig(format = '%(asctime)s %(message)s',
 
 Tag = 0
 Times = 1.2
-models = ["MobileNetV2"]
 
 class Scheduler():
 
@@ -43,6 +42,7 @@ class Scheduler():
         self.count[model_name] = (self.count[model_name] + 1) if model_name in self.count else 1
         if model_name not in self.warm_up_num:
             self.warm_up_num[model_name] = PREDICTOR_PARAM[0]
+            logging.info(f'****** adding to warmup {self.count[model_name]}')
 
     def launch_standby(self, instance_type, count, model_name):
         if Scheduler.cool_down > 0:
@@ -51,7 +51,7 @@ class Scheduler():
         logging.info(f': Launch {count} {instance_type} instances for model: {model_name}')
         ami = AMIS[DEFAULT_REGION]['GPU'] if instance_type.startswith('p2') else AMIS[DEFAULT_REGION]['CPU']
         params = {'imageId':ami, 'instanceType':instance_type, 'targetCapacity': count, 'key_value':[('exp_round', Tag)] }
-        ins_source.launch_ins(model_name, params,models)
+        ins_source.launch_ins(model_name, params,instance_soure.models)
         Scheduler.cool_down = 5
             
     async def schedule(self):
@@ -59,6 +59,7 @@ class Scheduler():
         total_cost = 0
 
         controller = proactive_controller2.ProactiveController(instance_info=[])
+        #controller = reactive_controller.ReactiveController(instance_info=[])
 
         max_count = 0;
 
@@ -70,6 +71,7 @@ class Scheduler():
             for i in range(0,PREDICTOR_PARAM[1]//PREDICTOR_WINDOW):
                 await asyncio.sleep(PREDICTOR_WINDOW)
                 for name in self.count.keys():
+                    logging.info(f': Scheduler model count: {self.count[name]}')
                     if self.count[name] > max_count_window:
                         max_count_window = self.count[name]
                     self.count[name] = 0
@@ -84,30 +86,34 @@ class Scheduler():
             for name in self.count.keys():
                 if self.warm_up_num[name] > 0:
                     forecasts = self.predictor.predict(max_count_window * Times)
+                    logging.info(f': Scheduler forecasts {forecasts} {instance_source.models}')                 
                     self.count[name] = 0
                     max_count_window = 0
                     self.warm_up_num[name] -= 1
                     continue
-                
-                currentInstance, prize_list = ins_source.get_current_ins_and_prize(name, IndexType)
-                if prize_list is None:
-                    logging.info(f'Prize uavailable for {IndexType}')
-                    self.count[name] = 0
-                    max_count_window = 0
-                    continue
-                # logging.info(f': Updated prize_list')
+                for model in instance_source.models:
+                    logging.info(f': Updating prize_list')
+                    currentInstance, prize_list = ins_source.get_current_ins_and_prize(name, IndexType, model)
+                    logging.info(f': currentInstance {currentInstance} prize_list {prize_list}')
+                    if prize_list is None:
+                        logging.info(f'Prize uavailable for {IndexType}')
+                        self.count[name] = 0
+                        max_count_window = 0
+                        continue
                 instanceInfo = []
+                logging.info(f': Updated prize_list')
                 for i in range(len(IndexType)):
                     instanceInfo.append([Capacity[i], prize_list[i], prize_list[i] * 180])
 
                 # forecasts = self.predictor.predict(max_count_window * Times)
 
-                # logging.info(f': Updated forecasts')
+                logging.info(f': Updated forecasts')
 
                 if max_count < max_count_window:
                     max_count = max_count_window
 
                 forecasts = [max_count * Times] * 50
+                logging.info(f': forecasts {forecasts}{max_count}')                 
 
 
                 # controller = proactive_controller2.ProactiveController(instance_info=instanceInfo)
@@ -130,7 +136,8 @@ class Scheduler():
                         logging.info(f'Launch {launch[i]} {IndexType[i]} instances for model: {name}')
                         ami = AMIS[DEFAULT_REGION]['GPU'] if IndexType[i].startswith('p2') else AMIS[DEFAULT_REGION]['CPU']
                         params = {'imageId':ami, 'instanceType':IndexType[i], 'targetCapacity': launch[i], 'key_value':[('exp_round', Tag)] }
-                        ins_source.launch_ins(name, params)
+                        for model in instance_source.models:
+                            ins_source.launch_ins(name, params,model)
                         cost += instanceInfo[i][2] * launch[i]
 
                 for i in range(len(des)):
