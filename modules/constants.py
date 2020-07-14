@@ -133,8 +133,9 @@ CREDENTIALS = {
     'aws_access_key_id' : access_key,
     'aws_secret_access_key' : secret_key
 }
-models="MobileNet ResNet50"
-
+models=["MobileNetV2", "InceptionResNetV2", "InceptionV3", "NASNetLarge"]
+accuracy = [.75,.75,.71,.74]
+latency = [200,100,55,75]
 # model deploy cmd
 TF_DEPLOY_CMD ={
     'cpu': f'nohup sudo docker run -p 8501:8501 --name TFserving_resnet --mount type=bind,source=/home/ubuntu/resnet,target=/models/resnet -e MODEL_NAME=resnet -t tensorflow/serving  > server.log 2>&1 &',

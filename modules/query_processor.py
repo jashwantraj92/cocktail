@@ -46,14 +46,19 @@ class QueryProcessor():
         await self.query_queue.put(future, name, time, data)
         await future
         return future.result()
-
-    def get_models(self):
+    
+    async def get_requirements(self,constraint):
+        logging.info(f'accuracy[constraint],latency[constraint]')
+        return float(accuracy[constraint]),latency[constraint]
+    
+    async def get_models(self, constraints):
         global inst_list, current_latency, current_cost
         print('main invoked') 
-        models = naiveSchedule.select_models()
+        """accuracy,latency = await self.get_requirements(constraints)
+        models = naiveSchedule.select_models(latency,accuracy)
         logging.info(f"selected models are {models}")
-        return models
-        #return "MobileNetV2 ResNet50V2 InceptionV3"
+        return models"""
+        return ["MobileNetV2","InceptionV3"]
       
     async def _manage_queue(self):
         while True:
@@ -65,7 +70,10 @@ class QueryProcessor():
             info = await self.query_queue.get()
             name = info[0][1]
             fu, times, data = [i[0] for i in info], [i[2] for i in info], [i[3] for i in info]
-            models = self.get_models()
+            #constraints = json.dumps({'data':f'{data[0]}'}).strip("\"}").split(",")[1]
+            #logging.info(f"constraint is {constraints}")
+            #models = await self.get_models(int(constraints))
+            models = await self.get_models(0)
             statements = []
             for i in range(len(models)):
                 alloc_info = ins_source.get_ins_alloc(name, models[i], self.balancer)

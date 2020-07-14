@@ -35,6 +35,7 @@ async def predict(request, model_name):
         # use a general decoder to handle different types
         # data =  utils.decode_image(request.json['data']) if typ == 'image' else request.json['data']
         data = request.json['data']
+        #logging.info("data is ",data)
         print("data is ",data)
         sch.record_request(model_name)
         res, typ, handel_time = await processor.send_query(model_name, receive_time, data)

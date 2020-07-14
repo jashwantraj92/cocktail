@@ -143,7 +143,7 @@ class SpotSource(_InstanceSource):
 
         logging.info('Initiating spot instance launch **********')
         for model in models:
-            aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['CPU'], 'instanceType':'c5.xlarge', 'targetCapacity':1, 'key_value':[('exp_round', tag)] }, model)
+            aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['CPU'], 'instanceType':'c5.xlarge', 'targetCapacity':2, 'key_value':[('exp_round', tag)] }, model)
             #aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['GPU'], 'instanceType':'p2.xlarge', 'targetCapacity':1, 'key_value':[('exp_round', tag)] }, models)
         # aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['CPU'], 'instanceType':'c5.large', 'targetCapacity':8, 'key_value':[('exp_round', tag)] })
         # aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['GPU'], 'instanceType':'p2.xlarge', 'targetCapacity':1, 'key_value':[('exp_round', tag)] })
@@ -153,6 +153,6 @@ all_ins_sources = {
     'spot': SpotSource(),
     'ondemand': OnDemandSource()
 }
-models = ["MobileNetV2", "MobileNet", "InceptionV3"]
+#models = ["MobileNetV2", "MobileNet", "InceptionV3"]
 #models = ["MobileNetV2", "ResNet50V2"]
 ins_source = all_ins_sources[INS_SOURCE]

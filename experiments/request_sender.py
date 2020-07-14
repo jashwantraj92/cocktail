@@ -49,7 +49,7 @@ def get_data():
 def send_data(args, reader):
     pool = ThreadPoolExecutor(5000)
     data = get_data()
-    df = pd.read_csv('/home/cc/ensembling/workload/short_interval.csv', delimiter=',')
+    df = pd.read_csv('/home/cc/ensembling/workload/test_interval.csv', delimiter=',')
 # User list comprehension to create a list of lists from Dataframe rows
     list_of_rows = [list(row) for row in df.values]
 # Print list of lists i.e. rows
@@ -67,10 +67,10 @@ def send_data(args, reader):
             # sender(data)
             # print(f'Send request after {s} ms')
         time.sleep(num)
-def send_tweet_data(args, reader):
+def send_trace_data(args, reader):
     pool = ThreadPoolExecutor(5000)
     data = get_data()
-    df = pd.read_csv('/home/cc/ensembling/workload/short_tweet_load.csv', delimiter=',')
+    df = pd.read_csv('/home/cc/ensembling/workload/short_wits_load.csv', delimiter=',')
 # User list comprehension to create a list of lists from Dataframe rows
     list_of_rows = [list(row) for row in df.values]
 # Print list of lists i.e. rows
@@ -79,12 +79,15 @@ def send_tweet_data(args, reader):
         if reader.line_num > args.timeout:
             break
         print(row)
-        num = row[1]
+        #num = row[1]
+        num = 1
+        constraints = row[2]
+        Data = data + "," + str(constraints)
         #lam = (60 * 1000.0) / num
         #samples = np.random.poisson(lam, num)
         #print(f'line: {reader.line_num}; sample_number: {num}')
         for s in range(num):
-            pool.submit(sender, data)
+            pool.submit(sender, Data)
             # sender(data)
             # print(f'Send request after {s} ms')
         time.sleep(1)
