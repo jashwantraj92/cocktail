@@ -49,7 +49,7 @@ def get_ins_from_ids(region, instance_id_list, models):
     ins = []
     ec2 = boto3.resource('ec2', region_name=region, **CREDENTIALS)
     logging.info(f'models are {models}')
-    [ ins.append(get_ins(ec2.Instance(i), region, models)) for i in instance_id_list ]
+    [ ins.append(get_ins(ec2.Instance(instance_id_list[i]), region, models[i])) for i in range(len(instance_id_list)) ]
     return ins
 
 class Instance:

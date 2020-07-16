@@ -218,7 +218,7 @@ def launch_spot_instances(name, params, models):
             'num' : params['targetCapacity']
         }
     }
-    logging.info("Waiting for spot fleet instances")
+    logging.info(f"Waiting for spot fleet instances {models}")
     pre_aws_accessor.save_cluster(name, pre_info)
 
     instance_id_list = _wait_active(client, request_id, params['targetCapacity'])
@@ -236,12 +236,11 @@ def launch_spot_instances(name, params, models):
             logging.info('Checked SSH connection')
             break
         time.sleep(10)
-
     mdl_source.setup_config(ins, params['region'], params['instanceType'],models) 
     #str(models).strip('[]'))
 
     # make the instances configured
-    time.sleep(3)
+    time.sleep(10)
 
     pre_aws_accessor.del_request(name, request_id)
     info = {

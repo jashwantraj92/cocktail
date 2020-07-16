@@ -9,11 +9,23 @@ myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 
 mydb = myclient["serving"]
 print(mydb.list_collection_names())
-print(list(mydb["instance"].find()))
-print(len(list(mydb["instance"].find())))
-print(list(mydb["instance"].find()))
-print(len(list(mydb["aws"].find())))
+if not sys.argv[1]:
+	print("please enter view or remove")
+	sys.exit()
+option = sys.argv[1]
+collections=["instance","aws","pre_aws","on_demand","spot"]
+if option == "view":
+	print(list(mydb["instance"].find()))
+	print(len(list(mydb["instance"].find())))
+	print(list(mydb["instance"].find()))
+	print(len(list(mydb["aws"].find())))
 
+elif option =="remove":
+	for name in collections:
+		mycol = mydb[name]
+		mycol.delete_many({})
+else:
+	print("please enter view or remove")
 mycol = mydb["job_stats"]
 arrivals = []
 for x in list(mycol.find()):

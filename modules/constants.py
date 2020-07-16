@@ -8,9 +8,9 @@ HANDLE_SIZE = 8
 
 #batch size config
 HANDLE_SIZE_P2 = 8
-HANDLE_SIZE_C5=1
-HANDLE_SIZE_C5X = 2
-HANDLE_SIZE_C52X = 2
+HANDLE_SIZE_C5=4
+HANDLE_SIZE_C5X = 5
+HANDLE_SIZE_C52X = 7
 HANDLE_SIZE_C54X = 2
 
 #proactive scheduler update interval

@@ -93,7 +93,7 @@ class SpotSource(_InstanceSource):
         ins_json = instance_accessor.get_instances(name,model)
         backup_ins = backup_ins_accessor.get_instances(name,model)
         instance_list = []
-        logging.info(f'existing spot instances json is : {ins_json}')
+        logging.info(f'existing spot instances json is : {ins_json} {model}')
         if ins_json:
             instance_list = [ utils.dict2Instance(i) for i in ins_json ]
 
@@ -141,8 +141,8 @@ class SpotSource(_InstanceSource):
         # aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['CPU'], 'instanceType':'c5.xlarge', 'targetCapacity':10, 'key_value':[('exp_round', tag)] })
 
         logging.info('Initiating spot instance launch **********')
-        for model in models:
-            aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['CPU'], 'instanceType':'c5.large', 'targetCapacity':1, 'key_value':[('exp_round', tag)] }, model)
+        #for model in models:
+        aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['CPU'], 'instanceType':'c5.large', 'targetCapacity':len(models), 'key_value':[('exp_round', tag)] }, models)
             #aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['GPU'], 'instanceType':'p2.xlarge', 'targetCapacity':1, 'key_value':[('exp_round', tag)] }, models)
         # aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['CPU'], 'instanceType':'c5.large', 'targetCapacity':8, 'key_value':[('exp_round', tag)] })
         # aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['GPU'], 'instanceType':'p2.xlarge', 'targetCapacity':1, 'key_value':[('exp_round', tag)] })
@@ -152,5 +152,5 @@ all_ins_sources = {
     'spot': SpotSource(),
     'ondemand': OnDemandSource()
 }
-models = ["MobileNetV2", "ResNetV2", "InceptionV2"]
+models = ["MobileNetV2", "ResNet50V2", "InceptionV3"]
 ins_source = all_ins_sources[INS_SOURCE]
