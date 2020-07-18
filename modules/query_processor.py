@@ -47,7 +47,7 @@ class QueryProcessor():
         futures = []
         for i in range(len(models)):
             future = asyncio.Future()
-            logging.info("adding query to queue")
+            logging.info(f"adding query to queue {models[i]}")
             await self.query_queue.put(future, name, time, data, models[i])
             futures.append(future)
         #await future
@@ -76,15 +76,15 @@ class QueryProcessor():
             logging.info(f"waiting for querys {self.query_queue.size()}\n")
             info = await self.query_queue.get()
             name = info[0][1]
-            fu, times, data, model = [i[0] for i in info], [i[2] for i in info], [i[3] for i in info], [i[4] for i in info]
+            fu, times, data, model = [i[0] for i in info], [i[2] for i in info], [i[3] for i in info], info[0][4]
             #constraints = json.dumps({'data':f'{data[0]}'}).strip("\"}").split(",")[1]
             #logging.info(f"constraint is {constraints}")
             #models = await self.get_models(int(constraints))
             #models = await self.get_models(0)
             statements = []
             #for i in range(len(models)):
-            alloc_info = ins_source.get_ins_alloc(name, models, self.balancer)
-            logging.info(f'sending query to VM &&&&&&&&&&&&&: {alloc_info} {fu} {times}')
+            alloc_info = ins_source.get_ins_alloc(name, model, self.balancer)
+            logging.info(f'sending query to VM &&&&&&&&&&&&&: {alloc_info} {fu} {times} {model}')
             if alloc_info:
                 ip, typ = alloc_info[0], alloc_info[1]
                 if typ.startswith('p2'):
@@ -104,7 +104,7 @@ class QueryProcessor():
                     [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
 
                     #data =  data[0] + "," + models[i]
-                logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is {data} {other_info}')
+                logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is {data} {other_info} {model}')
                 #statements.append(self.loop.create_task(self._get_result(fu, name, times, data, ip)))
                 self.loop.create_task(self._get_result(fu, name, times, data, ip))
             else:
@@ -117,20 +117,27 @@ class QueryProcessor():
         predictions = []
         votearray=[]    
         voteclasses= []
+        typ=0
+        times=0
         #results,failed = await asyncio.wait(statements,return_when=asyncio.ALL_COMPLETED)
-        for result in statements:
-            votearray.append(result.result().split()[0])
-            voteclasses.append(result.result().split()[1])
-            predictions.append(result.result())
+        for future in statements:
+            await future
+            result, typ, times = future.result()
+            logging.info(f"Future results is {result} {typ} {times}")
+            #votearray.append(result.result().split()[0])
+            votearray.append(result.split(" ")[0])
+            #voteclasses.append(result.result().split()[1])
+            voteclasses.append(result.split()[1])
+            predictions.append(result)
         maxVoteLabel        =       max(set(votearray), key = votearray.count) 
         maxVoteClass        =       max(set(voteclasses), key = voteclasses.count)
         logging.info(f'**************** gather results are {maxVoteClass}, {maxVoteLabel} ********************')
-        return str(maxVoteLabel)+str(maxVoteLabel), "Tf", "time" 
+        return str(maxVoteLabel) + "," + str(maxVoteClass), int(typ), int(times)
     
     async def _get_result(self, futures, name, times, data, ip):
         results, req_type = await self._serve(name, data, ip)
-        logging.info(f'predicted result is {results}')
-        [ f.set_result((r, typ, utils.gap_time(t))) for f, t, r, typ in zip(futures, times, results, req_type) ]
+        logging.info(f'predicted result is {results} {futures}')
+        [ f.set_result((r, typ, utils.gap_time(t))) for f, t, r, typ in zip(futures, times, [results], req_type) ]
         #return str(results)
 
     async def _serve(self, name, data, ip):
