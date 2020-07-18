@@ -80,7 +80,7 @@ def send_trace_data(args, reader):
             break
         print(row)
         #num = row[1]
-        num = 1
+        num = row[1]
         constraints = row[2]
         Data = data + "," + str(constraints)
         #lam = (60 * 1000.0) / num
@@ -245,7 +245,7 @@ if __name__ == '__main__':
     # send_stress_test_data(args)
     #send_data_nmt(args)
     reader = csv.DictReader('{upper_folder}/workload/2map_interval.csv')
-    send_data(args,reader)
+    send_trace_data(args,reader)
     # with open(f'{upper_folder}/workload/tweet_load.csv', 'r') as f:
     #     reader = csv.DictReader(f)
     #     send_data_nmt(args, reader)

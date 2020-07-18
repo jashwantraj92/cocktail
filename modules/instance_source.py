@@ -142,8 +142,8 @@ class SpotSource(_InstanceSource):
         # aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['CPU'], 'instanceType':'c5.xlarge', 'targetCapacity':10, 'key_value':[('exp_round', tag)] })
 
         logging.info('Initiating spot instance launch **********')
-        for model in models:
-            aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['CPU'], 'instanceType':'c5.xlarge', 'targetCapacity':2, 'key_value':[('exp_round', tag)] }, model)
+        #for model in models:
+        aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['CPU'], 'instanceType':'c5.xlarge', 'targetCapacity':len(models), 'key_value':[('exp_round', tag)] }, models)
             #aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['GPU'], 'instanceType':'p2.xlarge', 'targetCapacity':1, 'key_value':[('exp_round', tag)] }, models)
         # aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['CPU'], 'instanceType':'c5.large', 'targetCapacity':8, 'key_value':[('exp_round', tag)] })
         # aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['GPU'], 'instanceType':'p2.xlarge', 'targetCapacity':1, 'key_value':[('exp_round', tag)] })

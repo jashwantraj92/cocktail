@@ -7,23 +7,27 @@ import pprint
 from bson.son import SON
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 
+
 mydb = myclient["serving"]
 print(mydb.list_collection_names())
-print(list(mydb["instance"].find()))
-print(len(list(mydb["instance"].find())))
-print(list(mydb["instance"].find()))
-print(len(list(mydb["aws"].find())))
+if not sys.argv[1]:
+	print("please enter view or remove")
+	sys.exit()
+option = sys.argv[1]
+collections=["instance","aws","pre_aws","on_demand","spot"]
+if option == "view":
+	print(list(mydb["instance"].find()))
+	print(len(list(mydb["instance"].find())))
+	print(list(mydb["instance"].find()))
+	print(len(list(mydb["aws"].find())))
 
-mycol = mydb["job_stats"]
-arrivals = []
-for x in list(mycol.find()):
-    arrivals.append(x['arrivalTime'])
-#print(arrivals)
-pprint.pprint(list(mycol.aggregate( [{ "$group": {"_id": "$container", "count": { "$sum": 1 } } }, 
-				{"$sort": SON([("count", -1), ("_id", -1)])}
-				])))
-name="asr-slackprediction-01e7e831w881nsq2s9n1s5v7kb"
-print((list(mycol.find({"container": name}))))
+elif option =="remove":
+	for name in collections:
+		mycol = mydb[name]
+		mycol.delete_many({})
+else:
+	print("please enter view or remove")
+
 """
 
 predictor = Predictor(init_load=50,model_path='poisson_model_32.h5' , scaler_path='poisson_scaler.save')
