@@ -38,7 +38,7 @@ class QueryProcessor():
         # self.instances = utils.parse_instances(instance_accessor.get_all_instances())
         # instance_accessor.subscribe(self.update_instances)
         self.session = aiohttp.ClientSession(loop=self.loop)
-        self.loop.create_task(self._manage_queue())
+        asyncio.ensure_future(self._manage_queue())
 
     async def send_query(self, name, time, data):
         models = await self.get_models()
@@ -51,6 +51,7 @@ class QueryProcessor():
             futures.append(future)
         #for future in futures:    
         #    await future
+        logging.info(f"waiting for futures to complete {time}")
         return await self.ensemble_result(futures)
 
     async def get_models(self):
@@ -70,6 +71,7 @@ class QueryProcessor():
         maxVoteClass        =       max(set(voteclasses), key = voteclasses.count)
         logging.info(f'**************** gather results are {maxVoteClass}, {maxVoteLabel} ********************') 
         return str(maxVoteLabel)+str(maxVoteLabel), "Tf", "time" 
+
     async def _manage_queue(self):
         while True:
             """
