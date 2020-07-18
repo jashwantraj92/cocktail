@@ -67,6 +67,30 @@ def send_data(args, reader):
             # sender(data)
             # print(f'Send request after {s} ms')
         time.sleep(num)
+def send_trace_data(args, reader):
+    pool = ThreadPoolExecutor(5000)
+    data = get_data()
+    df = pd.read_csv('/home/cc/ensembling/workload/short_wits_load.csv', delimiter=',')
+# User list comprehension to create a list of lists from Dataframe rows
+    list_of_rows = [list(row) for row in df.values]
+# Print list of lists i.e. rows
+    print(list_of_rows)
+    for row in list_of_rows:
+        if reader.line_num > args.timeout:
+            break
+        print(row)
+        #num = row[1]
+        num = row[1]
+        constraints = row[2]
+        Data = data + "," + str(constraints)
+        #lam = (60 * 1000.0) / num
+        #samples = np.random.poisson(lam, num)
+        #print(f'line: {reader.line_num}; sample_number: {num}')
+        for s in range(num):
+            pool.submit(sender, Data)
+            # sender(data)
+            # print(f'Send request after {s} ms')
+        time.sleep(1)
 
 def get_kr_data():
     test_file = f'{upper_folder}/keras/SageMaker/cat.jpg'
@@ -220,7 +244,7 @@ if __name__ == '__main__':
     # send_stress_test_data(args)
     #send_data_nmt(args)
     reader = csv.DictReader('{upper_folder}/workload/2map_interval.csv')
-    send_data(args,reader)
+    send_trace_data(args,reader)
     # with open(f'{upper_folder}/workload/tweet_load.csv', 'r') as f:
     #     reader = csv.DictReader(f)
     #     send_data_nmt(args, reader)
