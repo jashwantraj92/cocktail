@@ -307,7 +307,7 @@ def cancel_spot_instances(name, request_ids, models):
         if 'SuccessfulFleetRequests' in res:
             logging.info('Successful cancel spot fleet request {}'.format(i))
             aws_accessor.del_request(name, i)
-            instance_accessor.del_instance(name, [ i.__dict__ for i in utils.get_ins_from_ids(region, instance_id_list, models[j])])
+            instance_accessor.del_instance(name, [ i.__dict__ for i in utils.get_ins_from_ids(region, instance_id_list, models)])
         j+=1
 def cancel_all_instances(name, models):
     requests = aws_accessor.get_requests(name)

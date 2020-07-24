@@ -9,10 +9,20 @@ HANDLE_SIZE = 8
 #batch size config
 HANDLE_SIZE_P2 = 8
 HANDLE_SIZE_C5=1
-HANDLE_SIZE_C5X = 6
+HANDLE_SIZE_C5X = 2
 HANDLE_SIZE_C52X = 8
 HANDLE_SIZE_C54X = 12
 
+HANDLE_SIZE_Mobilenet=10
+HANDLE_SIZE_Inception=6
+HANDLE_SIZE_Resnet=5
+HANDLE_SIZE_Densenet121=3
+HANDLE_SIZE_Xception=5
+HANDLE_SIZE_Densenet201=2
+HANDLE_SIZE_vgg16=1
+HANDLE_SIZE_InceptionResnet=2
+HANDLE_SIZE_Nasnetmobile=3
+HANDLE_SIZE_Nasnetlarge=1
 #proactive scheduler update interval
 UPDATER_INTERVAL = 600
 
@@ -69,8 +79,8 @@ MODEL = 'tf'
 
 # AMIs for each model
 AMIS_TF = {
-    'us-east-1': {'CPU': 'ami-0d97a358db413f1e8', 'GPU': 'ami-0edeb7664ef2967e7'},
-    'eu-west-3': {'CPU': 'ami-0d97a358db413f1e8', 'GPU': 'ami-0edeb7664ef2967e7'}
+    'us-east-1': {'CPU': 'ami-0280f69dc3e816c70', 'GPU': 'ami-0edeb7664ef2967e7'},
+    'eu-west-3': {'CPU': 'ami-0280f69dc3e816c70', 'GPU': 'ami-0edeb7664ef2967e7'}
 }
 AMIS_KR = {
     'us-east-1': {'CPU': 'ami-xxx', 'GPU': 'ami-xxx'}
@@ -133,7 +143,8 @@ CREDENTIALS = {
     'aws_access_key_id' : access_key,
     'aws_secret_access_key' : secret_key
 }
-models=["MobileNetV2", "InceptionResNetV2", "InceptionV3", "NASNetLarge"]
+#models=['NASNetLarge','InceptionResNetV2', 'Xception', 'InceptionV3', 'DenseNet201', 'ResNet50V2', 'DenseNet121', 'ResNet50', 'NASNetMobile', 'MobileNetV2', 'VGG16', 'MobileNet']
+models=['InceptionResNetV2', 'InceptionV3', 'MobileNetV2', 'MobileNet']
 accuracy = [.75,.75,.71,.74]
 latency = [200,100,55,75]
 # model deploy cmd

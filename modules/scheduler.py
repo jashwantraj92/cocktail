@@ -51,7 +51,7 @@ class Scheduler():
         logging.info(f': Launch {count} {instance_type} instances for model: {model_name}')
         ami = AMIS[DEFAULT_REGION]['GPU'] if instance_type.startswith('p2') else AMIS[DEFAULT_REGION]['CPU']
         params = {'imageId':ami, 'instanceType':instance_type, 'targetCapacity': count, 'key_value':[('exp_round', Tag)] }
-        ins_source.launch_ins(model_name, params,instance_soure.models)
+        ins_source.launch_ins(model_name, params,instance_source.models)
         Scheduler.cool_down = 5
             
     async def schedule(self):
@@ -91,7 +91,7 @@ class Scheduler():
                     max_count_window = 0
                     self.warm_up_num[name] -= 1
                     continue
-                for model in instance_source.models:
+                for model in models:
                     logging.info(f': Updating prize_list')
                     currentInstance, prize_list = ins_source.get_current_ins_and_prize(name, IndexType, model)
                     logging.info(f': currentInstance {currentInstance} prize_list {prize_list}')
@@ -136,8 +136,8 @@ class Scheduler():
                         logging.info(f'Launch {launch[i]} {IndexType[i]} instances for model: {name}')
                         ami = AMIS[DEFAULT_REGION]['GPU'] if IndexType[i].startswith('p2') else AMIS[DEFAULT_REGION]['CPU']
                         params = {'imageId':ami, 'instanceType':IndexType[i], 'targetCapacity': launch[i], 'key_value':[('exp_round', Tag)] }
-                        for model in instance_source.models:
-                            ins_source.launch_ins(name, params,model)
+                        #for model in instance_source.models:
+                        ins_source.launch_ins(name, params,model)
                         cost += instanceInfo[i][2] * launch[i]
 
                 for i in range(len(des)):

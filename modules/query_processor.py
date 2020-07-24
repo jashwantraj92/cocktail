@@ -7,7 +7,7 @@ from collections import deque
 
 import requests
 
-import aiohttp
+import aiohttp,time
 import tensorflow as tf
 
 from . import aws_manager, utils, naiveSchedule
@@ -40,32 +40,34 @@ class QueryProcessor():
         self.session = aiohttp.ClientSession(loop=self.loop)
         asyncio.ensure_future(self._manage_queue())
          
-    async def send_query(self, name, time, data):
+    async def send_query(self, name, time, data, constraints):
 
-        models = await self.get_models("")
+        #constraints = data.split(",")[1]
+        #logging.info(f"constraint is {constraints}")
+        models = await self.get_models(int(constraints))
         #models = models.split()
         futures = []
         for i in range(len(models)):
             future = asyncio.Future()
-            logging.info(f"adding query to queue {models[i]}")
+            logging.info(f"adding query to queue {models[i]} {time}")
             await self.query_queue.put(future, name, time, data, models[i])
             futures.append(future)
         #await future
-        return await self.ensemble_result(futures)
+        return await self.ensemble_result(futures, models)
         #return future.result()
     
     async def get_requirements(self,constraint):
-        logging.info(f'accuracy[constraint],latency[constraint]')
+        logging.info(f'constraint are{accuracy[constraint],latency[constraint]}')
         return float(accuracy[constraint]),latency[constraint]
     
     async def get_models(self, constraints):
         global inst_list, current_latency, current_cost
         print('main invoked') 
-        """accuracy,latency = await self.get_requirements(constraints)
-        models = naiveSchedule.select_models(latency,accuracy)
+        accuracy,latency = await self.get_requirements(constraints)
+        models = naiveSchedule.select_models(latency,accuracy,2)
         logging.info(f"selected models are {models}")
-        return models"""
-        return ["MobileNetV2","InceptionV3"]
+        return models
+        #return ["MobileNetV2","InceptionV3"]
       
     async def _manage_queue(self):
         while True:
@@ -87,33 +89,54 @@ class QueryProcessor():
             logging.info(f'sending query to VM &&&&&&&&&&&&&: {alloc_info} {fu} {times} {model}')
             if alloc_info:
                 ip, typ = alloc_info[0], alloc_info[1]
-                if typ.startswith('p2'):
-                    other_info = await self.query_queue.get(HANDLE_SIZE_P2 - 1)
-                    [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
-                elif typ.startswith('c5.x'):
-                    other_info = await self.query_queue.get(HANDLE_SIZE_C5X - 1)
-                    [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
-                elif typ.startswith('c5.2x'):
-                    other_info = await self.query_queue.get(HANDLE_SIZE_C52X - 1)
-                    [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
-                elif typ.startswith('c5.4x'):
-                    other_info = await self.query_queue.get(HANDLE_SIZE_C54X - 1)
-                    [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
-                elif typ.startswith('c5.'):
-                    other_info = await self.query_queue.get(HANDLE_SIZE_C5 - 1)
-                    [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
+                if self.query_queue.size() > 1:
+                    if typ.startswith('p2'):
+                        handle_size = HANDLE_SIZE_P2
+                    elif typ.startswith('c5.x'):
+                        handle_size = HANDLE_SIZE_C5X
+                    elif typ.startswith('c5.2x'):
+                        handle_size = HANDLE_SIZE_C52X
+                    elif typ.startswith('c5.4x'):
+                        handle_size = HANDLE_SIZE_C54X
+                    elif typ.startswith('c5.'):
+                        handle_size = HANDLE_SIZE_C5
+
+                    if model.startswith('Mobil'):
+                        other_info = await self.query_queue.get(handle_size * HANDLE_SIZE_Mobilenet - 1)
+                        [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
+                        logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is  {model}, {handle_size} {self.query_queue.size()}')
+                    elif model.startswith('InceptionRe'):
+                        other_info = await self.query_queue.get(handle_size * HANDLE_SIZE_InceptionResnet - 1)
+                        [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
+                        logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is {model}, {handle_size} {self.query_queue.size()}')
+                    elif model.startswith('Inception'):
+                        other_info = await self.query_queue.get(handle_size * HANDLE_SIZE_Inception - 1)
+                        [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
+                        logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is {model}, {handle_size} {self.query_queue.size()}')
+                    elif model.startswith('Resn'):
+                        other_info = await self.query_queue.get(handle_size * HANDLE_SIZE_Resnet - 1)
+                        [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
+                        logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is {model}, {handle_size} {self.query_queue.size()}')
+                    elif model.startswith('Xcepti'):
+                        other_info = await self.query_queue.get(handle_size * HANDLE_SIZE_Xception - 1)
+                        [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
+                        logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is {model}, {handle_size} {self.query_queue.size()}')
+                    elif model.startswith('NASNetMo'):
+                        other_info = await self.query_queue.get(handle_size * HANDLE_SIZE_Nasnetmobile - 1)
+                        [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
+                        logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is  {model}, {handle_size} {self.query_queue.size()}')
 
                     #data =  data[0] + "," + models[i]
-                logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is {data} {other_info} {model}')
                 #statements.append(self.loop.create_task(self._get_result(fu, name, times, data, ip)))
-                self.loop.create_task(self._get_result(fu, name, times, data, ip))
+                for f in fu:
+                    self.loop.create_task(self._get_result(f, name, times, data, ip))
             else:
                 [ f.set_result(('No resources available', -1, utils.gap_time(t))) for f, t in zip(fu, times) ]
             #logging.info(f'**************** waiting for results ********************') 
             #self.loop.create_task(self.ensemble_result(statements))
 
   
-    async def ensemble_result(self, statements): 
+    async def ensemble_result(self, statements, models): 
         predictions = []
         votearray=[]    
         voteclasses= []
@@ -123,7 +146,7 @@ class QueryProcessor():
         for future in statements:
             await future
             result, typ, times = future.result()
-            logging.info(f"Future results is {result} {typ} {times}")
+            logging.info(f"Future results is {result} {result.split()[0]} {typ} {times}")
             #votearray.append(result.result().split()[0])
             votearray.append(result.split(" ")[0])
             #voteclasses.append(result.result().split()[1])
@@ -132,7 +155,7 @@ class QueryProcessor():
         maxVoteLabel        =       max(set(votearray), key = votearray.count) 
         maxVoteClass        =       max(set(voteclasses), key = voteclasses.count)
         logging.info(f'**************** gather results are {maxVoteClass}, {maxVoteLabel} ********************')
-        return str(maxVoteLabel) + "," + str(maxVoteClass), int(typ), int(times)
+        return str(maxVoteLabel) + "," + str(maxVoteClass), int(typ), times, models
     
     async def _get_result(self, futures, name, times, data, ip):
         results, req_type = await self._serve(name, data, ip)
@@ -146,9 +169,14 @@ class QueryProcessor():
         req_type = [REQ_GPU for _ in data] if is_gpu else [REQ_CPU for _ in data]
         req = mdl_source.get_request(data, ip)
 
-        logging.info(f'Send request to ip: {ip}; batch_size:{len(data)}; req {req}')
-        data = json.dumps({'data':f'{data[0]}'})
+        logging.info(f'Send request to ip: {ip}; batch_size:{len(data)};')
+        #data = data[0].split(",")[0]
+        data = json.dumps({'data':data[0]})
+        
+        logging.info(f'data is {data} {len(data)}')
         #resp = await self.session.post(mdl_source.get_request(data, ip))
+        #cmd= "python3.6 python-grpc-async-server-example/client.py 1 1 50055 0"
+        #utils.check_command(utils.get_session(ip), cmd, debug=True)
         resp = await self.session.post(f'http://{ip}:8000/predict', data=data, headers={"Content-type": "application/json"})
         logging.info(f'the posted response is : {resp}')
         if resp.status == 200:

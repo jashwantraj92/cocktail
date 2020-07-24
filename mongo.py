@@ -25,6 +25,16 @@ elif option =="remove":
 	for name in collections:
 		mycol = mydb[name]
 		mycol.delete_many({})
+elif option == "ips":
+	records = list(mydb["instance"].find())
+	ips = []
+	IPS = ""
+	for i in range(len(records[0]['instances'])): 
+		print(records[0]['instances'][i]['ip'])
+		IPS= IPS + " " + (records[0]['instances'][i]['ip'].strip("'"))
+	#allips = [IPS + " " + i.strip("'") for i in ips]
+	print(IPS)
+        
 else:
 	print("please enter view or remove")
 

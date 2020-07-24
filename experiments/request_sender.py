@@ -8,8 +8,8 @@ from os.path import abspath, dirname, join
 from base64 import b64encode, b64decode
 import pandas as pd
 import requests
-import base64
-
+import base64,os, random
+from PIL import Image
 import numpy as np
 
 upper_folder = "/home/cc/ensembling"
@@ -32,9 +32,15 @@ def get_args():
     parser.add_argument('--burst', type=float, default=0.5)
     return parser.parse_args()
 
-def get_data():
-    with open(f'{upper_folder}/resources/test.jpg', 'rb') as f:
+images = []
+for filename in os.listdir('/home/cc/ensembling/CYAN/val'):
+        images.append(filename)
 
+def get_data():
+        global images 
+        filename = str(random.choice(images))
+        file = "/home/cc/ensembling/CYAN/val/" + str(filename)
+        image = Image.open(file)
         IMAGE_URL = 'http://farm4.static.flickr.com/3088/2573194878_7be4b14d7f.jpg'
         dl_request = requests.get(IMAGE_URL, stream=True)
         dl_request.raise_for_status()
@@ -45,7 +51,9 @@ def get_data():
         #base64_string = base64_bytes.decode('utf-8')
         #return base64_string
         #return predict_request
-        return IMAGE_URL
+        print(filename, image)
+        #return IMAGE_URL
+        return np.array(image).tolist()
 def send_data(args, reader):
     pool = ThreadPoolExecutor(5000)
     data = get_data()
@@ -63,13 +71,12 @@ def send_data(args, reader):
         #samples = np.random.poisson(lam, num)
         #print(f'line: {reader.line_num}; sample_number: {num}')
         #for s in samples:
-        pool.submit(sender, data)
+        pool.submit(sender, data, 0)
             # sender(data)
             # print(f'Send request after {s} ms')
         time.sleep(num)
 def send_trace_data(args, reader):
     pool = ThreadPoolExecutor(5000)
-    data = get_data()
     df = pd.read_csv('/home/cc/ensembling/workload/short_wits_load.csv', delimiter=',')
 # User list comprehension to create a list of lists from Dataframe rows
     list_of_rows = [list(row) for row in df.values]
@@ -79,15 +86,18 @@ def send_trace_data(args, reader):
         if reader.line_num > args.timeout:
             break
         print(row)
-        #num = row[1]
+        #num = 1
         num = row[1]
         constraints = row[2]
-        Data = data + "," + str(constraints)
+        #Data = data + "," + str(constraints)
         #lam = (60 * 1000.0) / num
         #samples = np.random.poisson(lam, num)
         #print(f'line: {reader.line_num}; sample_number: {num}')
         for s in range(num):
-            pool.submit(sender, Data)
+            data = get_data()
+            #data = np.append(data,[constraints])
+            pool.submit(sender, data)
+            print("request submitted", constraints)
             # sender(data)
             # print(f'Send request after {s} ms')
         time.sleep(1)

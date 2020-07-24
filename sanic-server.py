@@ -11,7 +11,7 @@ from collections import defaultdict
 import threading
 import tensorflow as tf
 import numpy as np
-
+from PIL import Image
 #tf.enable_eager_execution()
 from sanic import Sanic
 from sanic.response import json
@@ -54,16 +54,28 @@ def init(sanic, loop):
  
 async def test(request):
     global threads,pretrained_models,maxVoteLabel,maxVoteClass
+
     if request.method == 'POST':
         receive_time = time.time()
         print(f'Received request',receive_time)
-        question = request.json['data'].split(',')
-        data = question[0]
+        question = request.json['data']
+        data = question
+        img = data
+        #print(img,"***")
 	#data = request.json['data']
-        file = tf.keras.utils.get_file(
-            str(receive_time)+".jpg",data)
-        img = tf.keras.preprocessing.image.load_img(file, target_size=[224, 224])
-        x = tf.keras.preprocessing.image.img_to_array(img)
+        #file = tf.keras.utils.get_file(
+        #    str(receive_time)+".jpg",data)
+        
+        #img = data.decode('base64')
+        image='/home/cc/ensembling/sample.jpg'
+        #with open(image, 'w') as another_open_file:
+        #    another_open_file.write(img)
+        #another_open_file.close()
+        #print("imge is " ,image)
+        #print("****************************************")
+        new_image = Image.fromarray(np.array(img, dtype='uint8'))
+        #img = tf.keras.preprocessing.image.load_img(image, target_size=[224, 224])
+        x = tf.keras.preprocessing.image.img_to_array(new_image)
         x = tf.keras.applications.mobilenet.preprocess_input(np.array(img)[tf.newaxis,...])
         #model = int(question[1])
         for i in range(len(pretrained_models)):
@@ -73,7 +85,7 @@ async def test(request):
         for thread in threads:
             thread.join()
         end_time = time.time()
-        print(pretrained_models,data,threads)
+        print(pretrained_models,threads)
         threads.clear() 
 
         print("query respone time ",end_time, maxVoteLabel, maxVoteClass)

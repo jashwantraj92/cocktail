@@ -88,6 +88,7 @@ def get_session(ip):
 
 def check_command(ssh_client, command, debug=False):
     _, stdout, stderr = ssh_client.exec_command(command)
+    logging.info(f'standard out is {stdout.read()}')
     stdout.channel.set_combine_stderr(True)
     is_success = stdout.channel.recv_exit_status() == 0
     if debug or (not is_success):
