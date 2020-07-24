@@ -42,7 +42,7 @@ class _ModelSource():
         return 'https://example'
 
     def collect_result(self, res):
-        return str(res['image']) + " " + str(res['class'])
+        return str(res['image']) + " " + str(res['class']) + " " + str(res['time'])
 
 class MXNetSource(_ModelSource):
     def get_request(self, data, ip):

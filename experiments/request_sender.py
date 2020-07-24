@@ -14,12 +14,13 @@ import numpy as np
 
 upper_folder = "/home/cc/ensembling"
 
-sender = lambda data: requests.post(
+sender = lambda data, constraint: requests.post(
     f'http://{args.host}:{args.port}/predict/{args.name}',
     headers={"Content-type": "application/json"},
     data=json.dumps({ 
         'type':'image',
-        'data': data
+        'data': data ,
+        'constraint': constraint
     })
 )
 
@@ -51,7 +52,7 @@ def get_data():
         #base64_string = base64_bytes.decode('utf-8')
         #return base64_string
         #return predict_request
-        print(filename, image)
+        #print(filename, image)
         #return IMAGE_URL
         return np.array(image).tolist()
 def send_data(args, reader):
@@ -96,7 +97,7 @@ def send_trace_data(args, reader):
         for s in range(num):
             data = get_data()
             #data = np.append(data,[constraints])
-            pool.submit(sender, data)
+            pool.submit(sender, data, int(constraints))
             print("request submitted", constraints)
             # sender(data)
             # print(f'Send request after {s} ms')

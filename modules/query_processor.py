@@ -4,7 +4,7 @@ import logging
 import threading
 import time
 from collections import deque
-
+import numpy as np
 import requests
 
 import aiohttp,time
@@ -141,11 +141,13 @@ class QueryProcessor():
         votearray=[]    
         voteclasses= []
         typ=0
+        all_times=[]
         times=0
         #results,failed = await asyncio.wait(statements,return_when=asyncio.ALL_COMPLETED)
         for future in statements:
             await future
             result, typ, times = future.result()
+            all_times.append(times)
             logging.info(f"Future results is {result} {result.split()[0]} {typ} {times}")
             #votearray.append(result.result().split()[0])
             votearray.append(result.split(" ")[0])
@@ -154,13 +156,14 @@ class QueryProcessor():
             predictions.append(result)
         maxVoteLabel        =       max(set(votearray), key = votearray.count) 
         maxVoteClass        =       max(set(voteclasses), key = voteclasses.count)
-        logging.info(f'**************** gather results are {maxVoteClass}, {maxVoteLabel} ********************')
-        return str(maxVoteLabel) + "," + str(maxVoteClass), int(typ), times, models
+        logging.info(f'**************** gather results are {maxVoteClass}, {maxVoteLabel} {all_times}********************')
+        return str(maxVoteLabel) + "," + str(maxVoteClass), int(typ), np.mean(np.array(all_times)), models
     
     async def _get_result(self, futures, name, times, data, ip):
         results, req_type = await self._serve(name, data, ip)
         logging.info(f'predicted result is {results} {futures}')
-        [ f.set_result((r, typ, utils.gap_time(t))) for f, t, r, typ in zip(futures, times, [results], req_type) ]
+        process_time =  float(results.split()[2])*1000
+        [ f.set_result((r, typ, process_time)) for f, t, r, typ in zip(futures, times, [results], req_type) ]
         #return str(results)
 
     async def _serve(self, name, data, ip):
@@ -173,7 +176,7 @@ class QueryProcessor():
         #data = data[0].split(",")[0]
         data = json.dumps({'data':data[0]})
         
-        logging.info(f'data is {data} {len(data)}')
+        logging.info(f'data is {len(data)}')
         #resp = await self.session.post(mdl_source.get_request(data, ip))
         #cmd= "python3.6 python-grpc-async-server-example/client.py 1 1 50055 0"
         #utils.check_command(utils.get_session(ip), cmd, debug=True)

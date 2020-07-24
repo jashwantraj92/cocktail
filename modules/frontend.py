@@ -35,8 +35,8 @@ async def predict(request, model_name):
         # use a general decoder to handle different types
         # data =  utils.decode_image(request.json['data']) if typ == 'image' else request.json['data']
         data = request.json['data']
-        #constraint = data[1]
-        constraint = 0
+        constraint = request.json['constraint']
+        #constraint = 0
         #logging.info("data is ",data)
         print("data is ",len(data))
         sch.record_request(model_name)

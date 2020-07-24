@@ -79,8 +79,8 @@ MODEL = 'tf'
 
 # AMIs for each model
 AMIS_TF = {
-    'us-east-1': {'CPU': 'ami-0280f69dc3e816c70', 'GPU': 'ami-0edeb7664ef2967e7'},
-    'eu-west-3': {'CPU': 'ami-0280f69dc3e816c70', 'GPU': 'ami-0edeb7664ef2967e7'}
+    'us-east-1': {'CPU': 'ami-0c99b9341549188d8', 'GPU': 'ami-0edeb7664ef2967e7'},
+    'eu-west-3': {'CPU': 'ami-0c99b9341549188d8', 'GPU': 'ami-0edeb7664ef2967e7'}
 }
 AMIS_KR = {
     'us-east-1': {'CPU': 'ami-xxx', 'GPU': 'ami-xxx'}

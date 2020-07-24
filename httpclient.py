@@ -28,7 +28,7 @@ async def main():
     images=[]
     for filename in os.listdir('/home/cc/ensembling/CYAN/val'):
         images.append(filename)
-    for i in range(10):
+    for i in range(int(sys.argv[3])):
         filename = str(random.choice(images))
         file = "/home/cc/ensembling/CYAN/val/" + str(filename)
         receive_time = time.time()
@@ -48,13 +48,14 @@ async def main():
         ip = "ec2-35-174-5-243.compute-1.amazonaws.com"
         #data = json.dumps({'data':"https://tensorflow.org/images/blogs/serving/cat.jpg"})
         data = json.dumps({'data':np.array(image).tolist()})
-        print(data)
+        #print(data)
         async with aiohttp.ClientSession() as session:
-             resp = await session.post(url=f'http://{host}:8000/predict', data=data, headers={"Content-type": "application/json"})
+             start_time = time.time()
+             resp = await session.post(url=f'http://{host}:{port}/predict', data=data, headers={"Content-type": "application/json"})
              print(f'the posted response is : {resp}')
              if resp.status == 200:
                  r = await resp.json()
-             print("response is ",filename, r, "end time is ", time.time() - receive_time)
+             print("response is ",filename, r, "end time is ", time.time() - receive_time, time.time()-start_time, start_time)
     """requests.post(f'http://{host}:{port}/predict/',
 	      headers={"Content-type": "application/json"},
                data=json.dumps({	

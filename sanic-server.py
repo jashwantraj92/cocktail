@@ -89,7 +89,7 @@ async def test(request):
         threads.clear() 
 
         print("query respone time ",end_time, maxVoteLabel, maxVoteClass)
-        return json({'image': maxVoteLabel, 'class': maxVoteClass})
+        return json({'image': maxVoteLabel, 'class': maxVoteClass, 'time': end_time - receive_time})
 
 def predict(model,x):
     votearray=[]
