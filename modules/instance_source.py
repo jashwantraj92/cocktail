@@ -103,9 +103,9 @@ class SpotSource(_InstanceSource):
         
         return balancer.next_ip(name, instance_list)
 
-    def get_current_ins_and_prize(self, name, index_type, model):
+    def get_current_ins_and_prize(self, name, index_type):
         # filter the instances by type and region(Default region: us-east-1)
-        instance_list = [ utils.dict2Instance(i) for i in instance_accessor.get_instances(name, model) ]
+        instance_list = [ utils.dict2Instance(i) for i in instance_accessor.get_instances(name, "model", 1) ]
         currentInstance = []
         [ currentInstance.append(len([ i for i in instance_list if i.typ == typ and i.region == DEFAULT_REGION])) for typ in index_type ]
 
@@ -121,8 +121,8 @@ class SpotSource(_InstanceSource):
     def launch_ins(self, name, params,models):
         aws_manager.launch_spot_instances.delay(name, params,models)
 
-    def kill_ins(self, name, region, typ, num):
-        aws_manager.kill_spot_instances_by_num.delay(name, region, typ, num)
+    def kill_ins(self, name, region, typ, num, models):
+        aws_manager.kill_spot_instances_by_num.delay(name, region, typ, num, models)
 
     def kill_all_ins(self, name):
         aws_manager.cancel_all_instances(name, models)

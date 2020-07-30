@@ -7,7 +7,7 @@ from pandas import read_csv
 from pandas import datetime
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
-#from sklearn.utils import joblib
+#from sklearn.externals import joblib
 import joblib
 from keras.models import Sequential
 from keras.layers import Dense
@@ -16,7 +16,7 @@ from math import sqrt
 from numpy import array
 
 import numpy as np
-import keras as ks
+import tensorflow.keras as ks
 import pandas as pd
 
 class Predictor:
@@ -24,7 +24,7 @@ class Predictor:
     Just init this class and use predict function to predict
     """
 
-    def __init__(self, init_load, model_path='/home/cc/MArk-Project/resources/my_model.h5', scaler_path='/home/cc/MArk-Project/resources/my_scaler.save', n_out=50):
+    def __init__(self, init_load, model_path='/home/cc/ensembling/workload/prediction/my_model.h5', scaler_path='/home/cc/ensembling/workload/prediction/my_scaler.save', n_out=50):
         self.last_step = init_load
         self.model = ks.models.load_model(model_path)
         self.scaler = joblib.load(scaler_path) 
@@ -54,6 +54,7 @@ class Predictor:
         return inv_diff
 
     def predict(self, current_load):
+        print("load is ",current_load)
         X = [[(current_load - self.last_step)]]
         self.last_step = current_load
         X=np.asarray(X)

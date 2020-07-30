@@ -7,12 +7,14 @@ from collections import deque
 import numpy as np
 import requests
 
-import aiohttp,time
+import aiohttp
+import time
 import tensorflow as tf
 
 from . import aws_manager, utils, naiveSchedule
 from .model_source import mdl_source
 from .load_balancer import get_balancer
+from .load_balancer import get_model_tracker
 from .data_accessor import instance_accessor, demand_aws_accessor
 from .constants import *
 from .instance_source import ins_source
@@ -39,8 +41,10 @@ class QueryProcessor():
         # instance_accessor.subscribe(self.update_instances)
         self.session = aiohttp.ClientSession(loop=self.loop)
         asyncio.ensure_future(self._manage_queue())
-         
-    async def send_query(self, name, time, data, constraints):
+        self.model_tracker = get_model_tracker()
+
+            
+    async def send_query(self, name, times, data, constraints):
 
         #constraints = data.split(",")[1]
         #logging.info(f"constraint is {constraints}")
@@ -49,9 +53,10 @@ class QueryProcessor():
         futures = []
         for i in range(len(models)):
             future = asyncio.Future()
-            logging.info(f"adding query to queue {models[i]} {time}")
-            await self.query_queue.put(future, name, time, data, models[i])
+            logging.info(f"adding query to queue {models[i]} {times}" )
+            await self.query_queue.put(future, name, times, data, models[i])
             futures.append(future)
+            self.model_tracker[models[i]].append([time.time(),1])
         #await future
         return await self.ensemble_result(futures, models)
         #return future.result()

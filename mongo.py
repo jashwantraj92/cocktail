@@ -16,7 +16,8 @@ if not sys.argv[1]:
 option = sys.argv[1]
 collections=["instance","aws","pre_aws","on_demand","spot"]
 if option == "view":
-	print(list(mydb["instance"].find()))
+	instances = list(mydb["instance"].find())
+	print(instances, len(instances[0]['instances']))
 	print(len(list(mydb["instance"].find())))
 	print(list(mydb["instance"].find()))
 	print(len(list(mydb["aws"].find())))

@@ -268,7 +268,7 @@ def _check_ssh(ip):
         return True
 
 @app.task
-def kill_spot_instances_by_num(name, region, typ, num):
+def kill_spot_instances_by_num(name, region, typ, num, models):
     info = aws_accessor.get_cluster(name)['info']
 
     req_ins_num = []
@@ -288,7 +288,7 @@ def kill_spot_instances_by_num(name, region, typ, num):
     logging.info(f'Kill {total_size} {typ} instances')
             
     if len(cancel_req_ids) > 0:
-        cancel_spot_instances(name, cancel_req_ids)
+        cancel_spot_instances(name, cancel_req_ids, models)
 
 def cancel_spot_instances(name, request_ids, models):
     info = aws_accessor.get_cluster(name)['info']

@@ -1,5 +1,28 @@
 from . import utils
 from .constants import *
+import time
+import collections
+
+"""
+class ModelLoad():
+    def __init__(self)
+        self.requests = []
+    def add_request(self, num):
+        pass
+
+    def get_request(self)
+        pass
+
+
+    def add_request(self, num):
+        self.requests.append([time.time(),num])
+    def get_request(self)
+        return len(self.requests) 
+"""
+
+model_trackers = collections.defaultdict(list)
+#for model in models:
+#    model_trackers[model].append(0)
 
 class _Balancer():
     def __init__(self):
@@ -55,7 +78,10 @@ _balancers = {
     'round' : round_balancer,
     'weight' : weight_balancer
 }
+def get_model_tracker():
+    return model_trackers
 
+    
 def get_balancer(name=DEFAULT_BALANCER):
     return _balancers[name]
 

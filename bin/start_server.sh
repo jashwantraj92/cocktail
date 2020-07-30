@@ -105,7 +105,7 @@ stopback() {
 
 destroy() {
     start_mongodb
-    python3.6 main.py --signal=2 &
+    python3.6 main.py --signal=2 
 }
 
 send_request() {

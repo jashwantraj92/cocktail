@@ -76,14 +76,17 @@ class InstanceAccessor(_BaseAccessor):
         self.collection.update({'name' : name}, doc, upsert=True)
         logging.info(f'updateinstance {instance_list} {self.collection}')
 
-    def get_instances(self, name, model):
+    def get_instances(self, name, model, models=0):
         record = self.collection.find_one({'name' : name})
         instances = []
         if record:
             logging.info(f"instnaces are {record['instances']}")
             for ins in record['instances']:
-                if ins['model'] == model:
-                    instances.append(ins)
+                if models==0:
+                    if ins['model'] == model:
+                        instances.append(ins)
+                else:
+                    instances.append(ins) 
             return instances
     def get_all_instances(self):
         return self.collection.find({})

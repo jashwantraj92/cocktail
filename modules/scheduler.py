@@ -13,6 +13,8 @@ from .data_accessor import (demand_aws_accessor, instance_accessor,
                             pre_aws_accessor, pre_demand_aws_accessor)
 from .instance_source import ins_source
 from . import instance_source
+from .load_balancer import get_model_tracker
+import random,math
 logging.basicConfig(format = '%(asctime)s %(message)s',
                     datefmt = '%m/%d/%Y %I:%M:%S %p',
                     filename = 'scheduler_test.log',
@@ -30,14 +32,24 @@ class Scheduler():
         self.loop = loop_
         logging.info('starting scheduler')
         self.predictor = load_predictor.Predictor(init_load=2964, 
-            model_path=utils.upper_folder +'/resources/my_model_32.h5',
-            scaler_path=utils.upper_folder +'/resources/my_scaler.save')
+            model_path='/home/cc/ensembling/resources/my_model_32.h5',
+            scaler_path='/home/cc/ensembling/resources/my_scaler.save')
         self.warm_up_num = {}
         self.count = {}
         self.res_list = []
         self.loop.create_task(self.schedule())
+        self.model_tracker = get_model_tracker()
         logging.info('started scheduler')
-
+    def calculate_weights(self, model_tracker):
+        weights = []
+        Max = 0
+        for model in models:
+            logging.info(f'length s {len(model_tracker[model])} {Max}')
+            if len(model_tracker[model]) > Max:
+                Max = len(model_tracker[model])
+        for model in models:
+            weights.append(float(len(model_tracker[model])/ Max))      
+        return weights
     def record_request(self, model_name):
         self.count[model_name] = (self.count[model_name] + 1) if model_name in self.count else 1
         if model_name not in self.warm_up_num:
@@ -91,23 +103,22 @@ class Scheduler():
                     max_count_window = 0
                     self.warm_up_num[name] -= 1
                     continue
-                for model in models:
-                    logging.info(f': Updating prize_list')
-                    currentInstance, prize_list = ins_source.get_current_ins_and_prize(name, IndexType, model)
-                    logging.info(f': currentInstance {currentInstance} prize_list {prize_list}')
-                    if prize_list is None:
-                        logging.info(f'Prize uavailable for {IndexType}')
-                        self.count[name] = 0
-                        max_count_window = 0
-                        continue
+                logging.info(f': Updating prize_list')
+                currentInstance, prize_list = ins_source.get_current_ins_and_prize(name, IndexType)
+                logging.info(f': currentInstance {currentInstance} prize_list {prize_list}')
+                if prize_list is None:
+                    logging.info(f'Prize uavailable for {IndexType}')
+                    self.count[name] = 0
+                    max_count_window = 0
+                    continue
                 instanceInfo = []
-                logging.info(f': Updated prize_list')
+                logging.info(f' Updated prize_list')
                 for i in range(len(IndexType)):
                     instanceInfo.append([Capacity[i], prize_list[i], prize_list[i] * 180])
 
                 # forecasts = self.predictor.predict(max_count_window * Times)
 
-                logging.info(f': Updated forecasts')
+                logging.info(f': Updated forecasts {currentInstance}{instanceInfo}')
 
                 if max_count < max_count_window:
                     max_count = max_count_window
@@ -130,20 +141,25 @@ class Scheduler():
                 cost = 0
                 for i in range(len(currentInstance)):
                     cost += instanceInfo[i][1] * 60 * currentInstance[i]
-
+                weights = self.calculate_weights(self.model_tracker)
+                logging.info(f'weoghts are {weights}')
                 for i in range(len(launch)):
                     if launch[i] > 0:
                         logging.info(f'Launch {launch[i]} {IndexType[i]} instances for model: {name}')
                         ami = AMIS[DEFAULT_REGION]['GPU'] if IndexType[i].startswith('p2') else AMIS[DEFAULT_REGION]['CPU']
-                        params = {'imageId':ami, 'instanceType':IndexType[i], 'targetCapacity': launch[i], 'key_value':[('exp_round', Tag)] }
-                        #for model in instance_source.models:
-                        ins_source.launch_ins(name, params,model)
-                        cost += instanceInfo[i][2] * launch[i]
+                        for j in range(len(models)):
+                            model = models[j]
+                            logging.info(f'Launch {launch[i]} for model: {model} numinstances {math.ceil(launch[i]*weights[j])}')
+                            params = {'imageId':ami, 'instanceType':IndexType[i], 'targetCapacity': math.ceil(launch[i]*weights[j]), 'key_value':[('exp_round', Tag)] }
+                            model = random.choice(models)
+                            ins_source.launch_ins(name, params,[model])
+                            cost += instanceInfo[i][2] * launch[i]
 
                 for i in range(len(des)):
                     if des[i] > 0:
-                        logging.info(f'Kill {des[i]} {IndexType[i]} instances for model: {name}')
-                        ins_source.kill_ins(name, DEFAULT_REGION, IndexType[i], des[i])
+                        model = random.choice(models)
+                        logging.info(f'Kill {des[i]} {IndexType[i]} instances for model: {name} {model}')
+                        ins_source.kill_ins(name, DEFAULT_REGION, IndexType[i], des[i], model)
 
                 total_cost += cost
                 logging.info(f'count: {self.count[name]}; cost: {cost}; total_cost: {total_cost}')
