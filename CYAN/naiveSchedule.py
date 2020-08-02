@@ -102,7 +102,7 @@ ResNet50V2			=	pdf_fun(74.90,0);
 DenseNet201			=	pdf_fun(76.00,0);
 DenseNet121			=	pdf_fun(77.30,0);
 Xception			=	pdf_fun(75.00,0);
-NasNetMoile			=	pdf_fun(79.00,0);
+NASNetMobile			=	pdf_fun(79.00,0);
 NASNetLarge			=	pdf_fun(82.00,0);
 InceptionResnetV2		=	pdf_fun(80.30,0);
 vgg16				=	pdf_fun(71.30,0);
@@ -110,21 +110,6 @@ ResNet50			=	pdf_fun(74.90,0);
 
 # End PDFs
 ###############################################################
-"""
-        except:
-        class ArgsDefault:
-            latency = 0
-            cost = 0
-            accuracy = 0
-            scheme = "ensembling"
-        args = ArgsDefault() 
-
-        args.latency = 40
-        args.accuracy = 70
-        args.cost = 0.5
-        #print("default arguments added ", args)
-        log.info("default arguments added ", args)
-"""
 ###############################################################
 # Global Vars
 
@@ -136,15 +121,33 @@ def parse_arguments():
         args_parser.add_argument('-l', "--latency", default='', action='store',type=float, dest='latency',help="Target SLO")
         args_parser.add_argument('-c', "--cost", default='', action='store', dest='cost',type=float,help="Target Cost")
         args_parser.add_argument('-a', "--accuracy", default='', action='store', type=float, dest='accuracy',help="Target Accuracy")
-        args_parser.add_argument('-s', "--scheme", default='', action='store', type=string, dest='scheme',help="Scheme infaas")
+        args_parser.add_argument('-s', "--scheme", default='', action='store', type=str, dest='scheme',help="Scheme infaas")
         args = args_parser.parse_args()
         return args
+
     except:
-        return 
+            class ArgsDefault:
+                latency = 0
+                cost = 0
+                accuracy = 0
+                scheme = "ensembling"
+            args = ArgsDefault() 
+            args.latency = 40
+            args.accuracy = 70
+            args.cost = 0.5
+            print("default arguments added ", args)
+            #log.info("default arguments added ", args)
 #args = parse_arguments()
 #slo_accuracy			=	0.75;#float(args.accuracy)
 #slo_cost			=	1; #float(args.cost)
 #slo_latency			=	50;#float(args.latency)
+args = parse_arguments()
+print(args)
+slo_accuracy			=	float(args.accuracy)
+slo_cost			=	float(args.cost)
+slo_latency			=	float(args.latency)
+scheme				=	args.scheme
+
 accuracy_margin			=	0.05
 infaas 				=	False
 cost_margin			=	0.1
@@ -153,6 +156,7 @@ latecy_margin			=	10
 # Vars
 inst_list			=	[]; # list of all active instances - a list of class instace
 
+correct_predictions	= 	defaultdict(list)
 active_instaces		=	len(inst_list);
 base_spot_cost		=	0.02;		#FIXME Jash
 current_latency		=	0;		# max of all instances latency
@@ -161,7 +165,7 @@ current_cost		=	0;		# sum of all instance cost
 instance_list		=	[];
 model_lat_list		=	[315,151.96, 119.2, 74, 152.21, 89.5, 102.35, 98.22, 78.18, 41.5, 259, 43.45]
 top_accuracy_list	=	[82.3,80.30, 79.00, 77.90, 77.30, 76.00, 75.00, 74.90, 74.40, 71.30, 71.30, 70.40]
-model_name_list		=	['NASNetLarge','InceptionResNetV2', 'Xception', 'InceptionV3', 'DenseNet201', 'ResNet50V2', 'DenseNet121', 'ResNet50', 'NasNetMobile', 'MobileNetV2', 'VGG16', 'MobileNet']
+model_name_list		=	['NASNetLarge','InceptionResNetV2', 'Xception', 'InceptionV3', 'DenseNet201', 'ResNet50V2', 'DenseNet121', 'ResNet50', 'NASNetMobile', 'MobileNetV2', 'VGG16', 'MobileNet']
 
 active_model_list	=	[];
 union_model_list	=	[];
@@ -213,8 +217,8 @@ class instance:
 		if (self.my_latency < slo_latency):
 			#for itr in range(len(model_lat_list)):
 			for itr in range(len(model_lat_list)):
-				#obey_latency		=	model_lat_list[itr] < (slo_latency + latecy_margin - self.my_latency);
-				obey_latency		=	slo_latency + latecy_margin
+				obey_latency		=	model_lat_list[itr] < (slo_latency + latecy_margin);
+				#obey_latency		=	slo_latency + latecy_margin
 				obey_duplication	=	model_name_list[itr] not in active_model_list	
 				print("Adding more models to instance ",active_model_list, self.my_latency, obey_latency, obey_duplication)		
 				
@@ -339,8 +343,8 @@ def get_model_key(model_name, verbose):
 	elif (model_name == 'Xception'):
 		model = Xception
 		
-	elif (model_name == 'NasNetMobile'):
-		model = NasNetMoile
+	elif (model_name == 'NASNetMobile'):
+		model = NASNetMobile
 	
 	elif (model_name == 'NASNetLarge'):
 		model = NASNetLarge
@@ -463,7 +467,6 @@ def main():
 	baselineModel = eval('tf.keras.applications.NASNetLarge()')
 	for filename in os.listdir('/home/cc/val'):
 		stime	=	time.time()
-		
 		file = '/home/cc/val/' + str(filename)
 	#file = tf.keras.utils.get_file("grace_hopper.jpg","https://storage.googleapis.com/download.tensorflow.org/example_images/grace_hopper.jpg")
 		img = tf.keras.preprocessing.image.load_img(file, target_size=[224, 224])
@@ -479,15 +482,19 @@ def main():
 		#	pretrained_model = eval(cmd)
 			#pretrained_model = eval(f'tf.keras.applications.{model}()')
 			##print(pretrained_model)
+		i=0
 		for smodels in pretrained_model_list:
 			result_before_save = smodels(x)
 			vote_result = tf.keras.applications.mobilenet.decode_predictions(result_before_save.numpy())[0][0][1]
 			vote_class = tf.keras.applications.mobilenet.decode_predictions(result_before_save.numpy())[0][0][0]
 			#print("Result before saving",tf.keras.applications.mobilenet.decode_predictions(result_before_save.numpy())[0][0][1])
-			print("Result before saving",vote_result, vote_class,result_before_save.numpy()[0][0])
+			print("Result before saving",smodels, union_model_list[i] ,vote_result, vote_class,result_before_save.numpy()[0][0])
+			if vote_class == images[filename.strip('.JPEG')][0]:
+				correct_predictions[union_model_list[i]].append([fcount,vote_class])			
 			#votearray.append(tf.keras.applications.mobilenet.decode_predictions(result_before_save.numpy())[0][0][1]));
 			votearray.append(vote_result)
 			voteclassarray.append(vote_class)
+			i+=1
 		
 		##print(baselineModel);
 		resultBLModel	=	baselineModel(x);
@@ -512,6 +519,9 @@ def main():
 		
 		etime		=	time.time()
 		print("Time to Process Image	=	" + str(etime - stime),[maxVoteclass,BLclass])
+		if (fcount%100 == 0):
+			for key in correct_predictions.keys():
+				print(key, len(correct_predictions[key]))
 		check_ground_truth([maxVoteclass,BLclass],filename.strip('.JPEG'))
 		voteclassarray = []
 		votearray=[]
@@ -538,11 +548,5 @@ def main():
 # end Main
 ###############################################################
 if __name__ == "__main__":
-	args = parse_arguments()
-	print(args)
-	slo_accuracy			=	float(args.accuracy)
-	slo_cost			=	float(args.cost)
-	slo_latency			=	float(args.latency)
-	scheme				=	args.scheme
 	main()	
 
