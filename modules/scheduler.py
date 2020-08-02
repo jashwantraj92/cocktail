@@ -151,8 +151,8 @@ class Scheduler():
                             model = models[j]
                             logging.info(f'Launch {launch[i]} for model: {model} numinstances {math.ceil(launch[i]*weights[j])}')
                             params = {'imageId':ami, 'instanceType':IndexType[i], 'targetCapacity': math.ceil(launch[i]*weights[j]), 'key_value':[('exp_round', Tag)] }
-                            model = random.choice(models)
-                            ins_source.launch_ins(name, params,[model])
+                            #model = random.choice(models)
+                            ins_source.launch_ins(name, params,[models[j]])
                             cost += instanceInfo[i][2] * launch[i]
 
                 for i in range(len(des)):

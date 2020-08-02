@@ -249,7 +249,8 @@ def launch_spot_instances(name, params, models):
         request_id : {
             'region' : params['region'],
             'type' : params['instanceType'],
-            'instance_id_list' : instance_id_list
+            'instance_id_list' : instance_id_list,
+            'model_list' : models
         }
     }
     aws_accessor.save_cluster(name, info)
@@ -288,9 +289,9 @@ def kill_spot_instances_by_num(name, region, typ, num, models):
     logging.info(f'Kill {total_size} {typ} instances')
             
     if len(cancel_req_ids) > 0:
-        cancel_spot_instances(name, cancel_req_ids, models)
+        cancel_spot_instances(name, cancel_req_ids)
 
-def cancel_spot_instances(name, request_ids, models):
+def cancel_spot_instances(name, request_ids):
     info = aws_accessor.get_cluster(name)['info']
     j=0
     for i in request_ids:
@@ -298,6 +299,7 @@ def cancel_spot_instances(name, request_ids, models):
             logging.info('Request ID : {} not found'.format(i))
             continue
         instance_id_list = info[i]['instance_id_list']
+        model_list = info[i]['model_list']
         region = info[i]['region']
         client = get_client(region)
         res = client.cancel_spot_fleet_requests(
@@ -307,12 +309,12 @@ def cancel_spot_instances(name, request_ids, models):
         if 'SuccessfulFleetRequests' in res:
             logging.info('Successful cancel spot fleet request {}'.format(i))
             aws_accessor.del_request(name, i)
-            instance_accessor.del_instance(name, [ i.__dict__ for i in utils.get_ins_from_ids(region, instance_id_list, models)])
+            instance_accessor.del_instance(name, [ i.__dict__ for i in utils.get_ins_from_ids(region, instance_id_list, model_list)])
         j+=1
 def cancel_all_instances(name, models):
     requests = aws_accessor.get_requests(name)
     if requests:
-        cancel_spot_instances(name, requests, models)
+        cancel_spot_instances(name, requests)
 
 
 def get_client(region=DEFAULT_REGION):

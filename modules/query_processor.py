@@ -69,7 +69,7 @@ class QueryProcessor():
         global inst_list, current_latency, current_cost
         print('main invoked') 
         accuracy,latency = await self.get_requirements(constraints)
-        models = naiveSchedule.select_models(latency,accuracy,2)
+        models = naiveSchedule.select_models(latency,accuracy,2,scheme)
         logging.info(f"selected models are {models}")
         return models
         #return ["MobileNetV2","InceptionV3"]
@@ -107,27 +107,27 @@ class QueryProcessor():
                         handle_size = HANDLE_SIZE_C5
 
                     if model.startswith('Mobil'):
-                        other_info = await self.query_queue.get(handle_size * HANDLE_SIZE_Mobilenet - 1)
+                        other_info = await self.query_queue.get(handle_size * HANDLE_SIZE_Mobilenet - 1, model)
                         [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
                         logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is  {model}, {handle_size} {self.query_queue.size()}')
                     elif model.startswith('InceptionRe'):
-                        other_info = await self.query_queue.get(handle_size * HANDLE_SIZE_InceptionResnet - 1)
+                        other_info = await self.query_queue.get(handle_size * HANDLE_SIZE_InceptionResnet - 1, model)
                         [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
                         logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is {model}, {handle_size} {self.query_queue.size()}')
                     elif model.startswith('Inception'):
-                        other_info = await self.query_queue.get(handle_size * HANDLE_SIZE_Inception - 1)
+                        other_info = await self.query_queue.get(handle_size * HANDLE_SIZE_Inception - 1, model)
                         [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
                         logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is {model}, {handle_size} {self.query_queue.size()}')
                     elif model.startswith('Resn'):
-                        other_info = await self.query_queue.get(handle_size * HANDLE_SIZE_Resnet - 1)
+                        other_info = await self.query_queue.get(handle_size * HANDLE_SIZE_Resnet - 1, model)
                         [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
                         logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is {model}, {handle_size} {self.query_queue.size()}')
                     elif model.startswith('Xcepti'):
-                        other_info = await self.query_queue.get(handle_size * HANDLE_SIZE_Xception - 1)
+                        other_info = await self.query_queue.get(handle_size * HANDLE_SIZE_Xception - 1, model)
                         [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
                         logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is {model}, {handle_size} {self.query_queue.size()}')
                     elif model.startswith('NASNetMo'):
-                        other_info = await self.query_queue.get(handle_size * HANDLE_SIZE_Nasnetmobile - 1)
+                        other_info = await self.query_queue.get(handle_size * HANDLE_SIZE_Nasnetmobile - 1,model)
                         [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
                         logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is  {model}, {handle_size} {self.query_queue.size()}')
 
@@ -143,11 +143,14 @@ class QueryProcessor():
   
     async def ensemble_result(self, statements, models): 
         predictions = []
-        votearray=[]    
-        voteclasses= []
         typ=0
         all_times=[]
         times=0
+        votearray=[]    
+        maxvotename = []
+        maxvoteclass = []
+        voteclasses= []
+
         #results,failed = await asyncio.wait(statements,return_when=asyncio.ALL_COMPLETED)
         for future in statements:
             await future
@@ -161,8 +164,19 @@ class QueryProcessor():
             predictions.append(result)
         maxVoteLabel        =       max(set(votearray), key = votearray.count) 
         maxVoteClass        =       max(set(voteclasses), key = voteclasses.count)
-        logging.info(f'**************** gather results are {maxVoteClass}, {maxVoteLabel} {all_times}********************')
-        return str(maxVoteLabel) + "," + str(maxVoteClass), int(typ), np.mean(np.array(all_times)), models
+        counts = {x:votearray.count(x) for x in votearray}
+        maxcount = counts[maxVoteLabel]
+        for i in counts:
+            if counts[i] == maxcount:
+               maxvotename.append(i)
+        counts = {x:voteclasses.count(x) for x in voteclasses}
+        maxcount = counts[maxVoteClass]
+        for i in counts:
+            if counts[i] == maxcount:
+                maxvoteclass.append(i)
+
+        logging.info(f'**************** gather results are {votearray} {maxvotename} {maxvoteclass}{all_times}********************')
+        return maxvotename , maxvoteclass, int(typ), np.mean(np.array(all_times)), models
     
     async def _get_result(self, futures, name, times, data, ip):
         results, req_type = await self._serve(name, data, ip)
@@ -210,8 +224,9 @@ class QueryQuene():
     async def put(self, fu, name, time, data, model):
         await self.queue.put((fu, name, time, data, model))
 
-    async def get(self, num=1):
+    async def get(self, num=1, model=None):
         items = []
+        print(f"waiting for num items {num} {model}")
         while num > 0:
             item = await self.queue.get()
             items.append(item)

@@ -14,13 +14,14 @@ import numpy as np
 
 upper_folder = "/home/cc/ensembling"
 
-sender = lambda data, constraint: requests.post(
+sender = lambda data, constraint, filename: requests.post(
     f'http://{args.host}:{args.port}/predict/{args.name}',
     headers={"Content-type": "application/json"},
     data=json.dumps({ 
         'type':'image',
         'data': data ,
-        'constraint': constraint
+        'constraint': constraint,
+        'filename' : filename
     })
 )
 
@@ -34,13 +35,13 @@ def get_args():
     return parser.parse_args()
 
 images = []
-for filename in os.listdir('/home/cc/ensembling/CYAN/val'):
+for filename in os.listdir('/home/cc/val'):
         images.append(filename)
 
 def get_data():
         global images 
         filename = str(random.choice(images))
-        file = "/home/cc/ensembling/CYAN/val/" + str(filename)
+        file = "/home/cc/val/" + str(filename)
         image = Image.open(file)
         IMAGE_URL = 'http://farm4.static.flickr.com/3088/2573194878_7be4b14d7f.jpg'
         dl_request = requests.get(IMAGE_URL, stream=True)
@@ -54,7 +55,7 @@ def get_data():
         #return predict_request
         #print(filename, image)
         #return IMAGE_URL
-        return np.array(image).tolist()
+        return np.array(image).tolist(),filename
 def send_data(args, reader):
     pool = ThreadPoolExecutor(5000)
     data = get_data()
@@ -82,26 +83,31 @@ def send_trace_data(args, reader):
 # User list comprehension to create a list of lists from Dataframe rows
     list_of_rows = [list(row) for row in df.values]
 # Print list of lists i.e. rows
-    print(list_of_rows)
+    #print(list_of_rows)
+    count = 0
     for row in list_of_rows:
         if reader.line_num > args.timeout:
             break
+        if count > 100:
+            break
         print(row)
+ 
         #num = 1
-        num = row[1]
+        num = row[3]
         constraints = row[2]
         #Data = data + "," + str(constraints)
         #lam = (60 * 1000.0) / num
         #samples = np.random.poisson(lam, num)
         #print(f'line: {reader.line_num}; sample_number: {num}')
         for s in range(num):
-            data = get_data()
+            data,filename = get_data()
             #data = np.append(data,[constraints])
-            pool.submit(sender, data, int(constraints))
-            print("request submitted", constraints)
+            pool.submit(sender, data, int(constraints), filename)
+            print("request submitted", constraints, filename)
             # sender(data)
             # print(f'Send request after {s} ms')
-        time.sleep(1)
+        time.sleep(3)
+        count += 1
 
 
 def get_kr_data():

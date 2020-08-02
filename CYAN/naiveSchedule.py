@@ -1,5 +1,6 @@
 #Imports
 from __future__ import absolute_import, division, print_function
+from collections import defaultdict
 from tensorflow.python.saved_model import builder as saved_model_builder
 from tensorflow.python.saved_model import tag_constants, signature_constants, signature_def_utils_impl
 from matplotlib import pyplot as plt
@@ -46,6 +47,43 @@ README
 '''
 ###############################################################
 # PDFs
+
+matched = 0
+not_matched=0
+BLmatch = 0
+total = 0
+images = defaultdict(list)
+file1 = open('/home/cc/ensembling/CYAN/ground-truth-classes', 'r') 
+lines = file1.readlines()
+for line in lines:
+    label = line.split(" ")[1].strip('\n')
+    label = label.strip('\t')
+    name = line.split(" ")[0]
+    images[name].append(label)
+#logging.info(images)
+
+def check_ground_truth(imgcls,imgname):
+    global matched,not_matched,BLmatch,total
+    total +=1
+    match=0
+    print("matching ground truth", BLmatch, imgcls, imgname, images[imgname][0])
+    for i in range(len(imgcls)):
+        if imgcls[i] == images[imgname][0]:
+            print(f'ground truth matched {matched} {imgcls} {imgname} {images[imgname]}')
+            if i == 0:
+                matched+=1
+                #logging.info(f"Prediction accuracy {matched/(total)*100}")       
+            elif i ==1:
+                BLmatch+=1
+                #logging.info(f"Prediction accuracy {BLmatch/(total)*100}")       
+            match=1
+            #logging.info(f"Prediction accuracy {matched/(matched+not_matched)*100} {BLmatch/(BLmatch+not_matched)*100}")       
+    if match==0:
+        not_matched+=1
+        print(f'ground truth not matched {not_matched} {imgcls} {imgname} {images[imgname]}')
+    print(f'Prediction accuracy {matched} {BLmatch} {not_matched} {matched/total*100} {BLmatch/total*100}')       
+    #logging.info(f"Prediction accuracy {matched/(matched+not_matched)*100}")       
+
 def pdf_fun(accuracy, verbose):
 	pos			=	int(accuracy*100);
 	arr			=	np.zeros(10000);
@@ -72,7 +110,21 @@ ResNet50			=	pdf_fun(74.90,0);
 
 # End PDFs
 ###############################################################
+"""
+        except:
+        class ArgsDefault:
+            latency = 0
+            cost = 0
+            accuracy = 0
+            scheme = "ensembling"
+        args = ArgsDefault() 
 
+        args.latency = 40
+        args.accuracy = 70
+        args.cost = 0.5
+        #print("default arguments added ", args)
+        log.info("default arguments added ", args)
+"""
 ###############################################################
 # Global Vars
 
@@ -84,33 +136,17 @@ def parse_arguments():
         args_parser.add_argument('-l', "--latency", default='', action='store',type=float, dest='latency',help="Target SLO")
         args_parser.add_argument('-c', "--cost", default='', action='store', dest='cost',type=float,help="Target Cost")
         args_parser.add_argument('-a', "--accuracy", default='', action='store', type=float, dest='accuracy',help="Target Accuracy")
-
+        args_parser.add_argument('-s', "--scheme", default='', action='store', type=string, dest='scheme',help="Scheme infaas")
         args = args_parser.parse_args()
+        return args
     except:
-        class ArgsDefault:
-            latency = 0
-            cost = 0
-            accuracy = 0
-        args = ArgsDefault() 
-
-        args.latency = 40
-        args.accuracy = 70
-        args.cost = 0.5
-        #print("default arguments added ", args)
-        log.info("default arguments added ", args)
-
-    return args
-args = parse_arguments()
-slo_accuracy			=	float(args.accuracy)
-slo_cost			=	float(args.cost)
-slo_latency			=	float(args.latency)
-
+        return 
 #args = parse_arguments()
 #slo_accuracy			=	0.75;#float(args.accuracy)
 #slo_cost			=	1; #float(args.cost)
 #slo_latency			=	50;#float(args.latency)
-
 accuracy_margin			=	0.05
+infaas 				=	False
 cost_margin			=	0.1
 latecy_margin			=	10
 
@@ -139,6 +175,20 @@ verbosity			= 	1;
 
 ###############################################################
 # Classes
+def infaas_select_model():
+		global slo_latency, slo_accuracy
+		candidate_models = []
+		for itr in range(len(model_lat_list)):
+				if model_lat_list[itr] <= slo_latency:
+					candidate_models.append([itr,top_accuracy_list[itr]])
+		print(candidate_models)
+		if candidate_models:
+			
+			model = max(candidate_models, key=lambda x:x[1])
+			print(model, model_name_list[model[0]])
+			return [model_name_list[model[0]]]
+
+
 class instance:
 	def __init__(self):
 		print("New Spot Instce Created")
@@ -163,12 +213,13 @@ class instance:
 		if (self.my_latency < slo_latency):
 			#for itr in range(len(model_lat_list)):
 			for itr in range(len(model_lat_list)):
-				obey_latency		=	model_lat_list[itr] < (slo_latency + latecy_margin - self.my_latency);
+				#obey_latency		=	model_lat_list[itr] < (slo_latency + latecy_margin - self.my_latency);
+				obey_latency		=	slo_latency + latecy_margin
 				obey_duplication	=	model_name_list[itr] not in active_model_list	
 				print("Adding more models to instance ",active_model_list, self.my_latency, obey_latency, obey_duplication)		
 				
 				if (obey_latency and obey_duplication):
-					self.my_latency	=	max(self.my_latency ,model_lat_list[itr]);
+					self.my_latency	=	max(self.my_latency , obey_latency);
 					active_model_list.append(model_name_list[itr]);
 					self.my_model_list.append(model_name_list[itr]);
 					self.my_latency_list.append(model_lat_list[itr]);
@@ -362,10 +413,16 @@ def printv(string):
 ###############################################################
 # Main()
 def main():
-	global inst_list, current_latency, current_cost
-	print('main invoked')
+	global inst_list, current_latency, current_cost, infaas
+	print('main invoked',slo_accuracy,slo_latency,slo_cost)
+	if scheme == "infaas":
+		infaas = True
+
 	time_Scale = 1
 	init_scale();
+	if infaas:
+		return infaas_select_model()
+
 	for ts in range(time_Scale): # 1,000,000 itterations of autoscaling
 		global_accuracy 	=	get_global_accuracy();
 		while (global_accuracy < slo_accuracy):
@@ -403,11 +460,11 @@ def main():
 	voteclassarray = []
 	num_matching_pred	=	0;
 	num_non_matching_pred	=	0;
-	baselineModel = eval('tf.keras.applications.NASNetMobile()')
-	for filename in os.listdir('/home/cc/CYAN/val'):
+	baselineModel = eval('tf.keras.applications.NASNetLarge()')
+	for filename in os.listdir('/home/cc/val'):
 		stime	=	time.time()
 		
-		file = '/home/cc/CYAN/val/' + str(filename)
+		file = '/home/cc/val/' + str(filename)
 	#file = tf.keras.utils.get_file("grace_hopper.jpg","https://storage.googleapis.com/download.tensorflow.org/example_images/grace_hopper.jpg")
 		img = tf.keras.preprocessing.image.load_img(file, target_size=[224, 224])
 	# plt.imshow(img)
@@ -427,7 +484,7 @@ def main():
 			vote_result = tf.keras.applications.mobilenet.decode_predictions(result_before_save.numpy())[0][0][1]
 			vote_class = tf.keras.applications.mobilenet.decode_predictions(result_before_save.numpy())[0][0][0]
 			#print("Result before saving",tf.keras.applications.mobilenet.decode_predictions(result_before_save.numpy())[0][0][1])
-			##print("Result before saving",vote_result)
+			print("Result before saving",vote_result, vote_class,result_before_save.numpy()[0][0])
 			#votearray.append(tf.keras.applications.mobilenet.decode_predictions(result_before_save.numpy())[0][0][1]));
 			votearray.append(vote_result)
 			voteclassarray.append(vote_class)
@@ -438,24 +495,26 @@ def main():
 		BLclass		=	tf.keras.applications.mobilenet.decode_predictions(resultBLModel.numpy())[0][0][0]
 		maxVoteClass	=	max(set(votearray), key = votearray.count)
 		maxVoteclass	=	max(set(voteclassarray), key = voteclassarray.count)
-		print("$$$ Class Info $$$ " + str(collections.Counter(votearray)) + " ### VS ### " + str(BLClass), BLclass, maxVoteclass)	
+		print("$$$ Class Info $$$ " + str(collections.Counter(votearray)) + " ### VS ### " + str(BLClass), BLclass, maxVoteclass,tf.keras.applications.mobilenet.decode_predictions(resultBLModel.numpy())[0][0])	
 		fcount 	=	fcount	+ 1
 		if (maxVoteClass == BLClass):
 			num_matching_pred	=	num_matching_pred + 1;
 			print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-			print("Matched For " + str(filename) + " Matching Pred ====== " + str(num_matching_pred) + " ### Completed: " + str(fcount) + "/50,000")
+			print("Matched For " + str(filename) + " Matching Pred ====== " + str(num_matching_pred) + " ### Completed: " + str(fcount) + "/50,000", maxVoteClass,BLClass,maxVoteclass,BLclass)
 			print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 			print("\n")
 		else:
 			num_non_matching_pred	=	num_non_matching_pred + 1;
 			print("-------------------------------------------------------------------------------")
-			print("Did NOT Match For " + str(filename) + " NOT Matching Pred ====== " + str(num_non_matching_pred) + " ### Completed: " + str(fcount) + "/50,000")
+			print("Did NOT Match For " + str(filename) + " NOT Matching Pred ====== " + str(num_non_matching_pred) + " ### Completed: " + str(fcount) + "/50,000",maxVoteClass,BLClass,maxVoteclass,BLclass)
 			print("-------------------------------------------------------------------------------")
 			print("\n")
 		
 		etime		=	time.time()
-		votearray	=	[]
-		print("Time to Process Image	=	" + str(etime - stime))
+		print("Time to Process Image	=	" + str(etime - stime),[maxVoteclass,BLclass])
+		check_ground_truth([maxVoteclass,BLclass],filename.strip('.JPEG'))
+		voteclassarray = []
+		votearray=[]
 
 	text_file = open("sample.txt", "wt")
 	n = text_file.write(str(num_matching_pred))
@@ -479,5 +538,11 @@ def main():
 # end Main
 ###############################################################
 if __name__ == "__main__":
+	args = parse_arguments()
+	print(args)
+	slo_accuracy			=	float(args.accuracy)
+	slo_cost			=	float(args.cost)
+	slo_latency			=	float(args.latency)
+	scheme				=	args.scheme
 	main()	
 

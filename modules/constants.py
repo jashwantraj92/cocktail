@@ -3,7 +3,7 @@
 
 UPPER_LATENCY_BOUND = 200
 SLA_BOUND = 0.02
-
+scheme="infaas"
 HANDLE_SIZE = 8
 
 #batch size config

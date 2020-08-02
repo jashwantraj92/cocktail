@@ -1,16 +1,17 @@
+#set -x
 set -euo pipefail
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # Let the user start this script from anywhere in the filesystem.
 source $DIR/utils.sh
-ROOT=$DIR/..
+ROOT=/home/cc/ensembling
 cd $ROOT
 
 PID_FILE=${ROOT}/debug/pid
 STATE_FILE=${ROOT}/debug/state
 LOG_DIR=${ROOT}/debug/logs
 mkdir -p ${LOG_DIR}
-
+get_log_dir_name=/home/cc/ensembling/logs
 UPDATER="True"
 TAG=0
 
@@ -47,6 +48,7 @@ start_celery() {
 }
 
 clean_logs() {
+    move_logs
     if [ -d ${LOG_DIR} ]; then
         rm -rf ${LOG_DIR}
     fi
@@ -54,9 +56,10 @@ clean_logs() {
 
 move_logs() {
     if [ -d ${LOG_DIR} ]; then
-        LOG_PLACE=$(get_log_dir_name ${TAG})
-        mkdir -p ${LOG_PLACE}
-        mv ${LOG_DIR}/* ${LOG_PLACE}/
+        folder=`date '+%s'`
+        LOG_PLACE=${get_log_dir_name}/${folder}
+        mkdir -p ${LOG_PLACE}/
+        mv ${LOG_DIR}/ ${LOG_PLACE}/
     fi
 }
 
