@@ -1,4 +1,3 @@
-#Imports
 from __future__ import absolute_import, division, print_function
 from collections import defaultdict
 from tensorflow.python.saved_model import builder as saved_model_builder
@@ -53,7 +52,7 @@ not_matched=0
 BLmatch = 0
 total = 0
 images = defaultdict(list)
-file1 = open('/home/cc/ensembling/CYAN/ground-truth-classes', 'r') 
+file1 = open('/home/cc/cocktail/CYAN/ground-truth-classes', 'r') 
 lines = file1.readlines()
 for line in lines:
     label = line.split(" ")[1].strip('\n')
@@ -117,7 +116,7 @@ ResNet50			=	pdf_fun(74.90,0);
 
 def parse_arguments():
     try:
-        args_parser = argparse.ArgumentParser(description="ensembling combinations")
+        args_parser = argparse.ArgumentParser(description="cocktail combinations")
         args_parser.add_argument('-l', "--latency", default='', action='store',type=float, dest='latency',help="Target SLO")
         args_parser.add_argument('-c', "--cost", default='', action='store', dest='cost',type=float,help="Target Cost")
         args_parser.add_argument('-a', "--accuracy", default='', action='store', type=float, dest='accuracy',help="Target Accuracy")
