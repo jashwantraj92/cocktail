@@ -3,6 +3,8 @@ from collections import defaultdict
 from tensorflow.python.saved_model import builder as saved_model_builder
 from tensorflow.python.saved_model import tag_constants, signature_constants, signature_def_utils_impl
 from matplotlib import pyplot as plt
+from signal import signal, SIGINT
+from sys import exit
 import efficientnet.keras as efn
 import tensorflow as tf
 import numpy as np
@@ -13,6 +15,8 @@ import time
 import random
 import collections
 import logging
+import csv
+
 log = logging.getLogger('spam_application')
 log.setLevel(logging.INFO)
 
@@ -60,7 +64,6 @@ for line in lines:
     name = line.split(" ")[0]
     images[name].append(label)
 #logging.info(images)
-
 def check_ground_truth(imgcls,imgname):
     global matched,not_matched,BLmatch,total
     total +=1
@@ -120,8 +123,11 @@ def parse_arguments():
         args_parser.add_argument('-l', "--latency", default='', action='store',type=float, dest='latency',help="Target SLO")
         args_parser.add_argument('-c', "--cost", default='', action='store', dest='cost',type=float,help="Target Cost")
         args_parser.add_argument('-a', "--accuracy", default='', action='store', type=float, dest='accuracy',help="Target Accuracy")
+        args_parser.add_argument('-b', "--batch", default=10, action='store', type=float, dest='batch',help="Target Accuracy")
         args_parser.add_argument('-s', "--scheme", default='', action='store', type=str, dest='scheme',help="Scheme infaas")
+        args_parser.add_argument('-p', "--policy", default='constant', action='store', type=str, dest='policy',help="aggressive")
         args = args_parser.parse_args()
+
         return args
 
     except:
@@ -130,6 +136,7 @@ def parse_arguments():
                 cost = 0
                 accuracy = 0
                 scheme = "ensembling"
+                batch=10
             args = ArgsDefault() 
             args.latency = 40
             args.accuracy = 70
@@ -146,7 +153,8 @@ slo_accuracy			=	float(args.accuracy)
 slo_cost			=	float(args.cost)
 slo_latency			=	float(args.latency)
 scheme				=	args.scheme
-
+policy				=	args.policy
+batch				= 	args.batch
 accuracy_margin			=	0.05
 infaas 				=	False
 cost_margin			=	0.1
@@ -156,6 +164,7 @@ latecy_margin			=	10
 inst_list			=	[]; # list of all active instances - a list of class instace
 
 correct_predictions	= 	defaultdict(list)
+class_weights		= 	defaultdict(lambda: defaultdict(int))
 active_instaces		=	len(inst_list);
 base_spot_cost		=	0.02;		#FIXME Jash
 current_latency		=	0;		# max of all instances latency
@@ -168,6 +177,28 @@ model_name_list		=	['NASNetLarge','InceptionResNetV2', 'Xception', 'InceptionV3'
 
 active_model_list	=	[];
 union_model_list	=	[];
+
+def handler(signal_received, frame):
+    # Handle any cleanup here
+	print('SIGINT or CTRL-C detected. Exiting gracefully')
+	filename = str(time.time())+"-output.csv"
+	#dict = {'Python' : '.py', 'C++' : '.cpp', 'Java' : '.java'}
+	w = csv.writer(open(filename, "w"))
+	for k, val in class_weights.items():
+		for key,value in val.items():
+    			w.writerow([k,key, value])
+
+	exit(0)
+
+
+def write_to_file(logfile):
+    # Handle any cleanup here
+	print('Writing to fle class weights', logfile)
+	#dict = {'Python' : '.py', 'C++' : '.cpp', 'Java' : '.java'}
+	w = csv.writer(open(logfile, "w"))
+	for k, val in class_weights.items():
+		for key,value in val.items():
+    			w.writerow([k,key, value])
 
 
 # Debugs
@@ -191,6 +222,21 @@ def infaas_select_model():
 			print(model, model_name_list[model[0]])
 			return [model_name_list[model[0]]]
 
+def find_model(models):
+		global slo_latency, slo_accuracy
+		candidate_models = []
+		print("finding in models", models)
+		for model in models:
+				if model_lat_list[model_name_list.index(model)] <=  slo_latency:
+					candidate_models.append([model_name_list.index(model),top_accuracy_list[model_name_list.index(model)]])
+		if not candidate_models:
+			return None
+		print(candidate_models)
+		if candidate_models:
+			
+			model = max(candidate_models, key=lambda x:x[1])
+			print(model, model_name_list[model[0]])
+			return [model_name_list[model[0]]]
 
 class instance:
 	def __init__(self):
@@ -415,12 +461,34 @@ def printv(string):
 
 ###############################################################
 # Main()
+def aggressive_scaling(step_accuracy,overall_accuracy,correct_predictions,pretrained_model_list):
+        print("aggressive_scaling " ,step_accuracy, overall_accuracy, (slo_accuracy + 0.03)*100)
+        if (max(overall_accuracy,step_accuracy) >= ((slo_accuracy + 0.02)*100)) and len(correct_predictions) > 1:
+                index,drop_model = min((len(correct_predictions[key]),key) for key in correct_predictions )
+                drop = [e for e in pretrained_model_list if e[0] == drop_model]
+                print("least model is " ,index, drop_model,drop)
+                pretrained_model_list.remove(drop[0])
+                #union_model_list.remove(drop_model)
+                del correct_predictions[drop_model]
+        elif (max(overall_accuracy,step_accuracy) <= ((slo_accuracy - 0.02)*100)):
+                remaining_models = set(model_name_list) - set([x[0] for x in pretrained_model_list])
+                print("remaining_models",remaining_models,set(model_name_list),set(pretrained_model_list[0]))
+                if remaining_models:
+                    model = find_model(remaining_models)
+                    if model:
+                        cmd = 'tf.keras.applications.' + str(model[0]) + '()';
+                        pretrained_model = eval(cmd)
+                        pretrained_model_list.append([model[0],pretrained_model])
+                    else:
+                        print("***no model available to add *********")
+	
+
 def main():
 	global inst_list, current_latency, current_cost, infaas
 	print('main invoked',slo_accuracy,slo_latency,slo_cost)
 	if scheme == "infaas":
 		infaas = True
-
+	signal(SIGINT, handler)
 	time_Scale = 1
 	init_scale();
 	if infaas:
@@ -456,14 +524,18 @@ def main():
 	for model in union_model_list:
 		cmd = 'tf.keras.applications.' + str(model) + '()';
 		pretrained_model = eval(cmd)
-		pretrained_model_list.append(pretrained_model)
+		pretrained_model_list.append((model,pretrained_model))
 
 	fcount = 0;
 	votearray = []
 	voteclassarray = []
 	num_matching_pred	=	0;
 	num_non_matching_pred	=	0;
-	baselineModel = eval('tf.keras.applications.NASNetLarge()')
+	baselineModel = eval('tf.keras.applications.MobileNetV2()')
+	step_matching_pred = 0
+	step_length = batch
+	correct_predictions = defaultdict(list)
+	logfile = str(time.time()) + "-" + str(slo_latency)+ "-" + str(slo_accuracy) + "-"  + str(batch) +  "-output.csv"
 	for filename in os.listdir('/home/cc/val'):
 		stime	=	time.time()
 		file = '/home/cc/val/' + str(filename)
@@ -483,13 +555,14 @@ def main():
 			##print(pretrained_model)
 		i=0
 		for smodels in pretrained_model_list:
-			result_before_save = smodels(x)
+			result_before_save = smodels[1](x)
 			vote_result = tf.keras.applications.mobilenet.decode_predictions(result_before_save.numpy())[0][0][1]
 			vote_class = tf.keras.applications.mobilenet.decode_predictions(result_before_save.numpy())[0][0][0]
 			#print("Result before saving",tf.keras.applications.mobilenet.decode_predictions(result_before_save.numpy())[0][0][1])
-			print("Result before saving",smodels, union_model_list[i] ,vote_result, vote_class,result_before_save.numpy()[0][0])
+			print("Result before saving",smodels, smodels[0] ,vote_result, vote_class,result_before_save.numpy()[0][0])
 			if vote_class == images[filename.strip('.JPEG')][0]:
-				correct_predictions[union_model_list[i]].append([fcount,vote_class])			
+				correct_predictions[smodels[0]].append([fcount,vote_class])			
+				class_weights[smodels[0]][vote_class]+=1
 			#votearray.append(tf.keras.applications.mobilenet.decode_predictions(result_before_save.numpy())[0][0][1]));
 			votearray.append(vote_result)
 			voteclassarray.append(vote_class)
@@ -505,6 +578,7 @@ def main():
 		fcount 	=	fcount	+ 1
 		if (maxVoteClass == BLClass):
 			num_matching_pred	=	num_matching_pred + 1;
+			step_matching_pred+=1
 			print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 			print("Matched For " + str(filename) + " Matching Pred ====== " + str(num_matching_pred) + " ### Completed: " + str(fcount) + "/50,000", maxVoteClass,BLClass,maxVoteclass,BLclass)
 			print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
@@ -518,9 +592,21 @@ def main():
 		
 		etime		=	time.time()
 		print("Time to Process Image	=	" + str(etime - stime),[maxVoteclass,BLclass])
-		if (fcount%100 == 0):
+		if (fcount%step_length == 0):
+			step_accuracy = step_matching_pred/step_length * 100
+			overall_accuracy = num_matching_pred/fcount *100
+			if policy=="aggressive":
+                                aggressive_scaling(step_accuracy,overall_accuracy,correct_predictions,pretrained_model_list)
+
 			for key in correct_predictions.keys():
 				print(key, len(correct_predictions[key]))
+				correct_predictions[key] = []	
+			print("overall prediction accuracy is ", num_matching_pred/fcount *100, policy)
+			print("current step prediction accuracy is ", step_accuracy)
+			write_to_file(logfile)
+			#print(correct_predictions)
+			
+			step_matching_pred=0
 		check_ground_truth([maxVoteclass,BLclass],filename.strip('.JPEG'))
 		voteclassarray = []
 		votearray=[]
