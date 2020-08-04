@@ -35,6 +35,9 @@ for line in lines:
     name = line.split(" ")[0]
     images[name].append(label)
 #logging.info(images)
+constraints = defaultdict(list)
+for i in range(len(accuracy)):
+    constraints[i].append([])
 
 def check_ground_truth(imgcls,imgname):
     global matched,not_matched
