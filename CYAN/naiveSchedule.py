@@ -9,7 +9,7 @@ import efficientnet.keras as efn
 import tensorflow as tf
 import numpy as np
 import scipy as sp
-import os
+import os,sys
 import math
 import time
 import random
@@ -54,6 +54,7 @@ README
 matched = 0
 not_matched=0
 BLmatch = 0
+step_matching_pred = 0
 total = 0
 images = defaultdict(list)
 file1 = open('/home/cc/cocktail/CYAN/ground-truth-classes', 'r') 
@@ -65,7 +66,7 @@ for line in lines:
     images[name].append(label)
 #logging.info(images)
 def check_ground_truth(imgcls,imgname):
-    global matched,not_matched,BLmatch,total
+    global matched,not_matched,BLmatch,total,step_matching_pred
     total +=1
     match=0
     print("matching ground truth", BLmatch, imgcls, imgname, images[imgname][0])
@@ -74,6 +75,7 @@ def check_ground_truth(imgcls,imgname):
             print(f'ground truth matched {matched} {imgcls} {imgname} {images[imgname]}')
             if i == 0:
                 matched+=1
+                step_matching_pred +=1
                 #logging.info(f"Prediction accuracy {matched/(total)*100}")       
             elif i ==1:
                 BLmatch+=1
@@ -142,7 +144,7 @@ def parse_arguments():
         args_parser.add_argument('-b', "--batch", default=10, action='store', type=float, dest='batch',help="Target Accuracy")
         args_parser.add_argument('-s', "--scheme", default='', action='store', type=str, dest='scheme',help="Scheme infaas")
         args_parser.add_argument('-p', "--policy", default='constant', action='store', type=str, dest='policy',help="aggressive")
-        args_parser.add_argument('-g', "--gpu", default='constant', action='store', type=int, dest='gpu',help="aggressive")
+        args_parser.add_argument('-g', "--gpu", default=-1, action='store', type=int, dest='gpu',help="aggressive")
         args = args_parser.parse_args()
 
         return args
@@ -489,30 +491,35 @@ def aggressive_scaling(step_accuracy,overall_accuracy,correct_predictions,pretra
                 pretrained_model_list.remove(drop[0])
                 #union_model_list.remove(drop_model)
                 del correct_predictions[drop_model]
+                return drop 
         elif ((step_accuracy) <= ((slo_accuracy - 0.02)*100)):
                 remaining_models = set(model_name_list) - set([x[0] for x in pretrained_model_list])
                 print("remaining_models",remaining_models,set(model_name_list),set(pretrained_model_list[0]))
                 if remaining_models:
                     model = find_model(remaining_models)
                     if model:
+                        print("model added", model)
                         cmd = 'tf.keras.applications.' + str(model[0]) + '()';
                         pretrained_model = eval(cmd)
                         pretrained_model_list.append([model[0],pretrained_model])
+                        return model
                     else:
                         print("***no model available to add *********")
+                        return None
 	
 
 def main():
-	global inst_list, current_latency, current_cost, infaas
+	global inst_list, current_latency, current_cost, infaas, matched, BLmatch, not_matched, step_matching_pred
 	print('main invoked',slo_accuracy,slo_latency,slo_cost)
+
+
 	if scheme == "infaas":
 		infaas = True
 	signal(SIGINT, handler)
 	time_Scale = 1
 	init_scale();
 	if infaas:
-		return infaas_select_model()
-
+		return infaas_select_model() 
 	for ts in range(time_Scale): # 1,000,000 itterations of autoscaling
 		global_accuracy 	=	get_global_accuracy();
 		while (global_accuracy < slo_accuracy):
@@ -551,10 +558,11 @@ def main():
 	num_matching_pred	=	0;
 	num_non_matching_pred	=	0;
 	baselineModel = eval('tf.keras.applications.MobileNetV2()')
-	step_matching_pred = 0
 	step_length = batch
 	correct_predictions = defaultdict(list)
 	logfile = str(time.time()) + "-" + str(slo_latency)+ "-" + str(slo_accuracy) + "-"  + str(batch) +  "-output.csv"
+	batch_file_path = "/home/cc/"+str(slo_latency)+ "-" + str(slo_accuracy) + "-"  + str(batch) + "-results.csv"
+	f = open(batch_file_path,'w')
 	for filename in os.listdir('/home/cc/val'):
 		stime	=	time.time()
 		file = '/home/cc/val/' + str(filename)
@@ -597,7 +605,7 @@ def main():
 		fcount 	=	fcount	+ 1
 		if (maxVoteClass == BLClass):
 			num_matching_pred	=	num_matching_pred + 1;
-			step_matching_pred+=1
+			#step_matching_pred+=1
 			print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 			print("Matched For " + str(filename) + " Matching Pred ====== " + str(num_matching_pred) + " ### Completed: " + str(fcount) + "/50,000", maxVoteClass,BLClass,maxVoteclass,BLclass)
 			print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
@@ -611,22 +619,27 @@ def main():
 		
 		etime		=	time.time()
 		print("Time to Process Image	=	" + str(etime - stime),[maxVoteclass,BLclass])
+		check_ground_truth([maxVoteclass,BLclass],filename.strip('.JPEG'))
 		if (fcount%step_length == 0):
 			step_accuracy = step_matching_pred/step_length * 100
-			overall_accuracy = num_matching_pred/fcount *100
+			overall_accuracy = matched/fcount *100
 			if policy=="aggressive":
-                                aggressive_scaling(step_accuracy,overall_accuracy,correct_predictions,pretrained_model_list)
+                                result = aggressive_scaling(step_accuracy,overall_accuracy,correct_predictions,pretrained_model_list)
 
 			for key in correct_predictions.keys():
 				print(key, len(correct_predictions[key]))
-				correct_predictions[key] = []	
-			print("overall prediction accuracy is ", num_matching_pred/fcount *100, policy)
-			print("current step prediction accuracy is ", step_accuracy)
+				correct_predictions[key] = []
+			pretrained_models = [e for e,f in pretrained_model_list]
+			print("overall prediction accuracy is ", overall_accuracy, policy)
+			print("current step prediction accuracy is ", step_accuracy, step_matching_pred, step_length)
+			#original = sys.stdout
+			#sys.stdout = f
+			f.write("batchId ," + fcount/step_length, ",overall_accuracy, "+overall_accuracy+",step_accuracy, "+step_accuracy+",models, "+pretrained_models,","+len(pretrained_models)+","+result)
+			#sys.stdout = original
 			write_to_file(logfile)
 			#print(correct_predictions)
 			
 			step_matching_pred=0
-		check_ground_truth([maxVoteclass,BLclass],filename.strip('.JPEG'))
 		voteclassarray = []
 		votearray=[]
 
