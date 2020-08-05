@@ -116,6 +116,22 @@ ResNet50			=	pdf_fun(74.90,0);
 # Global Vars
 
 #SLOs
+def set_option(which_gpu, fraction_memory):
+    #config = tf.ConfigProto()
+    #config.gpu_options.per_process_gpu_memory_fraction = fraction_memory
+    #config.gpu_options.visible_device_list = which_gpu
+    #set_session(tf.Session(config=config))
+    if which_gpu == -1:
+        print("setting CPU********************")
+        my_devices = tf.config.list_physical_devices(device_type='CPU')
+        tf.config.set_visible_devices([], 'GPU')
+        #tf.config.set_visible_devices(devices= my_devices, device_type='CPU')
+        return
+
+    physical_devices = tf.config.list_physical_devices('GPU')
+    tf.config.set_visible_devices(physical_devices[which_gpu], 'GPU')
+    return
+
 
 def parse_arguments():
     try:
@@ -126,6 +142,7 @@ def parse_arguments():
         args_parser.add_argument('-b', "--batch", default=10, action='store', type=float, dest='batch',help="Target Accuracy")
         args_parser.add_argument('-s', "--scheme", default='', action='store', type=str, dest='scheme',help="Scheme infaas")
         args_parser.add_argument('-p', "--policy", default='constant', action='store', type=str, dest='policy',help="aggressive")
+        args_parser.add_argument('-g', "--gpu", default='constant', action='store', type=int, dest='gpu',help="aggressive")
         args = args_parser.parse_args()
 
         return args
@@ -155,10 +172,12 @@ slo_latency			=	float(args.latency)
 scheme				=	args.scheme
 policy				=	args.policy
 batch				= 	args.batch
+gpu                             =       args.gpu
 accuracy_margin			=	0.05
 infaas 				=	False
 cost_margin			=	0.1
 latecy_margin			=	10
+set_option(gpu, 0.9)
 
 # Vars
 inst_list			=	[]; # list of all active instances - a list of class instace
@@ -462,15 +481,15 @@ def printv(string):
 ###############################################################
 # Main()
 def aggressive_scaling(step_accuracy,overall_accuracy,correct_predictions,pretrained_model_list):
-        print("aggressive_scaling " ,step_accuracy, overall_accuracy, (slo_accuracy + 0.03)*100)
-        if (max(overall_accuracy,step_accuracy) >= ((slo_accuracy + 0.02)*100)) and len(correct_predictions) > 1:
+        print("aggressive_scaling " ,step_accuracy, overall_accuracy, (slo_accuracy + 0.02)*100)
+        if ((step_accuracy) >= ((slo_accuracy + 0.02)*100)) and len(correct_predictions) > 1:
                 index,drop_model = min((len(correct_predictions[key]),key) for key in correct_predictions )
                 drop = [e for e in pretrained_model_list if e[0] == drop_model]
                 print("least model is " ,index, drop_model,drop)
                 pretrained_model_list.remove(drop[0])
                 #union_model_list.remove(drop_model)
                 del correct_predictions[drop_model]
-        elif (max(overall_accuracy,step_accuracy) <= ((slo_accuracy - 0.02)*100)):
+        elif ((step_accuracy) <= ((slo_accuracy - 0.02)*100)):
                 remaining_models = set(model_name_list) - set([x[0] for x in pretrained_model_list])
                 print("remaining_models",remaining_models,set(model_name_list),set(pretrained_model_list[0]))
                 if remaining_models:
