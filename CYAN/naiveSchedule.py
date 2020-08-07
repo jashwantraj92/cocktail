@@ -52,6 +52,7 @@ README
 # PDFs
 
 matched = 0
+weighted_match = 0
 not_matched=0
 BLmatch = 0
 step_matching_pred = 0
@@ -66,20 +67,24 @@ for line in lines:
     images[name].append(label)
 #logging.info(images)
 def check_ground_truth(imgcls,imgname):
-    global matched,not_matched,BLmatch,total,step_matching_pred
+    global matched,not_matched,BLmatch,total,step_matching_pred,weighted_match
     total +=1
     match=0
-    print("matching ground truth", BLmatch, imgcls, imgname, images[imgname][0])
+    #print("matching ground truth", BLmatch, imgcls, imgname, images[imgname][0])
     for i in range(len(imgcls)):
         if imgcls[i] == images[imgname][0]:
-            print(f'ground truth matched {matched} {imgcls} {imgname} {images[imgname]}')
             if i == 0:
+                print(f'majority voting ground truth matched {matched} {imgcls} {imgname} {images[imgname]}')
                 matched+=1
                 step_matching_pred +=1
                 #logging.info(f"Prediction accuracy {matched/(total)*100}")       
             elif i ==1:
                 BLmatch+=1
-                #logging.info(f"Prediction accuracy {BLmatch/(total)*100}")       
+                print(f'Baseline ground truth matched {matched} {imgcls} {imgname} {images[imgname]}')
+            elif i ==2:
+                weighted_match+=1
+                print(f'Weighted voting  ground truth matched {matched} {imgcls} {imgname} {images[imgname]}')
+   #logging.info(f"Prediction accuracy {BLmatch/(total)*100}")       
             match=1
             #logging.info(f"Prediction accuracy {matched/(matched+not_matched)*100} {BLmatch/(BLmatch+not_matched)*100}")       
     if match==0:
@@ -98,9 +103,21 @@ def pdf_fun(accuracy, verbose):
 	if (verbose == 1):
 		print(sum(arr)/10000);
 	return arr;
+MobileNetV1			=	pdf_fun(69.36,0);
+MobileNetV2			=	pdf_fun(69.56,0);
+InceptionV3			=	pdf_fun(68,0);
+ResNet50V2			=	pdf_fun(66,0);
+DenseNet201			=	pdf_fun(72.8,0);
+DenseNet121			=	pdf_fun(69.95,0);
+Xception			=	pdf_fun(69.75,0);
+NASNetMobile			=	pdf_fun(71.14,0);
+NASNetLarge			=	pdf_fun(76,0);
+InceptionResnetV2		=	pdf_fun(73.6,0);
+vgg16				=	pdf_fun(66.52,0);
+ResNet50			=	pdf_fun(64,0);
 
-MobileNetV1			=	pdf_fun(70.40,0);
-MobileNEtV2			=	pdf_fun(71.30,0);
+"""MobileNetV1			=	pdf_fun(70.40,0);
+MobileNetV2			=	pdf_fun(71.30,0);
 InceptionV3			=	pdf_fun(77.90,0);
 ResNet50V2			=	pdf_fun(74.90,0);
 DenseNet201			=	pdf_fun(76.00,0);
@@ -110,7 +127,7 @@ NASNetMobile			=	pdf_fun(79.00,0);
 NASNetLarge			=	pdf_fun(82.00,0);
 InceptionResnetV2		=	pdf_fun(80.30,0);
 vgg16				=	pdf_fun(71.30,0);
-ResNet50			=	pdf_fun(74.90,0);
+ResNet50			=	pdf_fun(74.90,0);"""
 
 # End PDFs
 ###############################################################
@@ -180,6 +197,15 @@ infaas 				=	False
 cost_margin			=	0.1
 latecy_margin			=	10
 set_option(gpu, 0.9)
+weights = defaultdict(lambda: defaultdict(int))
+with open('all-models-classes', mode='r') as infile:
+    reader = csv.reader(infile)
+    for rows in reader:
+        model = rows[0]
+        Class = rows[1]
+        predictions = rows[2]
+        weights[model][Class]=predictions   
+
 
 # Vars
 inst_list			=	[]; # list of all active instances - a list of class instace
@@ -193,7 +219,8 @@ current_accuracy	=	0;		#
 current_cost		=	0;		# sum of all instance cost
 instance_list		=	[];
 model_lat_list		=	[315,151.96, 119.2, 74, 152.21, 89.5, 102.35, 98.22, 78.18, 41.5, 259, 43.45]
-top_accuracy_list	=	[82.3,80.30, 79.00, 77.90, 77.30, 76.00, 75.00, 74.90, 74.40, 71.30, 71.30, 70.40]
+#top_accuracy_list	=	[82.3,80.30, 79.00, 77.90, 77.30, 76.00, 75.00, 74.90, 74.40, 71.30, 71.30, 70.40]
+top_accuracy_list	=	[74.6,73, 69.75, 67.9, 72.83, 66, 70, 65,71.1, 68.05, 71.30, 68.36 ]
 model_name_list		=	['NASNetLarge','InceptionResNetV2', 'Xception', 'InceptionV3', 'DenseNet201', 'ResNet50V2', 'DenseNet121', 'ResNet50', 'NASNetMobile', 'MobileNetV2', 'VGG16', 'MobileNet']
 
 active_model_list	=	[];
@@ -207,15 +234,21 @@ def handler(signal_received, frame):
 	w = csv.writer(open(filename, "w"))
 	for k, val in class_weights.items():
 		for key,value in val.items():
-    			w.writerow([k,key, value])
+    			#w.writerow([k,key, value])
+    			exit(0)
 
 	exit(0)
 
 
-def write_to_file(logfile):
+def write_to_file(logfile, results):
     # Handle any cleanup here
 	print('Writing to fle class weights', logfile)
-	#dict = {'Python' : '.py', 'C++' : '.cpp', 'Java' : '.java'}
+	batch_file_path = "/home/cc/"+str(slo_latency)+ "-" + str(slo_accuracy) + "-"  + str(batch) + "-results.csv"
+	batch_file = open(batch_file_path,"w")
+	batch_writer = csv.writer(batch_file)
+	batch_writer.writerows(results)
+
+#dict = {'Python' : '.py', 'C++' : '.cpp', 'Java' : '.java'}
 	w = csv.writer(open(logfile, "w"))
 	for k, val in class_weights.items():
 		for key,value in val.items():
@@ -392,7 +425,7 @@ def get_model_key(model_name, verbose):
 		model = MobileNetV1
 	
 	elif (model_name == 'MobileNetV2'):
-		model = MobileNEtV2
+		model = MobileNetV2
 	
 	elif (model_name == 'InceptionV3'):
 		model = InceptionV3
@@ -505,11 +538,11 @@ def aggressive_scaling(step_accuracy,overall_accuracy,correct_predictions,pretra
                         return model
                     else:
                         print("***no model available to add *********")
-                        return None
+                        return "None"
 	
 
 def main():
-	global inst_list, current_latency, current_cost, infaas, matched, BLmatch, not_matched, step_matching_pred
+	global inst_list, current_latency, current_cost, infaas, matched, BLmatch, not_matched, step_matching_pred,weights
 	print('main invoked',slo_accuracy,slo_latency,slo_cost)
 
 
@@ -546,7 +579,8 @@ def main():
 
 	############################ Testing the entire test Suite ####################################
 	
-	pretrained_model_list	=	[];
+	pretrained_model_list	=	[]
+	results = []
 	for model in union_model_list:
 		cmd = 'tf.keras.applications.' + str(model) + '()';
 		pretrained_model = eval(cmd)
@@ -557,12 +591,11 @@ def main():
 	voteclassarray = []
 	num_matching_pred	=	0;
 	num_non_matching_pred	=	0;
-	baselineModel = eval('tf.keras.applications.MobileNetV2()')
+	weighted_matching	=	0;
+	baselineModel = eval('tf.keras.applications.NASNetLarge()')
 	step_length = batch
 	correct_predictions = defaultdict(list)
 	logfile = str(time.time()) + "-" + str(slo_latency)+ "-" + str(slo_accuracy) + "-"  + str(batch) +  "-output.csv"
-	batch_file_path = "/home/cc/"+str(slo_latency)+ "-" + str(slo_accuracy) + "-"  + str(batch) + "-results.csv"
-	f = open(batch_file_path,'w')
 	for filename in os.listdir('/home/cc/val'):
 		stime	=	time.time()
 		file = '/home/cc/val/' + str(filename)
@@ -581,18 +614,20 @@ def main():
 			#pretrained_model = eval(f'tf.keras.applications.{model}()')
 			##print(pretrained_model)
 		i=0
+		weighted_vote = defaultdict(int)
 		for smodels in pretrained_model_list:
 			result_before_save = smodels[1](x)
 			vote_result = tf.keras.applications.mobilenet.decode_predictions(result_before_save.numpy())[0][0][1]
 			vote_class = tf.keras.applications.mobilenet.decode_predictions(result_before_save.numpy())[0][0][0]
 			#print("Result before saving",tf.keras.applications.mobilenet.decode_predictions(result_before_save.numpy())[0][0][1])
-			print("Result before saving",smodels, smodels[0] ,vote_result, vote_class,result_before_save.numpy()[0][0])
+			print("Result before saving",smodels, smodels[0] ,vote_result, vote_class,weights[smodels[0]][vote_class],result_before_save.numpy()[0][0])
 			if vote_class == images[filename.strip('.JPEG')][0]:
 				correct_predictions[smodels[0]].append([fcount,vote_class])			
 				class_weights[smodels[0]][vote_class]+=1
 			#votearray.append(tf.keras.applications.mobilenet.decode_predictions(result_before_save.numpy())[0][0][1]));
 			votearray.append(vote_result)
 			voteclassarray.append(vote_class)
+			weighted_vote[vote_class]+= int(weights[smodels[0]][vote_class])
 			i+=1
 		
 		##print(baselineModel);
@@ -601,16 +636,27 @@ def main():
 		BLclass		=	tf.keras.applications.mobilenet.decode_predictions(resultBLModel.numpy())[0][0][0]
 		maxVoteClass	=	max(set(votearray), key = votearray.count)
 		maxVoteclass	=	max(set(voteclassarray), key = voteclassarray.count)
-		print("$$$ Class Info $$$ " + str(collections.Counter(votearray)) + " ### VS ### " + str(BLClass), BLclass, maxVoteclass,tf.keras.applications.mobilenet.decode_predictions(resultBLModel.numpy())[0][0])	
+		weighted_result =       max(weighted_vote, key= lambda x: weighted_vote[x])
+		print("weighted voted are ", weighted_vote)
+		print("$$$ Class Info $$$ " + str(collections.Counter(votearray)) + " ### VS ### " + str(BLClass), BLclass, maxVoteclass,weighted_result ,tf.keras.applications.mobilenet.decode_predictions(resultBLModel.numpy())[0][0])
+                    
 		fcount 	=	fcount	+ 1
-		if (maxVoteClass == BLClass):
+		if (maxVoteclass == BLclass):
 			num_matching_pred	=	num_matching_pred + 1;
 			#step_matching_pred+=1
 			print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 			print("Matched For " + str(filename) + " Matching Pred ====== " + str(num_matching_pred) + " ### Completed: " + str(fcount) + "/50,000", maxVoteClass,BLClass,maxVoteclass,BLclass)
 			print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 			print("\n")
-		else:
+		if (weighted_result == BLclass):
+			weighted_matching+= 1;
+			#step_matching_pred+=1
+			print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+			print("Matched For " + str(filename) + " Weighted Matching Pred ====== " + str(weighted_matching) + " ### Completed: " + str(fcount) + "/50,000", BLClass,weighted_result,BLclass)
+			print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+			print("\n")
+
+		if(maxVoteclass!=BLclass and weighted_result!=BLclass):
 			num_non_matching_pred	=	num_non_matching_pred + 1;
 			print("-------------------------------------------------------------------------------")
 			print("Did NOT Match For " + str(filename) + " NOT Matching Pred ====== " + str(num_non_matching_pred) + " ### Completed: " + str(fcount) + "/50,000",maxVoteClass,BLClass,maxVoteclass,BLclass)
@@ -619,7 +665,7 @@ def main():
 		
 		etime		=	time.time()
 		print("Time to Process Image	=	" + str(etime - stime),[maxVoteclass,BLclass])
-		check_ground_truth([maxVoteclass,BLclass],filename.strip('.JPEG'))
+		check_ground_truth([maxVoteclass,BLclass,weighted_result],filename.strip('.JPEG'))
 		if (fcount%step_length == 0):
 			step_accuracy = step_matching_pred/step_length * 100
 			overall_accuracy = matched/fcount *100
@@ -629,14 +675,15 @@ def main():
 			for key in correct_predictions.keys():
 				print(key, len(correct_predictions[key]))
 				correct_predictions[key] = []
-			pretrained_models = [e for e,f in pretrained_model_list]
+			pretrained_models = [e for e,m in pretrained_model_list]
 			print("overall prediction accuracy is ", overall_accuracy, policy)
 			print("current step prediction accuracy is ", step_accuracy, step_matching_pred, step_length)
 			#original = sys.stdout
 			#sys.stdout = f
-			f.write("batchId ," + fcount/step_length, ",overall_accuracy, "+overall_accuracy+",step_accuracy, "+step_accuracy+",models, "+pretrained_models,","+len(pretrained_models)+","+result)
-			#sys.stdout = original
-			write_to_file(logfile)
+			results.append(["batchId ," , str(fcount/step_length), ",overall_accuracy, ",str(overall_accuracy) ,",step_accuracy, " ,str(step_accuracy), ",models, ",str(collections.Counter(pretrained_models)),",",str(len(pretrained_models)),",",str(result)])
+                        #sys.stdout = original
+			write_to_file(logfile,results)
+			#batch_file.close()
 			#print(correct_predictions)
 			
 			step_matching_pred=0

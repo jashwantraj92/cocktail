@@ -1,9 +1,9 @@
-import csv
+import csv,sys
 import operator
 from collections import OrderedDict
 from collections import defaultdict
 weights = defaultdict(lambda: defaultdict(int))
-with open('1596592079.0497162-150.0-0.82-250.0-output.csv', mode='r') as infile:
+with open(sys.argv[1], mode='r') as infile:
     reader = csv.reader(infile)
     for rows in reader:
         model = rows[0]
