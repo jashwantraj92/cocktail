@@ -223,6 +223,9 @@ model_lat_list		=	[315,151.96, 119.2, 74, 152.21, 89.5, 102.35, 98.22, 78.18, 41
 #top_accuracy_list	=	[82.3,80.30, 79.00, 77.90, 77.30, 76.00, 75.00, 74.90, 74.40, 71.30, 71.30, 70.40]
 top_accuracy_list	=	[74.6,73, 69.75, 67.9, 72.83, 66, 70, 65,71.1, 68.05, 71.30, 68.36 ]
 model_name_list		=	['NASNetLarge','InceptionResNetV2', 'Xception', 'InceptionV3', 'DenseNet201', 'ResNet50V2', 'DenseNet121', 'ResNet50', 'NASNetMobile', 'MobileNetV2', 'VGG16', 'MobileNet']
+accuracy_list=defaultdict(float)
+for i in range(len(top_accuracy_list)):
+	accuracy_list[model_name_list[i]] = top_accuracy_list[i]
 
 active_model_list	=	[];
 union_model_list	=	[];
@@ -515,6 +518,31 @@ def printv(string):
 
 ###############################################################
 # Main()
+def vote_based_scaling(step_accuracy,overall_accuracy,correct_predictions,pretrained_model_list):
+        print("aggressive_scaling " ,step_accuracy, overall_accuracy, (slo_accuracy + 0.02)*100)
+        if ((step_accuracy) >= ((slo_accuracy + 0.02)*100)) and len(correct_predictions) > 1:
+                index,drop_model = min((len(correct_predictions[key]),key) for key in correct_predictions )
+                drop = [e for e in pretrained_model_list if e[0] == drop_model]
+                print("least model is " ,index, drop_model,drop)
+                pretrained_model_list.remove(drop[0])
+                #union_model_list.remove(drop_model)
+                del correct_predictions[drop_model]
+                return drop 
+        elif ((step_accuracy) <= ((slo_accuracy - 0.02)*100)):
+                remaining_models = set(model_name_list) - set([x[0] for x in pretrained_model_list])
+                print("remaining_models",remaining_models,set(model_name_list),set(pretrained_model_list[0]))
+                if remaining_models:
+                    model = find_model(remaining_models)
+                    if model:
+                        print("model added", model)
+                        cmd = 'tf.keras.applications.' + str(model[0]) + '()';
+                        pretrained_model = eval(cmd)
+                        pretrained_model_list.append([model[0],pretrained_model])
+                        return model
+                    else:
+                        print("***no model available to add *********")
+                        return "None"
+
 def aggressive_scaling(step_accuracy,overall_accuracy,correct_predictions,pretrained_model_list):
         print("aggressive_scaling " ,step_accuracy, overall_accuracy, (slo_accuracy + 0.02)*100)
         if ((step_accuracy) >= ((slo_accuracy + 0.02)*100)) and len(correct_predictions) > 1:
@@ -581,6 +609,21 @@ def main():
 	
 	pretrained_model_list	=	[]
 	results = []
+	accuracies = defaultdict()
+	if len(union_model_list)-5 > 0:
+		for i in union_model_list:
+			accuracies[i]=(accuracy_list[i])
+
+                
+		print(accuracies)
+		for i in range(len(union_model_list)-5):
+			min_model = min(accuracies,key=accuracies.get)
+			print(min_model)
+		#for i in range(len(union_model_list)-5:
+			union_model_list.remove(min_model)
+			del accuracies[min(accuracies,key=accuracies.get)]
+			
+
 	for model in union_model_list:
 		cmd = 'tf.keras.applications.' + str(model) + '()';
 		pretrained_model = eval(cmd)
