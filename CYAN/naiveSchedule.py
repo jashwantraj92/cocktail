@@ -74,8 +74,8 @@ def check_ground_truth(imgcls,imgname):
     for i in range(len(imgcls)):
         if imgcls[i] == images[imgname][0]:
             if i == 0:
-                print(f'majority voting ground truth matched {matched} {imgcls} {imgname} {images[imgname]}')
                 matched+=1
+                print(f'majority voting ground truth matched {matched} {imgcls} {imgname} {images[imgname]}')
                 step_matching_pred +=1
                 #logging.info(f"Prediction accuracy {matched/(total)*100}")       
             elif i ==1:
@@ -148,6 +148,7 @@ def set_option(which_gpu, fraction_memory):
         return
 
     physical_devices = tf.config.list_physical_devices('GPU')
+    print(physical_devices)
     tf.config.set_visible_devices(physical_devices[which_gpu], 'GPU')
     return
 
@@ -231,7 +232,6 @@ def handler(signal_received, frame):
 	print('SIGINT or CTRL-C detected. Exiting gracefully')
 	filename = str(time.time())+"-output.csv"
 	#dict = {'Python' : '.py', 'C++' : '.cpp', 'Java' : '.java'}
-	w = csv.writer(open(filename, "w"))
 	for k, val in class_weights.items():
 		for key,value in val.items():
     			#w.writerow([k,key, value])
@@ -632,11 +632,25 @@ def main():
 		
 		##print(baselineModel);
 		resultBLModel	=	baselineModel(x);
+		maxvoteclass = []
+		maxvotename = []
 		BLClass		=	tf.keras.applications.mobilenet.decode_predictions(resultBLModel.numpy())[0][0][1]
 		BLclass		=	tf.keras.applications.mobilenet.decode_predictions(resultBLModel.numpy())[0][0][0]
 		maxVoteClass	=	max(set(votearray), key = votearray.count)
 		maxVoteclass	=	max(set(voteclassarray), key = voteclassarray.count)
 		weighted_result =       max(weighted_vote, key= lambda x: weighted_vote[x])
+		counts = {x:votearray.count(x) for x in votearray}
+		maxcount = counts[maxVoteClass]
+		for i in counts:
+		    if counts[i] == maxcount:
+		        maxvotename.append(i)
+		counts = {x:voteclassarray.count(x) for x in voteclassarray}
+		maxcount = counts[maxVoteclass]
+		for i in counts:
+		    if counts[i] == maxcount:
+		        maxvoteclass.append(i)
+		if len(maxvoteclass) > 1:
+                    print("tied ",maxvotename,maxvoteclass)
 		print("weighted voted are ", weighted_vote)
 		print("$$$ Class Info $$$ " + str(collections.Counter(votearray)) + " ### VS ### " + str(BLClass), BLclass, maxVoteclass,weighted_result ,tf.keras.applications.mobilenet.decode_predictions(resultBLModel.numpy())[0][0])
                     
@@ -669,6 +683,7 @@ def main():
 		if (fcount%step_length == 0):
 			step_accuracy = step_matching_pred/step_length * 100
 			overall_accuracy = matched/fcount *100
+			result=""
 			if policy=="aggressive":
                                 result = aggressive_scaling(step_accuracy,overall_accuracy,correct_predictions,pretrained_model_list)
 
