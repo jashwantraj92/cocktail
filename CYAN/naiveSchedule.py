@@ -518,6 +518,7 @@ def printv(string):
 
 ###############################################################
 # Main()
+
 def vote_based_scaling(step_accuracy,overall_accuracy,correct_predictions,pretrained_model_list):
         print("aggressive_scaling " ,step_accuracy, overall_accuracy, (slo_accuracy + 0.02)*100)
         if ((step_accuracy) >= ((slo_accuracy + 0.02)*100)) and len(correct_predictions) > 1:
