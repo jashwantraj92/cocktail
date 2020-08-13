@@ -519,30 +519,34 @@ def printv(string):
 ###############################################################
 # Main()
 
-def vote_based_scaling(step_accuracy,overall_accuracy,correct_predictions,pretrained_model_list):
-        print("aggressive_scaling " ,step_accuracy, overall_accuracy, (slo_accuracy + 0.02)*100)
-        if ((step_accuracy) >= ((slo_accuracy + 0.02)*100)) and len(correct_predictions) > 1:
-                index,drop_model = min((len(correct_predictions[key]),key) for key in correct_predictions )
-                drop = [e for e in pretrained_model_list if e[0] == drop_model]
-                print("least model is " ,index, drop_model,drop)
-                pretrained_model_list.remove(drop[0])
+def vote_based_scaling(step_accuracy,overall_accuracy,correct_predictions,pretrained_model_list, MajorityVote):
+	print("aggressive_scaling " ,step_accuracy, overall_accuracy, (slo_accuracy + 0.02)*100)
+	drop = []
+	if ((step_accuracy) >= ((slo_accuracy + 0.02)*100)) and len(correct_predictions) > 1:
+		excess = max(MajorityVote) -  math.ceil(0.51*len(pretrained_model_list))
+		if(excess >= 1):
+			for i in range(excess):	
+				index,drop_model = min((len(correct_predictions[key]),key) for key in correct_predictions )
+				drop.append([e for e in pretrained_model_list if e[0] == drop_model])
+				print("least model is " ,index, drop_model,drop)
+				pretrained_model_list.remove(drop[0])
                 #union_model_list.remove(drop_model)
-                del correct_predictions[drop_model]
-                return drop 
-        elif ((step_accuracy) <= ((slo_accuracy - 0.02)*100)):
-                remaining_models = set(model_name_list) - set([x[0] for x in pretrained_model_list])
-                print("remaining_models",remaining_models,set(model_name_list),set(pretrained_model_list[0]))
-                if remaining_models:
-                    model = find_model(remaining_models)
-                    if model:
-                        print("model added", model)
-                        cmd = 'tf.keras.applications.' + str(model[0]) + '()';
-                        pretrained_model = eval(cmd)
-                        pretrained_model_list.append([model[0],pretrained_model])
-                        return model
-                    else:
-                        print("***no model available to add *********")
-                        return "None"
+				del correct_predictions[drop_model]
+			return drop 
+	elif ((step_accuracy) <= ((slo_accuracy - 0.02)*100)):		
+		remaining_models = set(model_name_list) - set([x[0] for x in pretrained_model_list])
+		print("remaining_models",remaining_models,set(model_name_list),set(pretrained_model_list[0]))
+		if remaining_models:
+			model = find_model(remaining_models)
+			if model:
+				print("model added", model)
+				cmd = 'tf.keras.applications.' + str(model[0]) + '()';
+				pretrained_model = eval(cmd)
+				pretrained_model_list.append([model[0],pretrained_model])
+				return model
+			else:
+				print("***no model available to add *********")
+				return "None"
 
 def aggressive_scaling(step_accuracy,overall_accuracy,correct_predictions,pretrained_model_list):
         print("aggressive_scaling " ,step_accuracy, overall_accuracy, (slo_accuracy + 0.02)*100)
@@ -632,6 +636,7 @@ def main():
 
 	fcount = 0;
 	votearray = []
+	MajorityVote = []
 	voteclassarray = []
 	num_matching_pred	=	0;
 	num_non_matching_pred	=	0;
@@ -693,6 +698,7 @@ def main():
 		for i in counts:
 		    if counts[i] == maxcount:
 		        maxvoteclass.append(i)
+		MajorityVote.append(len(maxvoteclass))
 		if len(maxvoteclass) > 1:
                     print("tied ",maxvotename,maxvoteclass)
 		print("weighted voted are ", weighted_vote)
@@ -730,10 +736,14 @@ def main():
 			result=""
 			if policy=="aggressive":
                                 result = aggressive_scaling(step_accuracy,overall_accuracy,correct_predictions,pretrained_model_list)
+			elif policy=="vote":
+                                result = vote_based_scaling(step_accuracy,overall_accuracy,correct_predictions,pretrained_model_list, MajorityVote)
+
 
 			for key in correct_predictions.keys():
 				print(key, len(correct_predictions[key]))
 				correct_predictions[key] = []
+			MajorityVote = []
 			pretrained_models = [e for e,m in pretrained_model_list]
 			print("overall prediction accuracy is ", overall_accuracy, policy)
 			print("current step prediction accuracy is ", step_accuracy, step_matching_pred, step_length)
