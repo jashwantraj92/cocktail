@@ -615,18 +615,19 @@ def main():
 	pretrained_model_list	=	[]
 	results = []
 	accuracies = defaultdict()
-	if len(union_model_list)-5 > 0:
-		for i in union_model_list:
-			accuracies[i]=(accuracy_list[i])
+	if top5 = True:
+		if len(union_model_list)-5 > 0:
+			for i in union_model_list:
+				accuracies[i]=(accuracy_list[i])
 
                 
-		print(accuracies)
-		for i in range(len(union_model_list)-5):
-			min_model = min(accuracies,key=accuracies.get)
-			print(min_model)
+			print(accuracies)
+			for i in range(len(union_model_list)-5):
+				min_model = min(accuracies,key=accuracies.get)
+				print(min_model)
 		#for i in range(len(union_model_list)-5:
-			union_model_list.remove(min_model)
-			del accuracies[min(accuracies,key=accuracies.get)]
+				union_model_list.remove(min_model)
+				del accuracies[min(accuracies,key=accuracies.get)]
 			
 
 	for model in union_model_list:
