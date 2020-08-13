@@ -520,7 +520,7 @@ def printv(string):
 # Main()
 
 def vote_based_scaling(step_accuracy,overall_accuracy,correct_predictions,pretrained_model_list, MajorityVote):
-	print("aggressive_scaling " ,step_accuracy, overall_accuracy, (slo_accuracy + 0.02)*100)
+	print("vote scaling " ,step_accuracy, overall_accuracy, (slo_accuracy + 0.02)*100, MajorityVote, len(MajorityVote))
 	drop = []
 	if ((step_accuracy) >= ((slo_accuracy + 0.02)*100)) and len(correct_predictions) > 1:
 		excess = max(MajorityVote) -  math.ceil(0.51*len(pretrained_model_list))
