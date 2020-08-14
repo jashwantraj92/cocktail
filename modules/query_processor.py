@@ -18,7 +18,7 @@ from .load_balancer import get_model_tracker
 from .data_accessor import instance_accessor, demand_aws_accessor
 from .constants import *
 from .instance_source import ins_source
-
+from .frontend import *
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s %(levelname)s %(message)s'
@@ -30,6 +30,7 @@ REQ_LAMBDA_CPU = 2
 REQ_LAMBDA_GPU = 3
 REQ_FAIL_CPU = 4
 REQ_FAIL_GPU = 5
+correct_predictions	= 	defaultdict(list)
 
 class QueryProcessor():
 
@@ -42,13 +43,14 @@ class QueryProcessor():
         self.session = aiohttp.ClientSession(loop=self.loop)
         asyncio.ensure_future(self._manage_queue())
         self.model_tracker = get_model_tracker()
-
+        
             
-    async def send_query(self, name, times, data, constraints):
+    async def send_query(self, name, times, data, constraints,filename, models=[]):
 
         #constraints = data.split(",")[1]
         #logging.info(f"constraint is {constraints}")
-        models = await self.get_models(int(constraints))
+        if not models:
+            models = await self.get_models(int(constraints))
         #models = models.split()
         futures = []
         for i in range(len(models)):
@@ -58,7 +60,7 @@ class QueryProcessor():
             futures.append(future)
             self.model_tracker[models[i]].append([time.time(),1])
         #await future
-        return await self.ensemble_result(futures, models)
+        return await self.ensemble_result(futures, models, filename)
         #return future.result()
     
     async def get_requirements(self,constraint):
@@ -141,7 +143,7 @@ class QueryProcessor():
             #self.loop.create_task(self.ensemble_result(statements))
 
   
-    async def ensemble_result(self, statements, models): 
+    async def ensemble_result(self, statements, models, filename): 
         predictions = []
         typ=0
         all_times=[]
@@ -150,7 +152,7 @@ class QueryProcessor():
         maxvotename = []
         maxvoteclass = []
         voteclasses= []
-
+        j=0
         #results,failed = await asyncio.wait(statements,return_when=asyncio.ALL_COMPLETED)
         for future in statements:
             await future
@@ -161,7 +163,10 @@ class QueryProcessor():
             votearray.append(result.split(" ")[0])
             #voteclasses.append(result.result().split()[1])
             voteclasses.append(result.split()[1])
+            if vote_class == frontend.images[filename.strip('.JPEG')][0]:
+                correct_predictions[models[j]].append([j,vote_class])	
             predictions.append(result)
+            j+=1
         maxVoteLabel        =       max(set(votearray), key = votearray.count) 
         maxVoteClass        =       max(set(voteclasses), key = voteclasses.count)
         counts = {x:votearray.count(x) for x in votearray}

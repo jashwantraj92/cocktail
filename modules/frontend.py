@@ -26,6 +26,8 @@ processor = query_processor.QueryProcessor()
 sch = scheduler.Scheduler()
 matched = 0
 not_matched = 0
+overall_accuracy = 0
+step_accuracy = 0
 images = defaultdict(list)
 file1 = open('/home/cc/ensembling/CYAN/ground-truth-classes', 'r') 
 lines = file1.readlines()
@@ -47,13 +49,38 @@ def check_ground_truth(imgcls,imgname):
         if imgcls[i] == images[imgname][0]:
             logging.info(f'ground truth matched {matched} {imgcls} {imgname} {images[imgname]}')
             matched+=1
-            logging.info(f"Prediction accuracy {matched/(matched+not_matched)*100}")       
+            logging.info(f"Prediction accuracy {matched/(matched+not_matched)*100}")                   
             return
     not_matched+=1
     logging.info(f'ground truth not matched {not_matched} {imgcls} {imgname} {images[imgname]}')
     logging.info(f"Prediction accuracy {matched/(matched+not_matched)*100}")       
 
 @app.route('/predict/<model_name>',  methods=['POST'])
+def vote_based_scaling(step_accuracy,overall_accuracy,correct_predictions,pretrained_model_list):
+        print("aggressive_scaling " ,step_accuracy, overall_accuracy, (slo_accuracy + 0.02)*100)
+        if ((step_accuracy) >= ((slo_accuracy + 0.02)*100)) and len(correct_predictions) > 1:
+                index,drop_model = min((len(correct_predictions[key]),key) for key in correct_predictions )
+                drop = [e for e in pretrained_model_list if e[0] == drop_model]
+                print("least model is " ,index, drop_model,drop)
+                pretrained_model_list.remove(drop[0])
+                #union_model_list.remove(drop_model)
+                del correct_predictions[drop_model]
+                return drop 
+        elif ((step_accuracy) <= ((slo_accuracy - 0.02)*100)):
+                remaining_models = set(model_name_list) - set([x[0] for x in pretrained_model_list])
+                print("remaining_models",remaining_models,set(model_name_list),set(pretrained_model_list[0]))
+                if remaining_models:
+                    model = find_model(remaining_models)
+                    if model:
+                        print("model added", model)
+                        cmd = 'tf.keras.applications.' + str(model[0]) + '()';
+                        pretrained_model = eval(cmd)
+                        pretrained_model_list.append([model[0],pretrained_model])
+                        return model
+                    else:
+                        print("***no model available to add *********")
+                        return "None"
+
 async def predict(request, model_name):
     if request.method == 'POST':
         receive_time = utils.now()
@@ -69,7 +96,16 @@ async def predict(request, model_name):
         #logging.info("data is ",data)
         print("data is ",len(data))
         sch.record_request(model_name)
-        name , synset , typ, handel_time, models = await processor.send_query(model_name, receive_time, data, constraint)
+        if not constraints[constraint]:
+            name , synset , typ, handel_time, models = await processor.send_query(model_name, receive_time, data, constraint,filename)
+            constraints[constraint].append(models,1)
+        else:
+            models = constraints[constraint][0]
+            constraints[constraint][1]+=1
+            name , synset , typ, handel_time, models = await processor.send_query(model_name, receive_time, data, constraint, models)
+            if constraints[constraint][1]%batch_size == 0:
+                vote_based_scaling(step_accuracy,overall_accuracy,processor.correct_predictions,constraints[constraint][0]
+)
         logging.info(f'Processed request for model: {model_name} {name} {synset}  {filename} {models}')
         check_ground_truth(synset,filename)
         if (typ > 3):

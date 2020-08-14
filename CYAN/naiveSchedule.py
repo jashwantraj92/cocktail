@@ -199,13 +199,13 @@ cost_margin			=	0.1
 latency_margin			=	10
 set_option(gpu, 0.9)
 weights = defaultdict(lambda: defaultdict(int))
-with open('all-models-classes', mode='r') as infile:
+"""with open('all-models-classes', mode='r') as infile:
     reader = csv.reader(infile)
     for rows in reader:
         model = rows[0]
         Class = rows[1]
         predictions = rows[2]
-        weights[model][Class]=predictions   
+        weights[model][Class]=predictions   """
 
 
 # Vars
@@ -678,6 +678,7 @@ def main():
 			if vote_class == images[filename.strip('.JPEG')][0]:
 				correct_predictions[smodels[0]].append([fcount,vote_class])			
 				class_weights[smodels[0]][vote_class]+=1
+				weights[smodels[0]][vote_class]+=1
 			#votearray.append(tf.keras.applications.mobilenet.decode_predictions(result_before_save.numpy())[0][0][1]));
 			votearray.append(vote_result)
 			voteclassarray.append(vote_class)
