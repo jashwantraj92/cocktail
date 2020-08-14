@@ -34,7 +34,7 @@ cur_cost:		total cost of all instances
 
 slo_latency, slo_accuracy, slo_cost : constraints provided by user. (FIXME: Need some defaut values for each)
 
-latecy_margin, accuracy_margin, cost_margin: margins provided by user. Defaut value = 0 if not provided
+latency_margin, accuracy_margin, cost_margin: margins provided by user. Defaut value = 0 if not provided
 
 Scaling Priority: User specified. Cost > Accuracy > latency (Default)
 
@@ -50,7 +50,7 @@ README
 '''
 ###############################################################
 # PDFs
-
+top5=False
 matched = 0
 weighted_match = 0
 not_matched=0
@@ -196,7 +196,7 @@ gpu                             =       args.gpu
 accuracy_margin			=	0.05
 infaas 				=	False
 cost_margin			=	0.1
-latecy_margin			=	10
+latency_margin			=	10
 set_option(gpu, 0.9)
 weights = defaultdict(lambda: defaultdict(int))
 with open('all-models-classes', mode='r') as infile:
@@ -284,7 +284,7 @@ def find_model(models):
 		candidate_models = []
 		print("finding in models", models)
 		for model in models:
-				if model_lat_list[model_name_list.index(model)] <=  slo_latency:
+				if model_lat_list[model_name_list.index(model)] <=  slo_latency + latency_margin:
 					candidate_models.append([model_name_list.index(model),top_accuracy_list[model_name_list.index(model)]])
 		if not candidate_models:
 			return None
@@ -319,8 +319,8 @@ class instance:
 		if (self.my_latency < slo_latency):
 			#for itr in range(len(model_lat_list)):
 			for itr in range(len(model_lat_list)):
-				obey_latency		=	model_lat_list[itr] < (slo_latency + latecy_margin);
-				#obey_latency		=	slo_latency + latecy_margin
+				obey_latency		=	model_lat_list[itr] < (slo_latency + latency_margin);
+				#obey_latency		=	slo_latency + latency_margin
 				obey_duplication	=	model_name_list[itr] not in active_model_list	
 				print("Adding more models to instance ",active_model_list, self.my_latency, obey_latency, obey_duplication)		
 				
@@ -338,7 +338,7 @@ class instance:
 					return 1;
 				
 				'''
-				elif (model_lat_list[itr] < (slo_latency + latecy_margin - self.my_latency)):# and forceScaleIn == 1):
+				elif (model_lat_list[itr] < (slo_latency + latency_margin - self.my_latency)):# and forceScaleIn == 1):
 					self.my_latency	=	self.my_latency + model_lat_list[itr];
 					self.my_model_list.append(model_name_list[itr]);
 					self.my_latency_list.append(model_lat_list[itr]);
@@ -492,7 +492,7 @@ def baseline_optimizer():
  
 	global accuracy_margin	
 	global cost_margin		
-	global latecy_margin	
+	global latency_margin	
  
 	global model_lat_list	
 	global top_accuracy_list
@@ -502,7 +502,7 @@ def baseline_optimizer():
 	norm_acc_dist				=	[]
 	
 	for lat in model_lat_list:
-		norm_lat_dist.append(1-(lat/(slo_latency + latecy_margin)))
+		norm_lat_dist.append(1-(lat/(slo_latency + latency_margin)))
 	
 	for acc in top_accuracy_list:
 		norm_acc_dist.append(1- (acc/slo_accuracy - accuracy_margin))
@@ -520,16 +520,20 @@ def printv(string):
 # Main()
 
 def vote_based_scaling(step_accuracy,overall_accuracy,correct_predictions,pretrained_model_list, MajorityVote):
-	print("vote scaling " ,step_accuracy, overall_accuracy, (slo_accuracy + 0.02)*100, MajorityVote, len(MajorityVote))
+	print("vote scaling " ,step_accuracy, overall_accuracy, (slo_accuracy + 0.02)*100, max(set(MajorityVote), key=MajorityVote.count), len(MajorityVote))
 	drop = []
 	if ((step_accuracy) >= ((slo_accuracy + 0.02)*100)) and len(correct_predictions) > 1:
-		excess = max(MajorityVote) -  math.ceil(0.51*len(pretrained_model_list))
+		excess = max(set(MajorityVote), key=MajorityVote.count) -  math.ceil(0.51*len(pretrained_model_list))
 		if(excess >= 1):
 			for i in range(excess):	
-				index,drop_model = min((len(correct_predictions[key]),key) for key in correct_predictions )
+				low_accurate_model = ""
+				count,drop_model = min((len(correct_predictions[key]),key) for key in correct_predictions )
+				for key in correct_predictions.keys():
+					if (len(correct_predictions[key]) == count) and (accuracy_list[key]< accuracy_list[drop_model]):
+						drop_model = key	
 				drop.append([e for e in pretrained_model_list if e[0] == drop_model])
-				print("least model is " ,index, drop_model,drop)
-				pretrained_model_list.remove(drop[0])
+				print("least model is " ,count, drop_model,drop,len(correct_predictions[drop_model]))
+				pretrained_model_list.remove(drop[i][0])
                 #union_model_list.remove(drop_model)
 				del correct_predictions[drop_model]
 			return drop 
@@ -615,7 +619,7 @@ def main():
 	pretrained_model_list	=	[]
 	results = []
 	accuracies = defaultdict()
-	if top5 = True:
+	if top5:
 		if len(union_model_list)-5 > 0:
 			for i in union_model_list:
 				accuracies[i]=(accuracy_list[i])
@@ -699,7 +703,7 @@ def main():
 		for i in counts:
 		    if counts[i] == maxcount:
 		        maxvoteclass.append(i)
-		MajorityVote.append(len(maxvoteclass))
+		MajorityVote.append(maxcount)
 		if len(maxvoteclass) > 1:
                     print("tied ",maxvotename,maxvoteclass)
 		print("weighted voted are ", weighted_vote)
