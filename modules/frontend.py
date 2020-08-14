@@ -38,14 +38,14 @@ for line in lines:
     images[name].append(label)
 #logging.info(images)
 constraints = defaultdict(list)
-for i in range(len(accuracy)):
-    constraints[i].append([])
+#for i in range(len(accuracy)):
+#    constraints[i].append([])
 
 def check_ground_truth(imgcls,imgname):
     global matched,not_matched
     for i in range(len(imgcls)):
         if imgcls[i] == "resources":
-		return
+            return
         if imgcls[i] == images[imgname][0]:
             logging.info(f'ground truth matched {matched} {imgcls} {imgname} {images[imgname]}')
             matched+=1
@@ -55,7 +55,6 @@ def check_ground_truth(imgcls,imgname):
     logging.info(f'ground truth not matched {not_matched} {imgcls} {imgname} {images[imgname]}')
     logging.info(f"Prediction accuracy {matched/(matched+not_matched)*100}")       
 
-@app.route('/predict/<model_name>',  methods=['POST'])
 def vote_based_scaling(step_accuracy,overall_accuracy,correct_predictions,pretrained_model_list):
         print("aggressive_scaling " ,step_accuracy, overall_accuracy, (slo_accuracy + 0.02)*100)
         if ((step_accuracy) >= ((slo_accuracy + 0.02)*100)) and len(correct_predictions) > 1:
@@ -81,6 +80,7 @@ def vote_based_scaling(step_accuracy,overall_accuracy,correct_predictions,pretra
                         print("***no model available to add *********")
                         return "None"
 
+@app.route('/predict/<model_name>',  methods=['POST'])
 async def predict(request, model_name):
     if request.method == 'POST':
         receive_time = utils.now()
@@ -97,10 +97,12 @@ async def predict(request, model_name):
         print("data is ",len(data))
         sch.record_request(model_name)
         if not constraints[constraint]:
+            logging.info(f"adding models for first time")
             name , synset , typ, handel_time, models = await processor.send_query(model_name, receive_time, data, constraint,filename)
             constraints[constraint].append(models,1)
         else:
             models = constraints[constraint][0]
+            logging.info(f"updating models {constraints[constraint]}")
             constraints[constraint][1]+=1
             name , synset , typ, handel_time, models = await processor.send_query(model_name, receive_time, data, constraint, models)
             if constraints[constraint][1]%batch_size == 0:

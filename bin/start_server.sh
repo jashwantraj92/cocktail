@@ -4,14 +4,14 @@ set -euo pipefail
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # Let the user start this script from anywhere in the filesystem.
 source $DIR/utils.sh
-ROOT=/home/cc/ensembling
+ROOT=/home/cc/cocktail
 cd $ROOT
 
 PID_FILE=${ROOT}/debug/pid
 STATE_FILE=${ROOT}/debug/state
 LOG_DIR=${ROOT}/debug/logs
 mkdir -p ${LOG_DIR}
-get_log_dir_name=/home/cc/ensembling/logs
+get_log_dir_name=/home/cc/cocktail/logs
 UPDATER="True"
 TAG=0
 
@@ -113,7 +113,7 @@ destroy() {
 
 send_request() {
     if [[ `cat ${STATE_FILE}` != "0" ]]; then
-        nohup python3.6 /home/cc/ensembling/experiments/request_sender.py --burst ${TAG} >${LOG_DIR}/sender.log 2>&1 &
+        nohup python3.6 /home/cc/cocktail/experiments/request_sender.py --burst ${TAG} >${LOG_DIR}/sender.log 2>&1 &
         SENDER_PID="$!"
         echo "sender started! PID : ${SENDER_PID}"
         echo "$SENDER_PID " >> ${PID_FILE}

@@ -145,7 +145,7 @@ CREDENTIALS = {
 }
 #models=['NASNetLarge','InceptionResNetV2', 'Xception', 'InceptionV3', 'DenseNet201', 'ResNet50V2', 'DenseNet121', 'ResNet50', 'NASNetMobile', 'MobileNetV2', 'VGG16', 'MobileNet']
 models=['InceptionResNetV2', 'InceptionV3', 'MobileNetV2', 'MobileNet', 'ResNet50V2', 'ResNet50']
-accuracy = [.75,.75,.71,.74]
+accuracy = [.75,.75,.67,.69]
 latency = [200,100,55,75]
 # model deploy cmd
 TF_DEPLOY_CMD ={
