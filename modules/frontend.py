@@ -6,14 +6,16 @@ import threading
 import time,os
 
 from sanic import Sanic
-from sanic.response import json
 from collections import defaultdict
+from sanic.response import json
 
 from . import utils
 from . import query_processor
+from .query_processor import get_correct_predictions
 from . import scheduler
 from .instance_source import ins_source
 from .constants import *
+
 # from .query_processor import processor
 
 logging.basicConfig(
@@ -29,7 +31,7 @@ not_matched = 0
 overall_accuracy = 0
 step_accuracy = 0
 images = defaultdict(list)
-file1 = open('/home/cc/ensembling/CYAN/ground-truth-classes', 'r') 
+file1 = open('/home/cc/cocktail/CYAN/ground-truth-classes', 'r') 
 lines = file1.readlines()
 for line in lines:
     label = line.split(" ")[1].strip('\n')
@@ -38,6 +40,7 @@ for line in lines:
     images[name].append(label)
 #logging.info(images)
 constraints = defaultdict(list)
+prediction_accuracy = defaultdict(list)
 #for i in range(len(accuracy)):
 #    constraints[i].append([])
 
@@ -55,7 +58,8 @@ def check_ground_truth(imgcls,imgname):
     logging.info(f'ground truth not matched {not_matched} {imgcls} {imgname} {images[imgname]}')
     logging.info(f"Prediction accuracy {matched/(matched+not_matched)*100}")       
 
-def vote_based_scaling(step_accuracy,overall_accuracy,correct_predictions,pretrained_model_list):
+def vote_based_scaling(step_accuracy,overall_accuracy,correct_predictions,pretrained_model_list, constraint):
+        slo_accuracy = accuracy[constraint]
         print("aggressive_scaling " ,step_accuracy, overall_accuracy, (slo_accuracy + 0.02)*100)
         if ((step_accuracy) >= ((slo_accuracy + 0.02)*100)) and len(correct_predictions) > 1:
                 index,drop_model = min((len(correct_predictions[key]),key) for key in correct_predictions )
@@ -93,23 +97,23 @@ async def predict(request, model_name):
         constraint = request.json['constraint']
         filename = request.json['filename'].strip('.JPEG')
         #constraint = 0
-        #logging.info("data is ",data)
+        logging.info(f"data is ,{constraint},{filename},{typ},")
         print("data is ",len(data))
         sch.record_request(model_name)
         if not constraints[constraint]:
             logging.info(f"adding models for first time")
             name , synset , typ, handel_time, models = await processor.send_query(model_name, receive_time, data, constraint,filename)
-            constraints[constraint].append(models,1)
+            constraints[constraint].append([models,1])
+            logging.info(f"added models for first time {models}")
         else:
-            models = constraints[constraint][0]
+            models = constraints[constraint][0][0]
             logging.info(f"updating models {constraints[constraint]}")
-            constraints[constraint][1]+=1
-            name , synset , typ, handel_time, models = await processor.send_query(model_name, receive_time, data, constraint, models)
-            if constraints[constraint][1]%batch_size == 0:
-                vote_based_scaling(step_accuracy,overall_accuracy,processor.correct_predictions,constraints[constraint][0]
-)
+            constraints[constraint][0][1]+=1
+            name , synset , typ, handel_time, models = await processor.send_query(model_name, receive_time, data, constraint, filename,models)
+            if constraints[constraint][0][1]%batch_size == 0:
+                vote_based_scaling(step_accuracy,overall_accuracy,get_correct_predictions(),constraints[constraint][0][0], constraint)
         logging.info(f'Processed request for model: {model_name} {name} {synset}  {filename} {models}')
-        check_ground_truth(synset,filename)
+        check_ground_truth(synset,filename, constraint)
         if (typ > 3):
             scheduler.Scheduler.failed_rate = scheduler.Scheduler.failed_rate * 0.999 + 0.001
         elif (handel_time > UPPER_LATENCY_BOUND):

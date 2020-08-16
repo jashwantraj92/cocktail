@@ -12,7 +12,7 @@ import base64,os, random
 from PIL import Image
 import numpy as np
 
-upper_folder = "/home/cc/ensembling"
+upper_folder = "/home/cc/cocktail"
 
 sender = lambda data, constraint, filename: requests.post(
     f'http://{args.host}:{args.port}/predict/{args.name}',
@@ -59,7 +59,7 @@ def get_data():
 def send_data(args, reader):
     pool = ThreadPoolExecutor(5000)
     data = get_data()
-    df = pd.read_csv('/home/cc/ensembling/workload/test_interval.csv', delimiter=',')
+    df = pd.read_csv('/home/cc/cocktail/workload/test_interval.csv', delimiter=',')
 # User list comprehension to create a list of lists from Dataframe rows
     list_of_rows = [list(row) for row in df.values]
 # Print list of lists i.e. rows
@@ -79,7 +79,7 @@ def send_data(args, reader):
         time.sleep(num)
 def send_trace_data(args, reader):
     pool = ThreadPoolExecutor(5000)
-    df = pd.read_csv('/home/cc/ensembling/workload/short_wits_load.csv', delimiter=',')
+    df = pd.read_csv('/home/cc/cocktail/workload/short_wits_load.csv', delimiter=',')
 # User list comprehension to create a list of lists from Dataframe rows
     list_of_rows = [list(row) for row in df.values]
 # Print list of lists i.e. rows
@@ -103,7 +103,7 @@ def send_trace_data(args, reader):
             data,filename = get_data()
             #data = np.append(data,[constraints])
             pool.submit(sender, data, int(constraints), filename)
-            print("request submitted", constraints, filename)
+            print("request submitted", constraints, filename, data)
             # sender(data)
             # print(f'Send request after {s} ms')
         time.sleep(3)

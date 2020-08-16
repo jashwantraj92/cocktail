@@ -101,7 +101,7 @@ def write_pdf(mypdf):
     print("pdf written")
 
 
-def plot_data(df, merged_pdf):
+def plot_data(df, merged_pdf,files):
     df = df.drop(['c1','c2','c3','c4','c5','c6'],axis=1).reset_index()
     df = df[df['c7']!="None"]
     df = df.drop(['c7','models'],axis=1).reset_index()
@@ -112,7 +112,7 @@ def plot_data(df, merged_pdf):
     ax.grid()
 #ax = df.plot(kind='bar', x="#batch", legend=False,  color=sns.color_palette("OrRd", n_colors=3))
 
-    g = sns.barplot(x="#batch",y="#models", data=df , linewidth=3, label="models")
+    g = sns.barplot(x="#batch",y="#models", data=df , linewidth=3, label="models").set_title(files.strip("csv"))
     ax2 = ax.twinx()
     g = sns.lineplot(x="#batch",y="overall_accuracy", ax=ax2, data=df,
                      palette='Paired', color="red", linewidth=1, label="overall_accuracy")
@@ -164,7 +164,7 @@ args = parse_arguments()
 merged_pdf = PdfFileMerger()
 for files in args.filename.split():
     df = run_reader(files)
-    plot_data(df,merged_pdf)
+    plot_data(df,merged_pdf,files)
 write_pdf(merged_pdf)
 print("***********************************")
 print(df['#models'].quantile([0.1, .25, .5, 0.75, 0.9, 0.99]))

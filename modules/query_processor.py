@@ -1,24 +1,24 @@
 import asyncio
-import json
 import logging
 import threading
 import time
 from collections import deque
+from collections import defaultdict
 import numpy as np
 import requests
 
 import aiohttp
 import time
 import tensorflow as tf
+from . import aws_manager, utils, naiveSchedule, frontend
+import json
 
-from . import aws_manager, utils, naiveSchedule
 from .model_source import mdl_source
 from .load_balancer import get_balancer
 from .load_balancer import get_model_tracker
 from .data_accessor import instance_accessor, demand_aws_accessor
 from .constants import *
 from .instance_source import ins_source
-from .frontend import *
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s %(levelname)s %(message)s'
@@ -31,7 +31,8 @@ REQ_LAMBDA_GPU = 3
 REQ_FAIL_CPU = 4
 REQ_FAIL_GPU = 5
 correct_predictions	= 	defaultdict(list)
-
+def get_correct_predictions():
+    return correct_predictions
 class QueryProcessor():
 
     def set_loop(self, loop_):
@@ -51,11 +52,12 @@ class QueryProcessor():
         #logging.info(f"constraint is {constraints}")
         if not models:
             models = await self.get_models(int(constraints))
+            logging.info(f"initiated model selection")
         #models = models.split()
         futures = []
         for i in range(len(models)):
             future = asyncio.Future()
-            logging.info(f"adding query to queue {models[i]} {times}" )
+            logging.info(f"adding query to queue {models[i]} {times} {models}" )
             await self.query_queue.put(future, name, times, data, models[i])
             futures.append(future)
             self.model_tracker[models[i]].append([time.time(),1])
@@ -144,6 +146,7 @@ class QueryProcessor():
 
   
     async def ensemble_result(self, statements, models, filename): 
+        global correct_predictions
         predictions = []
         typ=0
         all_times=[]
@@ -158,12 +161,13 @@ class QueryProcessor():
             await future
             result, typ, times = future.result()
             all_times.append(times)
-            logging.info(f"Future results is {result} {result.split()[0]} {typ} {times}")
+            logging.info(f"Future results is {result} {result.split()[0]} {typ} {times} {filename}")
             #votearray.append(result.result().split()[0])
             votearray.append(result.split(" ")[0])
             #voteclasses.append(result.result().split()[1])
             voteclasses.append(result.split()[1])
-            if vote_class == frontend.images[filename.strip('.JPEG')][0]:
+            vote_class = result.split()[1]
+            if vote_class == frontend.images[filename][0]:
                 correct_predictions[models[j]].append([j,vote_class])	
             predictions.append(result)
             j+=1
@@ -200,7 +204,7 @@ class QueryProcessor():
         #data = data[0].split(",")[0]
         data = json.dumps({'data':data[0]})
         
-        logging.info(f'data is {len(data)}')
+        logging.info(f'data is {len(data[0])}')
         #resp = await self.session.post(mdl_source.get_request(data, ip))
         #cmd= "python3.6 python-grpc-async-server-example/client.py 1 1 50055 0"
         #utils.check_command(utils.get_session(ip), cmd, debug=True)

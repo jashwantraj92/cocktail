@@ -26,14 +26,14 @@ async def main():
     host = sys.argv[1]
     port = sys.argv[2]
     images=[]
-    for filename in os.listdir('/home/cc/ensembling/CYAN/val'):
+    for filename in os.listdir('/home/cc/val'):
         images.append(filename)
     for i in range(int(sys.argv[3])):
         filename = str(random.choice(images))
-        file = "/home/cc/ensembling/CYAN/val/" + str(filename)
+        file = "/home/cc/val/" + str(filename)
         receive_time = time.time()
         #file = tf.keras.utils.get_file("grace_hopper.jpg","https://storage.googleapis.com/download.tensorflow.org/example_images/grace_hopper.jpg")
-        #dl_request = requests.get("/home/cc/ensembling/CYAN/val/ILSVRC2010_val_00024988.JPEG", stream=True)
+        #dl_request = requests.get("/home/cc/cocktail/CYAN/val/ILSVRC2010_val_00024988.JPEG", stream=True)
         #dl_request.raise_for_status()
         #with open(file, mode='rb') as file:
         #    img = file.read()

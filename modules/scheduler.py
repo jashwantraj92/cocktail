@@ -32,8 +32,8 @@ class Scheduler():
         self.loop = loop_
         logging.info('starting scheduler')
         self.predictor = load_predictor.Predictor(init_load=2964, 
-            model_path='/home/cc/ensembling/resources/my_model_32.h5',
-            scaler_path='/home/cc/ensembling/resources/my_scaler.save')
+            model_path='/home/cc/cocktail/resources/my_model_32.h5',
+            scaler_path='/home/cc/cocktail/resources/my_scaler.save')
         self.warm_up_num = {}
         self.count = {}
         self.res_list = []

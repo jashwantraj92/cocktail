@@ -51,7 +51,7 @@ not_matched=0
 BLmatch = 0
 total = 0
 images = collections.defaultdict(list)
-file1 = open('/home/cc/ensembling/CYAN/ground-truth-classes', 'r') 
+file1 = open('/home/cc/cocktail/CYAN/ground-truth-classes', 'r') 
 lines = file1.readlines()
 for line in lines:
     label = line.split(" ")[1].strip('\n')

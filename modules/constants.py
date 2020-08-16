@@ -38,7 +38,7 @@ DEFAULT_BALANCER = 'weight'
 DB_HOST = 'localhost'
 # REDIS_PORT = 6379
 MONGO_PORT = 27017
-
+batch_size = 10
 #DB configs
 ON_DEMAND_PRIZE_DB = 'on_demand'
 SPOT_PRIZE_DB = 'spot'
