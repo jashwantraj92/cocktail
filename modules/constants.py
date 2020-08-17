@@ -61,11 +61,11 @@ PREDICTOR_WINDOW = 5
 SECURITY_GROUPS = {
     'us-west-2': ['sg-xxx'],
     'us-west-1': ['sg-xxx'],
-    'us-east-1': ['sg-8c34ddfc'],
+    'us-east-2': ['sg-7b12e713'],
     'eu-west-3': ['sg-6c538705']
 }
 KEYS = {
-    'us-east-1': 'aws-cocktail',
+    'us-east-2': 'aws-cocktail',
     'eu-west-3': 'aws-cocktail',
     'us-west-1': 'xxx',
     'us-west-2': 'xxx'
@@ -79,17 +79,17 @@ MODEL = 'tf'
 
 # AMIs for each model
 AMIS_TF = {
-    'us-east-1': {'CPU': 'ami-0c99b9341549188d8', 'GPU': 'ami-0edeb7664ef2967e7'},
+    'us-east-2': {'CPU': 'ami-0eb0c6809fbf65176', 'GPU': 'ami-04e745c5a31677ca0'},
     'eu-west-3': {'CPU': 'ami-0c99b9341549188d8', 'GPU': 'ami-0edeb7664ef2967e7'}
 }
 AMIS_KR = {
-    'us-east-1': {'CPU': 'ami-xxx', 'GPU': 'ami-xxx'}
+    'us-east-2': {'CPU': 'ami-xxx', 'GPU': 'ami-xxx'}
 }
 AMIS_MX = {
-    'us-east-1': {'CPU': 'ami-xxx'}
+    'us-east-2': {'CPU': 'ami-xxx'}
 }
 AMIS_NMT = {
-    'us-east-1': {'CPU': 'ami-xxx', 'GPU': 'ami-xxx'}
+    'us-east-2': {'CPU': 'ami-xxx', 'GPU': 'ami-xxx'}
 }
 
 AMIS_MODEL = {
@@ -138,7 +138,7 @@ with open(filepath) as fp:
    access_key = fp.readline().strip()
    secret_key = fp.readline().strip()
 
-DEFAULT_REGION = 'eu-west-3'
+DEFAULT_REGION = 'us-east-2'
 CREDENTIALS = {
     'aws_access_key_id' : access_key,
     'aws_secret_access_key' : secret_key
