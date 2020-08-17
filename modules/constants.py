@@ -38,7 +38,7 @@ DEFAULT_BALANCER = 'weight'
 DB_HOST = 'localhost'
 # REDIS_PORT = 6379
 MONGO_PORT = 27017
-batch_size = 10
+batch_interval = 60
 #DB configs
 ON_DEMAND_PRIZE_DB = 'on_demand'
 SPOT_PRIZE_DB = 'spot'
@@ -144,9 +144,9 @@ CREDENTIALS = {
     'aws_secret_access_key' : secret_key
 }
 #models=['NASNetLarge','InceptionResNetV2', 'Xception', 'InceptionV3', 'DenseNet201', 'ResNet50V2', 'DenseNet121', 'ResNet50', 'NASNetMobile', 'MobileNetV2', 'VGG16', 'MobileNet']
-models=['InceptionResNetV2', 'InceptionV3', 'MobileNetV2', 'MobileNet', 'ResNet50V2', 'ResNet50']
-accuracy = [.75,.75,.67,.69]
-latency = [200,100,55,75]
+models=['InceptionResNetV2', 'InceptionV3', 'MobileNetV2', 'MobileNet', 'ResNet50V2', 'ResNet50','Xception','DensetNet201','DenseNet121','NASNetMobile']
+accuracy = [.75,.74,.76,.69]
+latency = [120,100,150,75]
 # model deploy cmd
 TF_DEPLOY_CMD ={
     'cpu': f'nohup sudo docker run -p 8501:8501 --name TFserving_resnet --mount type=bind,source=/home/ubuntu/resnet,target=/models/resnet -e MODEL_NAME=resnet -t tensorflow/serving  > server.log 2>&1 &',

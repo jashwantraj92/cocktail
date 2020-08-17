@@ -92,8 +92,21 @@ def pdf_fun(accuracy, verbose):
 	if (verbose == 1):
 		print(sum(arr)/10000);
 	return arr;
+MobileNetV1			=	pdf_fun(69.36,0);
+MobileNetV2			=	pdf_fun(69.56,0);
+InceptionV3			=	pdf_fun(68,0);
+ResNet50V2			=	pdf_fun(66,0);
+DenseNet201			=	pdf_fun(72.8,0);
+DenseNet121			=	pdf_fun(69.95,0);
+Xception			=	pdf_fun(69.75,0);
+NASNetMobile			=	pdf_fun(71.14,0);
+NASNetLarge			=	pdf_fun(76,0);
+InceptionResnetV2		=	pdf_fun(73.6,0);
+vgg16				=	pdf_fun(66.52,0);
+ResNet50			=	pdf_fun(64,0);
 
-MobileNetV1			=	pdf_fun(70.40,0);
+
+"""MobileNetV1			=	pdf_fun(70.40,0);
 MobileNEtV2			=	pdf_fun(71.30,0);
 InceptionV3			=	pdf_fun(77.90,0);
 ResNet50V2			=	pdf_fun(74.90,0);
@@ -103,7 +116,7 @@ Xception			=	pdf_fun(75.00,0);
 NasNetMoile			=	pdf_fun(79.00,0);
 NASNetLarge			=	pdf_fun(82.00,0);
 InceptionResnetV2		=	pdf_fun(80.30,0);
-vgg16				=	pdf_fun(71.30,0);
+vgg16				=	pdf_fun(71.30,0);"""
 ResNet50			=	pdf_fun(74.90,0);
 
 # End PDFs
@@ -160,8 +173,9 @@ current_accuracy	=	0;		#
 current_cost		=	0;		# sum of all instance cost
 
 model_lat_list		=	[315,151.96, 119.2, 74, 152.21, 89.5, 102.35, 98.22, 78.18, 41.5, 259, 43.45]
-top_accuracy_list	=	[82.3,80.30, 79.00, 77.90, 77.30, 76.00, 75.00, 74.90, 74.40, 71.30, 71.30, 70.40]
-model_name_list		=	['NASNetLarge','InceptionResNetV2', 'Xception', 'InceptionV3', 'DenseNet201', 'ResNet50V2', 'DenseNet121', 'ResNet50', 'NasNetMobile', 'MobileNetV2', 'VGG16', 'MobileNet']
+#top_accuracy_list	=	[82.3,80.30, 79.00, 77.90, 77.30, 76.00, 75.00, 74.90, 74.40, 71.30, 71.30, 70.40]
+model_name_list		=	['NASNetLarge','InceptionResNetV2', 'Xception', 'InceptionV3', 'DenseNet201', 'ResNet50V2', 'DenseNet121', 'ResNet50', 'NASNetMobile', 'MobileNetV2', 'VGG16', 'MobileNet']
+top_accuracy_list	=	[74.6,73, 69.75, 67.9, 72.83, 66, 70, 65,71.1, 68.05, 71.30, 68.36 ]
 
 active_model_list	=	[];
 union_model_list	=	[];
@@ -212,12 +226,12 @@ class instance:
 		if (self.my_latency < slo_latency):
 			#for itr in range(len(model_lat_list)):
 			for itr in range(len(model_lat_list)):
-				obey_latency		=	model_lat_list[itr] < (slo_latency + latecy_margin - self.my_latency);
+				obey_latency		=	model_lat_list[itr] < (slo_latency + latecy_margin);
 				obey_duplication	=	model_name_list[itr] not in active_model_list	
 				#print("Adding more models to instance ",active_model_list, self.my_latency, obey_latency, obey_duplication)		
 				
 				if (obey_latency and obey_duplication):
-					self.my_latency	=	max(self.my_latency ,model_lat_list[itr]);
+					self.my_latency	=	max(self.my_latency ,obey_latency);
 					active_model_list.append(model_name_list[itr]);
 					self.my_model_list.append(model_name_list[itr]);
 					self.my_latency_list.append(model_lat_list[itr]);
@@ -320,7 +334,7 @@ def get_model_key(model_name, verbose):
 		model = MobileNetV1
 	
 	elif (model_name == 'MobileNetV2'):
-		model = MobileNEtV2
+		model = MobileNetV2
 	
 	elif (model_name == 'InceptionV3'):
 		model = InceptionV3
@@ -338,7 +352,7 @@ def get_model_key(model_name, verbose):
 		model = Xception
 		
 	elif (model_name == 'NasNetMobile'):
-		model = NasNetMoile
+		model = NASNetMobile
 	
 	elif (model_name == 'NASNetLarge'):
 		model = NASNetLarge

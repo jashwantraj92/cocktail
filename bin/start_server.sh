@@ -74,7 +74,7 @@ start_all() {
     fi
 
 
-    clean_logs
+    #clean_logs
     mkdir -p ${LOG_DIR}
 
     start_redis

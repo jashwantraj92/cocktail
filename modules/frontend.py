@@ -30,6 +30,7 @@ matched = 0
 not_matched = 0
 overall_accuracy = 0
 step_accuracy = 0
+last_time = time.time()
 images = defaultdict(list)
 file1 = open('/home/cc/cocktail/CYAN/ground-truth-classes', 'r') 
 lines = file1.readlines()
@@ -50,36 +51,35 @@ def check_ground_truth(imgcls,imgname, constraint):
         if imgcls[i] == "resources":
             return
         if imgcls[i] == images[imgname][0]:
-            logging.info(f'ground truth matched {matched} {imgcls} {imgname} {images[imgname]}')
+            logging.info(f'ground truth matched {matched} {imgcls} {imgname} {images[imgname]} {constraints[constraint]}')
             matched+=1
-            constraints[constraint][0][2]+=1
-            constraints[constraint][0][3]+=1
+            constraints[constraint][2]+=1
+            constraints[constraint][3]+=1
             logging.info(f"Prediction accuracy {matched/(matched+not_matched)*100}")                   
             return
     not_matched+=1
     logging.info(f'ground truth not matched {not_matched} {imgcls} {imgname} {images[imgname]}')
     logging.info(f"Prediction accuracy {matched/(matched+not_matched)*100}")       
 
-def find_model(models,constraint):
+def find_model(rem_models,constraint):
 		slo_latency =  latency[constraint]
 		slo_accuracy = accuracy[constraint]
 		candidate_models = []
-		print("finding in models", models)
-		for model in models:
-				if model_lat_list[model_name_list.index(model)] <=  slo_latency + latency_margin:
-					candidate_models.append([model_name_list.index(model),top_accuracy_list[model_name_list.index(model)]])
+		print("finding in models", rem_models, models)
+		for model in rem_models:
+				if latency[models.index(model)] <=  slo_latency + latency_margin:
+					candidate_models.append([latency.index(model),accuracy[models.index(model)]])
 		if not candidate_models:
 			return None
 		print(candidate_models)
 		if candidate_models:
-			
 			model = max(candidate_models, key=lambda x:x[1])
-			print(model, model_name_list[model[0]])
-			return [model_name_list[model[0]]]
+			print(model, models[model[0]])
+			return [models[model[0]]]
 
 def vote_based_scaling(step_accuracy,overall_accuracy,correct_predictions,pretrained_model_list, constraint):
         slo_accuracy = accuracy[constraint]
-        print("aggressive_scaling " ,step_accuracy, overall_accuracy, (slo_accuracy + 0.02)*100)
+        print("vote-based_scaling " ,step_accuracy, overall_accuracy, (slo_accuracy + 0.02)*100)
         if ((step_accuracy) >= ((slo_accuracy + 0.02)*100)) and len(correct_predictions) > 1:
                 index,drop_model = min((len(correct_predictions[key]),key) for key in correct_predictions )
                 drop = [e for e in pretrained_model_list if e == drop_model]
@@ -89,11 +89,11 @@ def vote_based_scaling(step_accuracy,overall_accuracy,correct_predictions,pretra
                 #union_model_list.remove(drop_model)
                 del correct_predictions[drop_model]
                 return drop 
-        elif ((step_accuracy) <= ((slo_accuracy - 0.02)*100)):
-                remaining_models = set(model_name_list) - set(pretrained_model_list)
-                print("remaining_models",remaining_models,set(model_name_list),set(pretrained_model_list[0]))
+        """elif ((step_accuracy) <= ((slo_accuracy - 0.02)*100)):
+                remaining_models = set(models) - set(pretrained_model_list)
+                print("remaining_models",remaining_models,set(models),set(pretrained_model_list[0]))
                 if remaining_models:
-                    model = find_model(remaining_models)
+                    model = find_model(remaining_models, constraint)
                     if model:
                         print("model added", model)
                         cmd = 'tf.keras.applications.' + str(model[0]) + '()';
@@ -102,10 +102,11 @@ def vote_based_scaling(step_accuracy,overall_accuracy,correct_predictions,pretra
                         return model
                     else:
                         print("***no model available to add *********")
-                        return "None"
+                        return "None" """
 
 @app.route('/predict/<model_name>',  methods=['POST'])
 async def predict(request, model_name):
+    global last_time
     if request.method == 'POST':
         receive_time = utils.now()
         logging.info(f'Received request for model: {model_name}')
@@ -123,18 +124,19 @@ async def predict(request, model_name):
         if not constraints[constraint]:
             logging.info(f"adding models for first time")
             name , synset , typ, handel_time, models = await processor.send_query(model_name, receive_time, data, constraint,filename)
-            constraints[constraint].append([models,1,0,0])
-            logging.info(f"added models for first time {models}")
+            constraints[constraint]=[models,1,0,0]
+            logging.info(f"added models for first time {constraints[constraint]} {constraints[constraint][0]}")
         else:
-            models = constraints[constraint][0][0]
+            models = constraints[constraint][0]
             logging.info(f"updating models {constraints[constraint]}")
-            constraints[constraint][0][1]+=1
+            constraints[constraint][1]+=1
             name , synset , typ, handel_time, models = await processor.send_query(model_name, receive_time, data, constraint, filename,models)
-            if constraints[constraint][0][1]%batch_size == 0:
-                overall_accuracy = constraints[constraint][0][2] / constraints[constraint][0][1] * 100
-                step_accuracy = constraints[constraint][0][3] / constraints[constraint][0][1] * 100
-                constraints[constraint][0][3]=0
-                vote_based_scaling(step_accuracy,overall_accuracy,get_correct_predictions(),constraints[constraint][0][0], constraint)
+        if time.time() - last_time >= batch_interval:
+            last_time = time.time()
+            overall_accuracy = constraints[constraint][2] / constraints[constraint][1] * 100
+            step_accuracy = constraints[constraint][3] / constraints[constraint][1] * 100
+            constraints[constraint][3]=0
+            vote_based_scaling(step_accuracy,overall_accuracy,get_correct_predictions(),constraints[constraint][0], constraint)
         logging.info(f'Processed request for model: {model_name} {name} {synset}  {filename} {models}')
         check_ground_truth(synset,filename, constraint)
         if (typ > 3):
