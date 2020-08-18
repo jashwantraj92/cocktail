@@ -143,8 +143,8 @@ CREDENTIALS = {
     'aws_access_key_id' : access_key,
     'aws_secret_access_key' : secret_key
 }
-models=['NASNetLarge']
-#models=['InceptionResNetV2', 'InceptionV3', 'MobileNetV2', 'MobileNet', 'ResNet50V2', 'ResNet50','Xception','DensetNet201','DenseNet121','NASNetMobile']
+#models=['NASNetLarge']
+models=['InceptionResNetV2', 'InceptionV3', 'MobileNetV2', 'MobileNet', 'ResNet50V2', 'ResNet50','Xception','DensetNet201','DenseNet121','NASNetMobile']
 accuracy = [.75,.74,.76,.69]
 latency = [120,100,150,75]
 # model deploy cmd
