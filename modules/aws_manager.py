@@ -63,7 +63,7 @@ def launch_on_demand_instances(name, params,model):
     instances = ec2.create_instances(
         ImageId=params['imageId'],
         InstanceType=params['instanceType'],
-        KeyName="aws-cocktail",
+        KeyName="aws-connect",
         MinCount=params['targetCapacity'],
         MaxCount=params['targetCapacity'], 
         SecurityGroupIds=SECURITY_GROUPS[params['region']],
@@ -329,13 +329,13 @@ def _get_request_config(params):
         'IamFleetRole': 'arn:aws:iam::824426748887:role/aws-ec2-spot-fleet-tagging-role',
         'LaunchSpecifications': [{
             'ImageId': params['imageId'],
-            'KeyName': 'aws-cocktail',
+            'KeyName': 'aws-connect',
             'InstanceType': params['instanceType'],
             'BlockDeviceMappings': [{
                 'VirtualName': 'Root',
                 'DeviceName': '/dev/sda1',
                 'Ebs': {
-                    'VolumeSize': 75,
+                    'VolumeSize': 105,
                     'VolumeType': 'gp2',
                     'DeleteOnTermination': True
                 }

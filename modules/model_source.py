@@ -107,7 +107,27 @@ class TensorFlowSource(_ModelSource):
         j=0
         logging.info(f'Models are {models}')
         for i in ins:
-            cmd = f'nohup python3.6 sanic-server.py 0.0.0.0 8000 4 {models[j]} > server.log 2>&1 &'
+            model = models[j]
+            if model.startswith('Mobil'):
+                workers = HANDLE_SIZE_Mobilenet
+            elif model.startswith('InceptionRe'):
+                workers = HANDLE_SIZE_InceptionResnet 
+            elif model.startswith('Inception'):
+                workers = HANDLE_SIZE_Inception
+            elif model.startswith('Resn'):
+                workers = HANDLE_SIZE_Resnet
+            elif model.startswith('Xcepti'):
+                workers = HANDLE_SIZE_Xception
+            elif model.startswith('NASNetMo'):
+                workers = HANDLE_SIZE_Nasnetmobile 
+            elif model.startswith('NASNetLa'):
+                workers = HANDLE_SIZE_Nasnetlarge 
+            elif model.startswith('DenseNet12'):
+                workers = HANDLE_SIZE_Densenet121 
+            elif model.startswith('DenseNet20'):
+                workers = HANDLE_SIZE_Densenet201
+
+            cmd = f'nohup python3.6 sanic-server.py 0.0.0.0 8000 {workers} {models[j]} > server.log 2>&1 &'
             logging.info(f'Models are {models[j]}')
             utils.check_command(utils.get_session(i.ip), cmd, debug=True)
             cmd=f"nohup python3.6 python-grpc-async-server-example/server.py {models[j]} 50055 > grpc.log 2>&1 &"

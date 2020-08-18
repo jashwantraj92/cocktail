@@ -12,7 +12,7 @@ from functools import reduce
 from .constants import * 
 from .data_accessor import aws_accessor, instance_accessor
 
-KEY_FILE = "/home/cc/aws-cocktail.pem"
+KEY_FILE = "/home/cc/aws-connect.pem"
 
 upper_folder = dirname(dirname(abspath(__file__)))
 

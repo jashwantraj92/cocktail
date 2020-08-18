@@ -19,10 +19,10 @@ CREDENTIALS = {
 }
 print(access_key,secret_key)
 
-def get_client(region='eu-west-3'):
+def get_client(region='us-east-2'):
     return boto3.client('ec2', region_name=region, **CREDENTIALS)
 
-params={'imageId':'ami-046f472a484355376', 'instanceType':'c5.large', 'targetCapacity':1, 'key_value':[('exp_round', 0)] }
+params={'imageId':'ami-05a68cdf1af3cc0cf', 'instanceType':'c5.xlarge', 'targetCapacity':1, 'key_value':[('exp_round', 0)] }
 
 base = {
         'TargetCapacity': params['targetCapacity'],
@@ -32,13 +32,13 @@ base = {
         'IamFleetRole': 'arn:aws:iam::824426748887:role/aws-ec2-spot-fleet-tagging-role',
         'LaunchSpecifications': [{
             'ImageId': params['imageId'],
-            'KeyName': 'aws-cocktail',
+            'KeyName': 'aws-connect',
             'InstanceType': params['instanceType'],
             'BlockDeviceMappings': [{
                 'VirtualName': 'Root',
                 'DeviceName': '/dev/sda1',
                 'Ebs': {
-                    'VolumeSize': 75,
+                    'VolumeSize': 105,
                     'VolumeType': 'gp2',
                     'DeleteOnTermination': True
                 }

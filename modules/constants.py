@@ -65,7 +65,7 @@ SECURITY_GROUPS = {
     'eu-west-3': ['sg-6c538705']
 }
 KEYS = {
-    'us-east-2': 'aws-cocktail',
+    'us-east-2': 'aws-connect',
     'eu-west-3': 'aws-cocktail',
     'us-west-1': 'xxx',
     'us-west-2': 'xxx'
@@ -79,7 +79,7 @@ MODEL = 'tf'
 
 # AMIs for each model
 AMIS_TF = {
-    'us-east-2': {'CPU': 'ami-0eb0c6809fbf65176', 'GPU': 'ami-04e745c5a31677ca0'},
+    'us-east-2': {'CPU': 'ami-05a68cdf1af3cc0cf', 'GPU': 'ami-05a68cdf1af3cc0cf'},
     'eu-west-3': {'CPU': 'ami-0c99b9341549188d8', 'GPU': 'ami-0edeb7664ef2967e7'}
 }
 AMIS_KR = {
@@ -143,8 +143,8 @@ CREDENTIALS = {
     'aws_access_key_id' : access_key,
     'aws_secret_access_key' : secret_key
 }
-#models=['NASNetLarge','InceptionResNetV2', 'Xception', 'InceptionV3', 'DenseNet201', 'ResNet50V2', 'DenseNet121', 'ResNet50', 'NASNetMobile', 'MobileNetV2', 'VGG16', 'MobileNet']
-models=['InceptionResNetV2', 'InceptionV3', 'MobileNetV2', 'MobileNet', 'ResNet50V2', 'ResNet50','Xception','DensetNet201','DenseNet121','NASNetMobile']
+models=['NASNetLarge']
+#models=['InceptionResNetV2', 'InceptionV3', 'MobileNetV2', 'MobileNet', 'ResNet50V2', 'ResNet50','Xception','DensetNet201','DenseNet121','NASNetMobile']
 accuracy = [.75,.74,.76,.69]
 latency = [120,100,150,75]
 # model deploy cmd
