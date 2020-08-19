@@ -210,7 +210,7 @@ class QueryProcessor():
 
         logging.info(f'Send request to ip: {ip}; batch_size:{len(data)};')
         #data = data[0].split(",")[0]
-        data = json.dumps({'data':data[0]})
+        data = json.dumps({'data':data[0],'file':'file'})
         
         #logging.info(f'data is {len(data[0])}')
         #resp = await self.session.post(mdl_source.get_request(data, ip))
@@ -223,7 +223,7 @@ class QueryProcessor():
             return (mdl_source.collect_result(r), req_type)
         else:
             logging.info(f'Request rejected. ip: {ip}; status: {resp.status}')
-            return ([ r for _ in data ], req_typ)
+            return ([], req_typ)
             async with self.session.get(mdl_source.get_lambda_req()) as res_lam:
                 if res_lam.status == 200:
                         r = await res_lam.text()

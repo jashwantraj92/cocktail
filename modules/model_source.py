@@ -130,8 +130,8 @@ class TensorFlowSource(_ModelSource):
             cmd = f'nohup python3.6 sanic-server.py 0.0.0.0 8000 {workers} {models[j]} > server.log 2>&1 &'
             logging.info(f'Models are {models[j]}')
             utils.check_command(utils.get_session(i.ip), cmd, debug=True)
-            cmd=f"nohup python3.6 python-grpc-async-server-example/server.py {models[j]} 50055 > grpc.log 2>&1 &"
-            utils.check_command(utils.get_session(i.ip), cmd, debug=True)
+            #cmd=f"nohup python3.6 python-grpc-async-server-example/server.py {models[j]} 50055 > grpc.log 2>&1 &"
+            #utils.check_command(utils.get_session(i.ip), cmd, debug=True)
             j+=1
         #self._deploy_model(region, [ i.ip for i in ins ], cmd)
         logging.info('Models are Deployed now')

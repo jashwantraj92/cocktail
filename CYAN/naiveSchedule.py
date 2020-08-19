@@ -267,10 +267,10 @@ verbosity			= 	1;
 ###############################################################
 # Classes
 def infaas_select_model():
-		global slo_latency, slo_accuracy
+		global slo_latency, slo_accuracy,latency_margin
 		candidate_models = []
 		for itr in range(len(model_lat_list)):
-				if model_lat_list[itr] <= slo_latency:
+				if model_lat_list[itr] <= slo_latency+latency_margin:
 					candidate_models.append([itr,top_accuracy_list[itr]])
 		print(candidate_models)
 		if candidate_models:
@@ -280,7 +280,7 @@ def infaas_select_model():
 			return [model_name_list[model[0]]]
 
 def find_model(models):
-		global slo_latency, slo_accuracy
+		global slo_latency, slo_accuracy,latency_margin
 		candidate_models = []
 		print("finding in models", models)
 		for model in models:

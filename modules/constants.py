@@ -3,7 +3,7 @@
 
 UPPER_LATENCY_BOUND = 200
 SLA_BOUND = 0.02
-scheme="ensembling"
+scheme="infaas"
 HANDLE_SIZE = 8
 
 #batch size config
@@ -79,7 +79,7 @@ MODEL = 'tf'
 
 # AMIs for each model
 AMIS_TF = {
-    'us-east-2': {'CPU': 'ami-05a68cdf1af3cc0cf', 'GPU': 'ami-05a68cdf1af3cc0cf'},
+    'us-east-2': {'CPU': 'ami-00e15b8fbe5c2b729', 'GPU': 'ami-00e15b8fbe5c2b729'},
     'eu-west-3': {'CPU': 'ami-0c99b9341549188d8', 'GPU': 'ami-0edeb7664ef2967e7'}
 }
 AMIS_KR = {
@@ -144,9 +144,10 @@ CREDENTIALS = {
     'aws_secret_access_key' : secret_key
 }
 #models=['NASNetLarge']
-models=['InceptionResNetV2', 'InceptionV3', 'MobileNetV2', 'MobileNet', 'ResNet50V2', 'ResNet50','Xception','DensetNet201','DenseNet121','NASNetMobile']
+models=['InceptionResNetV2', 'InceptionV3', 'MobileNetV2', 'MobileNet', 'ResNet50V2', 'ResNet50','Xception','DenseNet201','DenseNet121','NASNetMobile','NASNetLarge']
 accuracy = [.75,.74,.76,.69]
-latency = [120,100,150,75]
+#latency = [120,100,150,75]
+latency = [355,100,155,60]
 # model deploy cmd
 TF_DEPLOY_CMD ={
     'cpu': f'nohup sudo docker run -p 8501:8501 --name TFserving_resnet --mount type=bind,source=/home/ubuntu/resnet,target=/models/resnet -e MODEL_NAME=resnet -t tensorflow/serving  > server.log 2>&1 &',

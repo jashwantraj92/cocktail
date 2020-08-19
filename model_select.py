@@ -3,7 +3,7 @@ import pandas as pd
 import logging,os
 
 accuracy = [.75,.74,.76,.74]
-latency = [120,100,150,69]
+latency = [355,100,155,60]
 #accuracy = [.75,.75,.71,.74]
 #latency = [200,200,200,255]
 selected_models = []
@@ -15,7 +15,7 @@ def get_models(constraints):
         global inst_list, current_latency, current_cost
         print('main invoked')
         accuracy,latency = get_requirements(constraints)
-        models = naiveSchedule.select_models(latency,accuracy,2,"ensembling")
+        models = naiveSchedule.select_models(latency,accuracy,2,"infaas")
         cmd=f'python3.6 naiveSchedule.py -a {accuracy} -l {latency} -c 2'
         #os.system(cmd)
         print(f"************** selected models are {models}")

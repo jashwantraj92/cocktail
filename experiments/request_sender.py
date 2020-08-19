@@ -55,7 +55,8 @@ def get_data():
         #return predict_request
         #print(filename, image)
         #return IMAGE_URL
-        image = image.resize((224,224))
+        image = image.convert('RGB')
+        image = image.resize([224,224])
         return np.array(image).tolist(),filename
 def send_data(args, reader):
     pool = ThreadPoolExecutor(5000)

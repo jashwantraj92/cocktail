@@ -30,7 +30,7 @@ cur_cost:		total cost of all instances
 
 slo_latency, slo_accuracy, slo_cost : constraints provided by user. (FIXME: Need some defaut values for each)
 
-latecy_margin, accuracy_margin, cost_margin: margins provided by user. Defaut value = 0 if not provided
+latency_margin, accuracy_margin, cost_margin: margins provided by user. Defaut value = 0 if not provided
 
 Scaling Priority: User specified. Cost > Accuracy > latency (Default)
 
@@ -161,7 +161,7 @@ slo_latency			=	90;#float(args.latency)
 
 accuracy_margin			=	0.05
 cost_margin			=	0.1
-latecy_margin			=	10
+latency_margin			=	10
 
 # Vars
 inst_list			=	[]; # list of all active instances - a list of class instace
@@ -190,10 +190,10 @@ verbosity			= 	1;
 ###############################################################
 # Classes
 def infaas_select_model():
-		global slo_latency, slo_accuracy
+		global slo_latency, slo_accuracy,latency_margin
 		candidate_models = []
 		for itr in range(len(model_lat_list)):
-				if model_lat_list[itr] <= slo_latency:
+				if model_lat_list[itr] <= slo_latency + latency_margin:
 					candidate_models.append([itr,top_accuracy_list[itr]])
 		print(candidate_models)
 		if candidate_models:
@@ -226,7 +226,7 @@ class instance:
 		if (self.my_latency < slo_latency):
 			#for itr in range(len(model_lat_list)):
 			for itr in range(len(model_lat_list)):
-				obey_latency		=	model_lat_list[itr] < (slo_latency + latecy_margin);
+				obey_latency		=	model_lat_list[itr] < (slo_latency + latency_margin);
 				obey_duplication	=	model_name_list[itr] not in active_model_list	
 				#print("Adding more models to instance ",active_model_list, self.my_latency, obey_latency, obey_duplication)		
 				
@@ -244,7 +244,7 @@ class instance:
 					return 1;
 				
 				'''
-				elif (model_lat_list[itr] < (slo_latency + latecy_margin - self.my_latency)):# and forceScaleIn == 1):
+				elif (model_lat_list[itr] < (slo_latency + latency_margin - self.my_latency)):# and forceScaleIn == 1):
 					self.my_latency	=	self.my_latency + model_lat_list[itr];
 					self.my_model_list.append(model_name_list[itr]);
 					self.my_latency_list.append(model_lat_list[itr]);
@@ -398,7 +398,7 @@ def baseline_optimizer(slo_latency, slo_accuracy):
  
 	global accuracy_margin	
 	global cost_margin		
-	global latecy_margin	
+	global latency_margin	
  
 	global model_lat_list	
 	global top_accuracy_list
@@ -408,7 +408,7 @@ def baseline_optimizer(slo_latency, slo_accuracy):
 	norm_acc_dist				=	[]
 	
 	for lat in model_lat_list:
-		norm_lat_dist.append(1-(lat/(slo_latency + latecy_margin)))
+		norm_lat_dist.append(1-(lat/(slo_latency + latency_margin)))
 	
 	for acc in top_accuracy_list:
 		norm_acc_dist.append(1- (acc/slo_accuracy - accuracy_margin))
