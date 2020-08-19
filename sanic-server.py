@@ -59,8 +59,10 @@ async def test(request):
 
     if request.method == 'POST':
         receive_time = time.time()
-        print(f'Received request',receive_time)
         question = request.json['data']
+        filename = request.json['file']
+      
+        print(f'Received request',receive_time, filename)
         data = question
         img = data
         #print(img,"***")
