@@ -53,7 +53,7 @@ def init(sanic, loop):
 @app.route('/predict',methods=['POST'])
  
 async def test(request):
-    global threads,pretrained_models,maxVoteLabel,maxVoteClass,votearray,voteclasses
+    global threads,pretrained_models,maxVoteLabel,maxVoteClass,votearray,voteclasses,models
     votearray=[]
     voteclasses= []
 
@@ -83,11 +83,12 @@ async def test(request):
         x = tf.keras.applications.mobilenet.preprocess_input(np.array(img)[tf.newaxis,...])
         #model = int(question[1])
         for i in range(len(pretrained_models)):
-            tid = threading.Thread(target=predict, args=(pretrained_models[i],x,))
-            threads.append(tid)
-            tid.start()
-        for thread in threads:
-            thread.join()
+            #tid = threading.Thread(target=predict, args=(pretrained_models[i],x,models[i]))
+            predict(pretrained_models[i],x,models[i])
+            #threads.append(tid)
+            #tid.start()
+        #for thread in threads:
+        #    thread.join()
         end_time = time.time()
         print(pretrained_models,threads)
         threads.clear() 
@@ -97,10 +98,10 @@ async def test(request):
         print("query respone time ",end_time, maxVoteLabel, maxVoteClass)
         return json({'image': maxVoteLabel, 'class': maxVoteClass, 'time': end_time - receive_time})
 
-def predict(model,x):
+def predict(model,x,name):
     global maxVoteLabel, maxVoteClass,votearray,voteclasses
     receive_time = time.time()
-    print(f'Thread Start {receive_time}')
+    print(f'Thread Start {receive_time} {name}')
     result_before_save = model(x)
     print("Result before saving",
     tf.keras.applications.mobilenet.decode_predictions(
