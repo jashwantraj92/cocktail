@@ -48,7 +48,7 @@ async def main():
         #    data = "{'http://ec2-35-174-5-243.compute-1.amazonaws.com:8000/predict', 'data': '{\"data\": \"https://tensorflow.org/images/blogs/serving/cat.jpg\"}', 'timeout': 2, 'headers': '{\"Content-type\": \"application/json\"}'}"
         ip = "ec2-35-174-5-243.compute-1.amazonaws.com"
         #data = json.dumps({'data':"https://tensorflow.org/images/blogs/serving/cat.jpg"})
-        data = json.dumps({'data':np.array(image).tolist()})
+        data = json.dumps({'data':np.array(image).tolist(), 'file':filename})
         #print(data)
         async with aiohttp.ClientSession() as session:
              start_time = time.time()
