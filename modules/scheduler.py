@@ -152,14 +152,14 @@ class Scheduler():
                             logging.info(f'Launch {launch[i]} for model: {model} numinstances {math.ceil(launch[i]*weights[j])}')
                             params = {'imageId':ami, 'instanceType':IndexType[i], 'targetCapacity': math.ceil(launch[i]*weights[j]), 'key_value':[('exp_round', Tag)] }
                             #model = random.choice(models)
-                            #ins_source.launch_ins(name, params,[models[j]])
+                            ins_source.launch_ins(name, params,[models[j]])
                             cost += instanceInfo[i][2] * launch[i]
 
                 for i in range(len(des)):
                     if des[i] > 0:
                         model = random.choice(models)
                         logging.info(f'Kill {des[i]} {IndexType[i]} instances for model: {name} {model}')
-                        ins_source.kill_ins(name, DEFAULT_REGION, IndexType[i], des[i], model)
+                        #ins_source.kill_ins(name, DEFAULT_REGION, IndexType[i], des[i], model)
 
                 total_cost += cost
                 logging.info(f'count: {self.count[name]}; cost: {cost}; total_cost: {total_cost}')

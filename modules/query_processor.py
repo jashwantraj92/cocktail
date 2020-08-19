@@ -30,9 +30,6 @@ REQ_LAMBDA_CPU = 2
 REQ_LAMBDA_GPU = 3
 REQ_FAIL_CPU = 4
 REQ_FAIL_GPU = 5
-correct_predictions	= 	defaultdict(list)
-def get_correct_predictions():
-    return correct_predictions
 class QueryProcessor():
 
     def set_loop(self, loop_):
@@ -42,17 +39,21 @@ class QueryProcessor():
         # self.instances = utils.parse_instances(instance_accessor.get_all_instances())
         # instance_accessor.subscribe(self.update_instances)
         self.session = aiohttp.ClientSession(loop=self.loop)
+        self.correct_predictions	= 	defaultdict(lambda: defaultdict(list))
         asyncio.ensure_future(self._manage_queue())
         self.model_tracker = get_model_tracker()
-        
+    
+    def get_correct_predictions():
+        return self.correct_predictions
+       
             
-    async def send_query(self, name, times, data, constraints,filename, models=[]):
+    async def send_query(self, name, times, data, constraints,filename, models):
 
         #constraints = data.split(",")[1]
         #logging.info(f"constraint is {constraints}")
-        if not models:
-            models = await self.get_models(int(constraints))
-            logging.info(f"initiated model selection")
+        #if not models:
+        #    models = await self.get_models(int(constraints))
+        #    logging.info(f"initiated model selection")
         #models = models.split()
         futures = []
         for i in range(len(models)):
@@ -62,7 +63,7 @@ class QueryProcessor():
             futures.append(future)
             self.model_tracker[models[i]].append([time.time(),1])
         #await future
-        return await self.ensemble_result(futures, models, filename)
+        return await self.ensemble_result(futures, models, filename, constraints)
         #return future.result()
     
     async def get_requirements(self,constraint):
@@ -95,7 +96,7 @@ class QueryProcessor():
             statements = []
             #for i in range(len(models)):
             alloc_info = ins_source.get_ins_alloc(name, model, self.balancer)
-            logging.info(f'sending query to VM &&&&&&&&&&&&&: {alloc_info} {fu} {times} {model}')
+            #logging.info(f'sending query to VM &&&&&&&&&&&&&: {alloc_info} {fu} {times} {model}')
             if alloc_info:
                 ip, typ = alloc_info[0], alloc_info[1]
                 if self.query_queue.size() > 1:
@@ -113,29 +114,36 @@ class QueryProcessor():
                     if model.startswith('Mobil'):
                         other_info = await self.query_queue.get(handle_size * HANDLE_SIZE_Mobilenet - 1, model)
                         [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
-                        logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is  {model}, {handle_size} {self.query_queue.size()}')
+                        logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is  {model}, {handle_size}{HANDLE_SIZE_Mobilenet} {self.query_queue.size()}')
                     elif model.startswith('InceptionRe'):
                         other_info = await self.query_queue.get(handle_size * HANDLE_SIZE_InceptionResnet - 1, model)
                         [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
-                        logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is {model}, {handle_size} {self.query_queue.size()}')
+                        logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is {model}, {handle_size}{HANDLE_SIZE_InceptionResnet} {self.query_queue.size()}')
                     elif model.startswith('Inception'):
                         other_info = await self.query_queue.get(handle_size * HANDLE_SIZE_Inception - 1, model)
                         [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
-                        logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is {model}, {handle_size} {self.query_queue.size()}')
-                    elif model.startswith('Resn'):
+                        logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is {model}, {handle_size}{HANDLE_SIZE_Inception} {self.query_queue.size()}')
+                    elif model.startswith('ResN'):
                         other_info = await self.query_queue.get(handle_size * HANDLE_SIZE_Resnet - 1, model)
                         [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
-                        logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is {model}, {handle_size} {self.query_queue.size()}')
+                        logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is {model}, {handle_size}{HANDLE_SIZE_Resnet} {self.query_queue.size()}')
                     elif model.startswith('Xcepti'):
                         other_info = await self.query_queue.get(handle_size * HANDLE_SIZE_Xception - 1, model)
                         [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
-                        logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is {model}, {handle_size} {self.query_queue.size()}')
+                        logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is {model}, {handle_size}{HANDLE_SIZE_Xception} {self.query_queue.size()}')
                     elif model.startswith('NASNetMo'):
                         other_info = await self.query_queue.get(handle_size * HANDLE_SIZE_Nasnetmobile - 1,model)
                         [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
-                        logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is  {model}, {handle_size} {self.query_queue.size()}')
-
-                    #data =  data[0] + "," + models[i]
+                        logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is  {model}, {handle_size}{HANDLE_SIZE_Nasnetmobile} {self.query_queue.size()}')
+                    elif model.startswith('DenseNet12'):
+                        other_info = await self.query_queue.get(handle_size * HANDLE_SIZE_Densenet121  - 1,model)
+                        [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
+                        logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is  {model}, {handle_size}{HANDLE_SIZE_Densenet121} {self.query_queue.size()}')
+                    elif model.startswith('DenseNet20'):
+                        other_info = await self.query_queue.get(handle_size * HANDLE_SIZE_Densenet201  - 1,model)
+                        [ (fu.append(i[0]), times.append(i[2]), data.append(i[3])) for i in other_info ]
+                        logging.info(f'candidate VM  is &&&&&&&&&&&&& {ip} data is  {model}, {handle_size}{HANDLE_SIZE_Densenet201} {self.query_queue.size()}')
+                #data =  data[0] + "," + models[i]
                 #statements.append(self.loop.create_task(self._get_result(fu, name, times, data, ip)))
                 for f in fu:
                     self.loop.create_task(self._get_result(f, name, times, data, ip))
@@ -145,7 +153,7 @@ class QueryProcessor():
             #self.loop.create_task(self.ensemble_result(statements))
 
   
-    async def ensemble_result(self, statements, models, filename): 
+    async def ensemble_result(self, statements, models, filename, constraint): 
         global correct_predictions
         predictions = []
         typ=0
@@ -161,14 +169,14 @@ class QueryProcessor():
             await future
             result, typ, times = future.result()
             all_times.append(times)
-            logging.info(f"Future results is {result} {result.split()[0]} {typ} {times} {filename}")
+            logging.info(f"Future results is {result} {result.split()[0]}{models[j]} {typ} {times} {filename}")
             #votearray.append(result.result().split()[0])
             votearray.append(result.split(" ")[0])
             #voteclasses.append(result.result().split()[1])
             voteclasses.append(result.split()[1])
             vote_class = result.split()[1]
             if vote_class == frontend.images[filename][0]:
-                correct_predictions[models[j]].append([j,vote_class])	
+                self.correct_predictions[constraint][models[j]].append([j,vote_class])	
             predictions.append(result)
             j+=1
         maxVoteLabel        =       max(set(votearray), key = votearray.count) 
@@ -189,7 +197,7 @@ class QueryProcessor():
     
     async def _get_result(self, futures, name, times, data, ip):
         results, req_type = await self._serve(name, data, ip)
-        logging.info(f'predicted result is {results} {futures}')
+        #logging.info(f'predicted result is {results} {futures}')
         process_time =  float(results.split()[2])*1000
         [ f.set_result((r, typ, process_time)) for f, t, r, typ in zip(futures, times, [results], req_type) ]
         #return str(results)
@@ -204,7 +212,7 @@ class QueryProcessor():
         #data = data[0].split(",")[0]
         data = json.dumps({'data':data[0]})
         
-        logging.info(f'data is {len(data[0])}')
+        #logging.info(f'data is {len(data[0])}')
         #resp = await self.session.post(mdl_source.get_request(data, ip))
         #cmd= "python3.6 python-grpc-async-server-example/client.py 1 1 50055 0"
         #utils.check_command(utils.get_session(ip), cmd, debug=True)

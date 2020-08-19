@@ -41,6 +41,7 @@ async def main():
         #base64_bytes = b64encode(img)
         #base64_string = base64_bytes.decode('utf-8')
         image = Image.open(file)
+        image = image.resize((224,224))
         #data = {}
         #data['img'] = base64.b64encode(img) 
         #jpeg_bytes = b64encode(img).decode('utf-8')

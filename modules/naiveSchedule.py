@@ -199,7 +199,7 @@ def infaas_select_model():
 		if candidate_models:
 			
 			model = max(candidate_models, key=lambda x:x[1])
-			print(model, model_name_list[model[0]])
+			#print(model, model_name_list[model[0]])
 			return [model_name_list[model[0]]]
 
 class instance:
@@ -228,7 +228,7 @@ class instance:
 			for itr in range(len(model_lat_list)):
 				obey_latency		=	model_lat_list[itr] < (slo_latency + latecy_margin);
 				obey_duplication	=	model_name_list[itr] not in active_model_list	
-				print("Adding more models to instance ",active_model_list, self.my_latency, obey_latency, obey_duplication)		
+				#print("Adding more models to instance ",active_model_list, self.my_latency, obey_latency, obey_duplication)		
 				
 				if (obey_latency and obey_duplication):
 					self.my_latency	=	max(self.my_latency ,obey_latency);
@@ -237,7 +237,7 @@ class instance:
 					self.my_latency_list.append(model_lat_list[itr]);
 					forceIt			=	0;
 					self.my_latency = max(self.my_latency_list);
-					print(str(model_name_list[itr]) + " Added #####################################")
+					#print(str(model_name_list[itr]) + " Added #####################################")
 					#print(self.my_model_list, self.my_latency)
 					#print("Scale in Successful...")
 					

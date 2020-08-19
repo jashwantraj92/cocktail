@@ -43,11 +43,11 @@ def get_data():
         filename = str(random.choice(images))
         file = "/home/cc/val/" + str(filename)
         image = Image.open(file)
-        IMAGE_URL = 'http://farm4.static.flickr.com/3088/2573194878_7be4b14d7f.jpg'
-        dl_request = requests.get(IMAGE_URL, stream=True)
-        dl_request.raise_for_status()
-        jpeg_bytes = b64encode(dl_request.content).decode('utf-8')
-        predict_request = '{"instances" : [{"b64": "%s"}]}' % jpeg_bytes        
+        #IMAGE_URL = 'http://farm4.static.flickr.com/3088/2573194878_7be4b14d7f.jpg'
+        #dl_request = requests.get(IMAGE_URL, stream=True)
+        #dl_request.raise_for_status()
+        #jpeg_bytes = b64encode(dl_request.content).decode('utf-8')
+        #predict_request = '{"instances" : [{"b64": "%s"}]}' % jpeg_bytes        
         #raw_data = f.read()
         #base64_bytes = b64encode(raw_data)
         #base64_string = base64_bytes.decode('utf-8')
@@ -55,6 +55,7 @@ def get_data():
         #return predict_request
         #print(filename, image)
         #return IMAGE_URL
+        image = image.resize((224,224))
         return np.array(image).tolist(),filename
 def send_data(args, reader):
     pool = ThreadPoolExecutor(5000)
@@ -85,29 +86,26 @@ def send_trace_data(args, reader):
 # Print list of lists i.e. rows
     #print(list_of_rows)
     count = 0
-    for row in list_of_rows:
-        if reader.line_num > args.timeout:
-            break
-        if count > 100:
-            break
-        print(row)
+    while(count <=50):
+        for row in list_of_rows:
+            if reader.line_num > args.timeout:
+                break
+            if count > 100:
+                break
+            print(row)
  
-        #num = 1
-        num = row[3]
-        constraints = row[2]
-        #Data = data + "," + str(constraints)
-        #lam = (60 * 1000.0) / num
-        #samples = np.random.poisson(lam, num)
-        #print(f'line: {reader.line_num}; sample_number: {num}')
-        for s in range(num):
-            data,filename = get_data()
-            #data = np.append(data,[constraints])
-            pool.submit(sender, data, int(constraints), filename)
-            print("request submitted", constraints, filename, data)
-            # sender(data)
-            # print(f'Send request after {s} ms')
-        time.sleep(3)
-        count += 1
+            num = row[3]
+            constraints = row[2]
+            for s in range(num):
+                data,filename = get_data()
+                #data = np.append(data,[constraints])
+                pool.submit(sender, data, int(constraints), filename)
+                print("request submitted", constraints, filename)
+                # sender(data)
+                # print(f'Send request after {s} ms')
+            time.sleep(3)
+            count += 1
+        time.sleep(8)
 
 
 def get_kr_data():

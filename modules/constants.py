@@ -10,17 +10,17 @@ HANDLE_SIZE = 8
 HANDLE_SIZE_P2 = 8
 HANDLE_SIZE_C5=1
 HANDLE_SIZE_C5X = 2
-HANDLE_SIZE_C52X = 8
-HANDLE_SIZE_C54X = 12
+HANDLE_SIZE_C52X = 4
+HANDLE_SIZE_C54X = 8
 
 HANDLE_SIZE_Mobilenet=10
-HANDLE_SIZE_Inception=6
+HANDLE_SIZE_Inception=4
 HANDLE_SIZE_Resnet=5
 HANDLE_SIZE_Densenet121=3
 HANDLE_SIZE_Xception=5
 HANDLE_SIZE_Densenet201=2
 HANDLE_SIZE_vgg16=1
-HANDLE_SIZE_InceptionResnet=2
+HANDLE_SIZE_InceptionResnet=1
 HANDLE_SIZE_Nasnetmobile=3
 HANDLE_SIZE_Nasnetlarge=1
 #proactive scheduler update interval
@@ -38,7 +38,7 @@ DEFAULT_BALANCER = 'weight'
 DB_HOST = 'localhost'
 # REDIS_PORT = 6379
 MONGO_PORT = 27017
-batch_interval = 60
+batch_interval = 20
 #DB configs
 ON_DEMAND_PRIZE_DB = 'on_demand'
 SPOT_PRIZE_DB = 'spot'

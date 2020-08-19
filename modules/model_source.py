@@ -114,7 +114,7 @@ class TensorFlowSource(_ModelSource):
                 workers = HANDLE_SIZE_InceptionResnet 
             elif model.startswith('Inception'):
                 workers = HANDLE_SIZE_Inception
-            elif model.startswith('Resn'):
+            elif model.startswith('ResN'):
                 workers = HANDLE_SIZE_Resnet
             elif model.startswith('Xcepti'):
                 workers = HANDLE_SIZE_Xception

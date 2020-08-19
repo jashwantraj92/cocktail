@@ -53,7 +53,9 @@ def init(sanic, loop):
 @app.route('/predict',methods=['POST'])
  
 async def test(request):
-    global threads,pretrained_models,maxVoteLabel,maxVoteClass
+    global threads,pretrained_models,maxVoteLabel,maxVoteClass,votearray,voteclasses
+    votearray=[]
+    voteclasses= []
 
     if request.method == 'POST':
         receive_time = time.time()
@@ -87,14 +89,14 @@ async def test(request):
         end_time = time.time()
         print(pretrained_models,threads)
         threads.clear() 
-
+        maxVoteLabel	=	max(set(votearray), key = votearray.count)
+        maxVoteClass	=	max(set(voteclasses), key = voteclasses.count)
+        print("gather result ",votearray,voteclasses,maxVoteLabel,maxVoteClass)
         print("query respone time ",end_time, maxVoteLabel, maxVoteClass)
         return json({'image': maxVoteLabel, 'class': maxVoteClass, 'time': end_time - receive_time})
 
 def predict(model,x):
-    votearray=[]
-    voteclasses= []
-    global maxVoteLabel, maxVoteClass
+    global maxVoteLabel, maxVoteClass,votearray,voteclasses
     receive_time = time.time()
     print(f'Thread Start {receive_time}')
     result_before_save = model(x)
@@ -103,9 +105,7 @@ def predict(model,x):
         result_before_save.numpy())[0][0])
     votearray.append(tf.keras.applications.mobilenet.decode_predictions(result_before_save.numpy())[0][0][1])
     voteclasses.append(tf.keras.applications.mobilenet.decode_predictions(result_before_save.numpy())[0][0][0])
-    maxVoteLabel	=	max(set(votearray), key = votearray.count)
-    maxVoteClass	=	max(set(voteclasses), key = voteclasses.count)
-
+    
 
 
 async def compute(request):
@@ -115,7 +115,7 @@ async def compute(request):
         print(f'Received request',receive_time,datas[0],datas[1])
     return json({'hello': 'world'})
 
-models = sys.argv[4].split()
+models = sys.argv[4].split(",")
 #model2=sys.argv[2]
 _port = int(sys.argv[2])
 _host = sys.argv[1]
