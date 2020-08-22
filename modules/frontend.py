@@ -163,7 +163,7 @@ async def predict(request, model_name):
             scheduler.Scheduler.failed_rate = scheduler.Scheduler.failed_rate * 0.999
 
         if sch.failed_rate > SLA_BOUND:
-            sch.launch_standby('c5.xlarge', 1, model_name)
+            #sch.launch_standby('c5.xlarge', 1, model_name)
             scheduler.Scheduler.failed_rate = 0.0
 
         print("response received",name,synset) 

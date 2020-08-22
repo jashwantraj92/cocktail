@@ -3,15 +3,16 @@
 
 UPPER_LATENCY_BOUND = 200
 SLA_BOUND = 0.02
-scheme="infaas"
+scheme="ensembling"
 HANDLE_SIZE = 8
 
 #batch size config
 HANDLE_SIZE_P2 = 8
-HANDLE_SIZE_C5=1
+HANDLE_SIZE_C5=0.5
 HANDLE_SIZE_C5X = 1
 HANDLE_SIZE_C52X = 2
 HANDLE_SIZE_C54X = 4
+HANDLE_SIZE_C59X = 9
 
 HANDLE_SIZE_Mobilenet=10
 HANDLE_SIZE_Inception=4
@@ -53,7 +54,7 @@ SPOT_PRIZE_URL = 'http://spot-price.s3.amazonaws.com/spot.js'
 ON_DEMAND_PRIZE_URL = 'http://a0.awsstatic.com/pricing/1/ec2/linux-od.js'
 
 # the data amount to warm up predictor, the re-schedule period(seconds)
-PREDICTOR_PARAM = [2, 30]
+PREDICTOR_PARAM = [2, 60]
 
 # the arrival rate smaple window
 PREDICTOR_WINDOW = 5
@@ -103,7 +104,7 @@ AMIS = AMIS_MODEL[MODEL]
 
 # the instances to use in each model
 AllIndexType = {
-    'tf': ['c5.large', 'c5.xlarge', 'c5.2xlarge', 'c5.4xlarge'],
+    'tf': ['c5.9xlarge', 'c5.xlarge', 'c5.2xlarge', 'c5.4xlarge'],
     'kr': ['c5.xlarge', 'c5.2xlarge', 'c5.4xlarge', 'p2.xlarge'],
     'mx': ['c5.xlarge', 'c5.2xlarge', 'c5.4xlarge', 'p2.xlarge'],
     'nmt': ['c5.xlarge', 'c5.2xlarge', 'c5.4xlarge', 'p2.xlarge']
@@ -145,9 +146,10 @@ CREDENTIALS = {
 }
 #models=['NASNetLarge']
 models=['InceptionResNetV2', 'InceptionV3', 'MobileNetV2', 'MobileNet', 'ResNet50V2', 'ResNet50','Xception','DenseNet201','DenseNet121','NASNetMobile','NASNetLarge']
-accuracy = [.75,.74,.76,.69]
+accuracy = [.75,.74,.76,.60]
+concurrency =[1,4,10,10,5,5,4,2,3,3,1]
 #latency = [120,100,150,75]
-latency = [355,100,155,60]
+latency = [355,100,155,65]
 # model deploy cmd
 TF_DEPLOY_CMD ={
     'cpu': f'nohup sudo docker run -p 8501:8501 --name TFserving_resnet --mount type=bind,source=/home/ubuntu/resnet,target=/models/resnet -e MODEL_NAME=resnet -t tensorflow/serving  > server.log 2>&1 &',

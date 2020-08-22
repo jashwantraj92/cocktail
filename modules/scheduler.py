@@ -142,24 +142,25 @@ class Scheduler():
                 for i in range(len(currentInstance)):
                     cost += instanceInfo[i][1] * 60 * currentInstance[i]
                 weights = self.calculate_weights(self.model_tracker)
-                logging.info(f'weoghts are {weights}')
+                logging.info(f'weights are {weights}')
                 for i in range(len(launch)):
                     if launch[i] > 0:
                         logging.info(f'Launch {launch[i]} {IndexType[i]} instances for model: {name}')
                         ami = AMIS[DEFAULT_REGION]['GPU'] if IndexType[i].startswith('p2') else AMIS[DEFAULT_REGION]['CPU']
                         for j in range(len(models)):
                             model = models[j]
-                            logging.info(f'Launch {launch[i]} for model: {model} numinstances {math.ceil(launch[i]*weights[j])}')
-                            params = {'imageId':ami, 'instanceType':IndexType[i], 'targetCapacity': math.ceil(launch[i]*weights[j]), 'key_value':[('exp_round', Tag)] }
+                            if weights[j] > 0: 
+                                logging.info(f'Launch {launch[i]} for model: {model} numinstances {math.ceil(launch[i]*weights[j])}')
+                                params = {'imageId':ami, 'instanceType':IndexType[i], 'targetCapacity': math.floor(launch[i]*weights[j]), 'key_value':[('exp_round', Tag)] }
                             #model = random.choice(models)
-                            ins_source.launch_ins(name, params,[models[j]])
-                            cost += instanceInfo[i][2] * launch[i]
+                                ins_source.launch_ins(name, params,[models[j]])
+                                cost += instanceInfo[i][2] * launch[i]
 
                 for i in range(len(des)):
                     if des[i] > 0:
                         model = random.choice(models)
                         logging.info(f'Kill {des[i]} {IndexType[i]} instances for model: {name} {model}')
-                        #ins_source.kill_ins(name, DEFAULT_REGION, IndexType[i], des[i], model)
+                        ins_source.kill_ins(name, DEFAULT_REGION, IndexType[i], des[i], model)
 
                 total_cost += cost
                 logging.info(f'count: {self.count[name]}; cost: {cost}; total_cost: {total_cost}')

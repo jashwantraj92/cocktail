@@ -1,4 +1,4 @@
-import asyncio
+import asyncio,math
 import json
 import logging
 import threading
@@ -106,6 +106,19 @@ class TensorFlowSource(_ModelSource):
         #cmd = TF_DEPLOY_CMD['GPU'] if typ.startswith('p2') else TF_DEPLOY_CMD['CPU']
         j=0
         logging.info(f'Models are {models}')
+        if typ.startswith('p2'):
+            handle_size = HANDLE_SIZE_P2
+        elif typ.startswith('c5.x'):
+            handle_size = HANDLE_SIZE_C5X
+        elif typ.startswith('c5.2x'):
+            handle_size = HANDLE_SIZE_C52X
+        elif typ.startswith('c5.4x'):
+            handle_size = HANDLE_SIZE_C54X
+        elif typ.startswith('c5.'):
+            handle_size = HANDLE_SIZE_C5
+        elif typ.startswith('c5.9x'):
+            handle_size = HANDLE_SIZE_C59x
+
         for i in ins:
             model = models[j]
             if model.startswith('Mobil'):
@@ -127,7 +140,7 @@ class TensorFlowSource(_ModelSource):
             elif model.startswith('DenseNet20'):
                 workers = HANDLE_SIZE_Densenet201
 
-            cmd = f'nohup python3.6 sanic-server.py 0.0.0.0 8000 {workers} {models[j]} > server.log 2>&1 &'
+            cmd = f'nohup python3.6 sanic-server.py 0.0.0.0 8000 {math.ceil(workers*handle_size)} {models[j]} > server.log 2>&1 &'
             logging.info(f'Models are {models[j]}')
             utils.check_command(utils.get_session(i.ip), cmd, debug=True)
             #cmd=f"nohup python3.6 python-grpc-async-server-example/server.py {models[j]} 50055 > grpc.log 2>&1 &"

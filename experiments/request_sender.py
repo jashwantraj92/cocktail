@@ -85,17 +85,15 @@ def send_trace_data(args, reader):
 # User list comprehension to create a list of lists from Dataframe rows
     list_of_rows = [list(row) for row in df.values]
 # Print list of lists i.e. rows
-    #print(list_of_rows)
+    print(list_of_rows)
     count = 0
     while(count <=50):
         for row in list_of_rows:
             if reader.line_num > args.timeout:
                 break
-            if count > 100:
-                break
             print(row)
  
-            num = row[3]
+            num = int(row[3])*50
             constraints = row[2]
             for s in range(num):
                 data,filename = get_data()
@@ -104,9 +102,9 @@ def send_trace_data(args, reader):
                 print("request submitted", constraints, filename)
                 # sender(data)
                 # print(f'Send request after {s} ms')
-            time.sleep(3)
-            count += 1
-        time.sleep(8)
+            time.sleep(10)
+        count += 1
+        time.sleep(5)
 
 
 def get_kr_data():

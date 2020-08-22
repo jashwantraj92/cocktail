@@ -155,8 +155,20 @@ def plot_data(df, merged_pdf,files):
     #for i, q in enumerate(quantiles):
     #    plt.plot(q, label=i)
     #    print(i,q)
-    close_fig(merged_pdf)
 
+    latency_df = pd.read_csv('latency.csv', header=0, index_col=False)
+    print(latency_df)
+    fig, ax = plt.subplots(figsize=(8, 4))
+    g = sns.boxplot(y=latency_df['latency'], x=latency_df['policy'],
+                                hue = 'policy',
+                                data = latency_df,
+                                showfliers = False,
+                                palette = latency_3color_palette,
+                                linewidth = None)
+            #ax.set_ylim([0,1500])
+    ax.set_xlim([0,1250])
+    ax.set_ylabel('Response Latency (ms)')
+    close_fig(merged_pdf)
 
 
 args = parse_arguments()
@@ -165,8 +177,8 @@ merged_pdf = PdfFileMerger()
 for files in args.filename.split():
     df = run_reader(files)
     plot_data(df,merged_pdf,files)
+    print("***********************************")
+    print(df['#models'].quantile([0.1, .25, .5, 0.75, 0.9, 0.99]))
+    print(df['overall_accuracy'].quantile([0.1, .25, .5, 0.75, 0.9, 0.99]))
+    print("***********************************")
 write_pdf(merged_pdf)
-print("***********************************")
-print(df['#models'].quantile([0.1, .25, .5, 0.75, 0.9, 0.99]))
-print(df['overall_accuracy'].quantile([0.1, .25, .5, 0.75, 0.9, 0.99]))
-print("***********************************")

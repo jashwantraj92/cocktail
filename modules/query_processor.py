@@ -108,8 +108,8 @@ class QueryProcessor():
                         handle_size = HANDLE_SIZE_C52X
                     elif typ.startswith('c5.4x'):
                         handle_size = HANDLE_SIZE_C54X
-                    elif typ.startswith('c5.'):
-                        handle_size = HANDLE_SIZE_C5
+                    elif typ.startswith('c5.9x'):
+                        handle_size = HANDLE_SIZE_C59x
 
                     if model.startswith('Mobil'):
                         other_info = await self.query_queue.get(handle_size * HANDLE_SIZE_Mobilenet - 1, model)

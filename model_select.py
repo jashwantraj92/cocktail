@@ -15,7 +15,7 @@ def get_models(constraints):
         global inst_list, current_latency, current_cost
         print('main invoked')
         accuracy,latency = get_requirements(constraints)
-        models = naiveSchedule.select_models(latency,accuracy,2,"infaas")
+        models = naiveSchedule.select_models(latency,accuracy,2,"ensembling")
         cmd=f'python3.6 naiveSchedule.py -a {accuracy} -l {latency} -c 2'
         #os.system(cmd)
         print(f"************** selected models are {models}")
