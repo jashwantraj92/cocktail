@@ -169,6 +169,14 @@ def plot_data(df, merged_pdf,files):
             #ax.set_ylim([0,1500])
     #ax.set_xlim([0,1250])
     ax.set_ylabel('Response Latency (ms)')
+    fig, ax = plt.subplots(figsize=(8, 4))
+    threed_df = pd.read_csv('cost-lat-acc.csv', header=0, index_col=False)
+    print(threeD_df)
+    ax.scatter(threeD_df['latency'], threeD_df['cost'], threeD_df['accuracy'], c=threeD_df['accuracy'], marker='o')
+    ax.set_xlabel('X Label')
+    ax.set_ylabel('Y Label')
+    ax.set_zlabel('Z Label')
+
     close_fig(merged_pdf)
 
 
