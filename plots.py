@@ -159,14 +159,15 @@ def plot_data(df, merged_pdf,files):
     latency_df = pd.read_csv('latency.csv', header=0, index_col=False)
     print(latency_df)
     fig, ax = plt.subplots(figsize=(8, 4))
-    g = sns.boxplot(y=latency_df['latency'], x=latency_df['policy'],
-                                hue = 'policy',
+    
+    g = sns.boxplot(y=latency_df['Latency'], x=latency_df['Policy'],
+                              
                                 data = latency_df,
                                 showfliers = False,
                                 palette = latency_3color_palette,
                                 linewidth = None)
             #ax.set_ylim([0,1500])
-    ax.set_xlim([0,1250])
+    #ax.set_xlim([0,1250])
     ax.set_ylabel('Response Latency (ms)')
     close_fig(merged_pdf)
 
