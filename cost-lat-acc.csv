@@ -1,0 +1,14 @@
+cost,latency,accuracy,scheme
+2.02,355,76,infaas
+2.02,155,73,infaas
+1.212,100,71,infaas
+0.78,70,69,infaas
+1.44,155,75.5,cocktail
+0.84,120,74.7,cocktail
+0.78,100,73.6,cocktail
+0.75,70,71,cocktail
+1.92,155,76,clipper
+1.32,120,75,clipper
+0.9,100,74,clipper
+0.75,70,71,clipper
+
