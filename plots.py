@@ -6,6 +6,7 @@ import pandas as pd
 import seaborn as sns
 from matplotlib.font_manager import FontProperties
 from PyPDF2 import PdfFileMerger, PdfFileReader
+from mpl_toolkits.mplot3d import Axes3D
 import datetime as dt
 import pytz,sys
 from statsmodels.tsa.arima_model import ARIMA
@@ -134,7 +135,7 @@ def plot_data(df, merged_pdf,files):
     ax.set_xticklabels(df['#batch'])
     ax.set_xlim(0,len(df['#models']))
     close_fig(merged_pdf)
-    fig, ax = plt.subplots(figsize=(8, 4))
+    """fig, ax = plt.subplots(figsize=(8, 4))
     quantile_df = pd.DataFrame({'mean': df['overall_accuracy'].mean(), 'median': df['overall_accuracy'].median(),
                    '90%': df['overall_accuracy'].quantile([0.9]),
                    '99%': df['overall_accuracy'].quantile([0.99])})
@@ -144,7 +145,7 @@ def plot_data(df, merged_pdf,files):
     #for i, q in enumerate(quantiles):
     #    plt.plot(q, label=i)
     #    print(i,q)
-    close_fig(merged_pdf)
+    close_fig(merged_pdf)"""
     fig, ax = plt.subplots(figsize=(8, 4))
     quantile_df = pd.DataFrame({'mean': df['#models'].mean(), 'median': df['#models'].median(),
                    '90%': df['#models'].quantile([0.9]),
@@ -155,8 +156,10 @@ def plot_data(df, merged_pdf,files):
     #for i, q in enumerate(quantiles):
     #    plt.plot(q, label=i)
     #    print(i,q)
-
-    latency_df = pd.read_csv('latency.csv', header=0, index_col=False)
+    close_fig(merged_pdf)
+  
+def plot_latency():    
+    latency_df = pd.read_csv('/home/cc/cocktail/latency.csv', header=0, index_col=False)
     print(latency_df)
     fig, ax = plt.subplots(figsize=(8, 4))
     
@@ -164,20 +167,38 @@ def plot_data(df, merged_pdf,files):
                               
                                 data = latency_df,
                                 showfliers = False,
-                                palette = latency_3color_palette,
+                                palette = latency_3color_palette,width=0.6,
                                 linewidth = None)
             #ax.set_ylim([0,1500])
     #ax.set_xlim([0,1250])
     ax.set_ylabel('Response Latency (ms)')
+    close_fig(merged_pdf)
     fig, ax = plt.subplots(figsize=(8, 4))
-    threed_df = pd.read_csv('cost-lat-acc.csv', header=0, index_col=False)
+    ax = Axes3D(fig)
+    threeD_df = pd.read_csv('/home/cc/cocktail/cost-lat-acc.csv', header=0, index_col=False)
     print(threeD_df)
     ax.scatter(threeD_df['latency'], threeD_df['cost'], threeD_df['accuracy'], c=threeD_df['accuracy'], marker='o')
-    ax.set_xlabel('X Label')
-    ax.set_ylabel('Y Label')
-    ax.set_zlabel('Z Label')
-
+    ax.set_xlabel('Latency')
+    ax.set_ylabel('Cost')
+    ax.set_zlabel('Accuracy')
+    plt.legend(loc='upper center',
+               bbox_to_anchor=(0.5, 1.4),
+               ncol=2,
+               frameon=True,
+               fancybox=True,
+               framealpha=0.4,
+               shadow=False,
+               edgecolor="black",
+               labelspacing=0,
+               columnspacing=0.1,
+               handletextpad=0.5
+               # labels=figs_normalized_barlabels
+               )
     close_fig(merged_pdf)
+    fig, ax = plt.subplots(figsize=(8, 4))
+    sns.pairplot(threeD_df, hue='scheme')
+    close_fig(merged_pdf)
+
 
 
 args = parse_arguments()
@@ -190,4 +211,5 @@ for files in args.filename.split():
     print(df['#models'].quantile([0.1, .25, .5, 0.75, 0.9, 0.99]))
     print(df['overall_accuracy'].quantile([0.1, .25, .5, 0.75, 0.9, 0.99]))
     print("***********************************")
+plot_latency()
 write_pdf(merged_pdf)
