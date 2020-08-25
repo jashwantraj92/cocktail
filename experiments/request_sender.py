@@ -87,13 +87,13 @@ def send_trace_data(args, reader):
 # Print list of lists i.e. rows
     print(list_of_rows)
     count = 0
-    while(count <=50):
+    while(count <=500):
         for row in list_of_rows:
             if reader.line_num > args.timeout:
                 break
             print(row)
  
-            num = int(row[3])*50
+            num = int(row[3])*2
             constraints = row[2]
             for s in range(num):
                 data,filename = get_data()
@@ -102,7 +102,7 @@ def send_trace_data(args, reader):
                 print("request submitted", constraints, filename)
                 # sender(data)
                 # print(f'Send request after {s} ms')
-            time.sleep(10)
+            time.sleep(3)
         count += 1
         time.sleep(5)
 
