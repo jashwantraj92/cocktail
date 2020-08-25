@@ -173,6 +173,28 @@ def plot_latency():
     #ax.set_xlim([0,1250])
     ax.set_ylabel('Response Latency (ms)')
     close_fig(merged_pdf)
+    const1_df = latency_df(latency_df['Latency'<=220])
+    const1_df['const'] = "Const1"
+    const2_df = latency_df.(latency_df['Latency'<=350])
+    const2_df = const2_df.drop(latency_df['Latency'<=220])
+    const2_df['const'] = "Const2"
+    const3_df = latency_df(latency_df['Latency']>350)
+    const3_df['const'] = "Const3"
+    frames= [const1_df,const2_df,const3_df]
+    all_df = pd.concat(frames)
+    fig, ax = plt.subplots(figsize=(8, 4))
+    
+    g = sns.boxplot(y='Latency', x='const',
+                                hue='policy'
+                                data = all_df,
+                                showfliers = False,
+                                palette = latency_3color_palette,width=0.6,
+                                linewidth = None)
+            #ax.set_ylim([0,1500])
+    #ax.set_xlim([0,1250])
+    ax.set_ylabel('Response Latency (ms)')
+    close_fig(merged_pdf)
+
     fig, ax = plt.subplots(figsize=(8, 4))
     ax = Axes3D(fig)
     threeD_df = pd.read_csv('/home/cc/cocktail/cost-lat-acc.csv', header=0, index_col=False)
