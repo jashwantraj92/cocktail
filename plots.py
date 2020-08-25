@@ -178,7 +178,7 @@ def plot_latency():
     threeD_df = pd.read_csv('/home/cc/cocktail/cost-lat-acc.csv', header=0, index_col=False)
     print(threeD_df)
     #ax.scatter(threeD_df['latency'], threeD_df['cost'], threeD_df['accuracy'], c=threeD_df['accuracy'], marker='o')
-    ax.plot_surface(threeD_df['latency'], threeD_df['cost'], threeD_df['accuracy'], c=threeD_df['accuracy'], marker='o')
+    ax.plot_trisurf(threeD_df['latency'], threeD_df['cost'], threeD_df['accuracy'])
     ax.set_xlabel('Latency')
     ax.set_ylabel('Cost')
     ax.set_zlabel('Accuracy')
