@@ -1,0 +1,685 @@
+/usr/local/lib/python3.6/dist-packages/celery/platforms.py:801: RuntimeWarning: You're running the worker with superuser privileges: this is
+absolutely not recommended!
+
+Please specify a different user using the --uid option.
+
+User information: uid=0 euid=0 gid=0 egid=0
+
+  uid=uid, euid=euid, gid=gid, egid=egid,
+[2020-08-26 19:20:54,565: INFO/MainProcess] Connected to redis://localhost:6379//
+[2020-08-26 19:20:54,580: INFO/MainProcess] mingle: searching for neighbors
+[2020-08-26 19:20:55,596: INFO/MainProcess] mingle: all alone
+[2020-08-26 19:20:55,609: INFO/MainProcess] celery@galaxy-gpu ready.
+[2020-08-26 19:22:57,320: INFO/MainProcess] Received task: modules.aws_manager.check_spot_states[9eaad8a4-6f36-4d11-bf79-90e338e451be]  
+/usr/local/lib/python3.6/dist-packages/celery/platforms.py:801: RuntimeWarning: You're running the worker with superuser privileges: this is
+absolutely not recommended!
+
+Please specify a different user using the --uid option.
+
+User information: uid=0 euid=0 gid=0 egid=0
+
+  uid=uid, euid=euid, gid=gid, egid=egid,
+[2020-08-26 19:22:57,325: WARNING/ForkPoolWorker-31] --- Logging error ---
+[2020-08-26 19:22:57,327: WARNING/ForkPoolWorker-31] Traceback (most recent call last):
+[2020-08-26 19:22:57,327: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 994, in emit
+    msg = self.format(record)
+[2020-08-26 19:22:57,327: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 840, in format
+    return fmt.format(record)
+[2020-08-26 19:22:57,327: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/utils/log.py", line 153, in format
+    msg = logging.Formatter.format(self, record)
+[2020-08-26 19:22:57,328: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 577, in format
+    record.message = record.getMessage()
+[2020-08-26 19:22:57,328: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 338, in getMessage
+    msg = msg % self.args
+[2020-08-26 19:22:57,328: WARNING/ForkPoolWorker-31] TypeError: not all arguments converted during string formatting
+[2020-08-26 19:22:57,328: WARNING/ForkPoolWorker-31] Call stack:
+[2020-08-26 19:22:57,332: WARNING/ForkPoolWorker-31] File "/usr/local/bin/celery", line 8, in <module>
+    sys.exit(main())
+[2020-08-26 19:22:57,332: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/__main__.py", line 16, in main
+    _main()
+[2020-08-26 19:22:57,332: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 322, in main
+    cmd.execute_from_commandline(argv)
+[2020-08-26 19:22:57,332: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 499, in execute_from_commandline
+    super(CeleryCommand, self).execute_from_commandline(argv)))
+[2020-08-26 19:22:57,332: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/base.py", line 305, in execute_from_commandline
+    return self.handle_argv(self.prog_name, argv[1:])
+[2020-08-26 19:22:57,332: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 491, in handle_argv
+    return self.execute(command, argv)
+[2020-08-26 19:22:57,332: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 419, in execute
+    ).run_from_argv(self.prog_name, argv[1:], command=argv[0])
+[2020-08-26 19:22:57,333: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/worker.py", line 223, in run_from_argv
+    return self(*args, **options)
+[2020-08-26 19:22:57,333: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/base.py", line 253, in __call__
+    ret = self.run(*args, **kwargs)
+[2020-08-26 19:22:57,333: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/worker.py", line 259, in run
+    worker.start()
+[2020-08-26 19:22:57,333: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/worker/worker.py", line 208, in start
+    self.blueprint.start(self)
+[2020-08-26 19:22:57,333: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bootsteps.py", line 119, in start
+    step.start(parent)
+[2020-08-26 19:22:57,333: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bootsteps.py", line 369, in start
+    return self.obj.start()
+[2020-08-26 19:22:57,333: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/base.py", line 132, in start
+    self.on_start()
+[2020-08-26 19:22:57,333: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/prefork.py", line 117, in on_start
+    **self.options)
+[2020-08-26 19:22:57,333: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/asynpool.py", line 486, in __init__
+    super(AsynPool, self).__init__(processes, *args, **kwargs)
+[2020-08-26 19:22:57,333: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 1046, in __init__
+    self._create_worker_process(i)
+[2020-08-26 19:22:57,334: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/asynpool.py", line 503, in _create_worker_process
+    return super(AsynPool, self)._create_worker_process(i)
+[2020-08-26 19:22:57,334: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 1158, in _create_worker_process
+    w.start()
+[2020-08-26 19:22:57,334: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/process.py", line 124, in start
+    self._popen = self._Popen(self)
+[2020-08-26 19:22:57,334: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/context.py", line 333, in _Popen
+    return Popen(process_obj)
+[2020-08-26 19:22:57,334: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/popen_fork.py", line 24, in __init__
+    self._launch(process_obj)
+[2020-08-26 19:22:57,334: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/popen_fork.py", line 79, in _launch
+    code = process_obj._bootstrap()
+[2020-08-26 19:22:57,334: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/process.py", line 327, in _bootstrap
+    self.run()
+[2020-08-26 19:22:57,334: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/process.py", line 114, in run
+    self._target(*self._args, **self._kwargs)
+[2020-08-26 19:22:57,334: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 292, in __call__
+    sys.exit(self.workloop(pid=pid))
+[2020-08-26 19:22:57,334: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 362, in workloop
+    result = (True, prepare_result(fun(*args, **kwargs)))
+[2020-08-26 19:22:57,334: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/app/trace.py", line 612, in _fast_trace_task
+    uuid, args, kwargs, request,
+[2020-08-26 19:22:57,334: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/app/trace.py", line 412, in trace_task
+    R = retval = fun(*args, **kwargs)
+[2020-08-26 19:22:57,335: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/app/trace.py", line 704, in __protected_call__
+    return self.run(*args, **kwargs)
+[2020-08-26 19:22:57,335: WARNING/ForkPoolWorker-31] File "/home/cc/cocktail/modules/aws_manager.py", line 27, in check_spot_states
+    logging.info("**************",all_info)
+[2020-08-26 19:22:57,335: WARNING/ForkPoolWorker-31] Message: '**************'
+Arguments: (<pymongo.cursor.Cursor object at 0x7f505ddc7198>,)
+[2020-08-26 19:23:09,031: INFO/ForkPoolWorker-31] Task modules.aws_manager.check_spot_states[9eaad8a4-6f36-4d11-bf79-90e338e451be] succeeded in 11.707986099179834s: None
+[2020-08-26 19:24:59,038: INFO/MainProcess] Received task: modules.aws_manager.check_spot_states[c9dde13b-d334-420b-ace1-4278a8723e67]  
+[2020-08-26 19:24:59,040: WARNING/ForkPoolWorker-31] --- Logging error ---
+[2020-08-26 19:24:59,040: WARNING/ForkPoolWorker-31] Traceback (most recent call last):
+[2020-08-26 19:24:59,040: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 994, in emit
+    msg = self.format(record)
+[2020-08-26 19:24:59,040: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 840, in format
+    return fmt.format(record)
+[2020-08-26 19:24:59,040: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/utils/log.py", line 153, in format
+    msg = logging.Formatter.format(self, record)
+[2020-08-26 19:24:59,041: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 577, in format
+    record.message = record.getMessage()
+[2020-08-26 19:24:59,041: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 338, in getMessage
+    msg = msg % self.args
+[2020-08-26 19:24:59,041: WARNING/ForkPoolWorker-31] TypeError: not all arguments converted during string formatting
+[2020-08-26 19:24:59,041: WARNING/ForkPoolWorker-31] Call stack:
+[2020-08-26 19:24:59,042: WARNING/ForkPoolWorker-31] File "/usr/local/bin/celery", line 8, in <module>
+    sys.exit(main())
+[2020-08-26 19:24:59,042: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/__main__.py", line 16, in main
+    _main()
+[2020-08-26 19:24:59,042: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 322, in main
+    cmd.execute_from_commandline(argv)
+[2020-08-26 19:24:59,042: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 499, in execute_from_commandline
+    super(CeleryCommand, self).execute_from_commandline(argv)))
+[2020-08-26 19:24:59,042: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/base.py", line 305, in execute_from_commandline
+    return self.handle_argv(self.prog_name, argv[1:])
+[2020-08-26 19:24:59,042: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 491, in handle_argv
+    return self.execute(command, argv)
+[2020-08-26 19:24:59,042: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 419, in execute
+    ).run_from_argv(self.prog_name, argv[1:], command=argv[0])
+[2020-08-26 19:24:59,042: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/worker.py", line 223, in run_from_argv
+    return self(*args, **options)
+[2020-08-26 19:24:59,042: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/base.py", line 253, in __call__
+    ret = self.run(*args, **kwargs)
+[2020-08-26 19:24:59,042: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/worker.py", line 259, in run
+    worker.start()
+[2020-08-26 19:24:59,042: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/worker/worker.py", line 208, in start
+    self.blueprint.start(self)
+[2020-08-26 19:24:59,043: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bootsteps.py", line 119, in start
+    step.start(parent)
+[2020-08-26 19:24:59,043: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bootsteps.py", line 369, in start
+    return self.obj.start()
+[2020-08-26 19:24:59,043: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/base.py", line 132, in start
+    self.on_start()
+[2020-08-26 19:24:59,043: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/prefork.py", line 117, in on_start
+    **self.options)
+[2020-08-26 19:24:59,043: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/asynpool.py", line 486, in __init__
+    super(AsynPool, self).__init__(processes, *args, **kwargs)
+[2020-08-26 19:24:59,043: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 1046, in __init__
+    self._create_worker_process(i)
+[2020-08-26 19:24:59,043: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/asynpool.py", line 503, in _create_worker_process
+    return super(AsynPool, self)._create_worker_process(i)
+[2020-08-26 19:24:59,043: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 1158, in _create_worker_process
+    w.start()
+[2020-08-26 19:24:59,043: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/process.py", line 124, in start
+    self._popen = self._Popen(self)
+[2020-08-26 19:24:59,043: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/context.py", line 333, in _Popen
+    return Popen(process_obj)
+[2020-08-26 19:24:59,043: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/popen_fork.py", line 24, in __init__
+    self._launch(process_obj)
+[2020-08-26 19:24:59,043: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/popen_fork.py", line 79, in _launch
+    code = process_obj._bootstrap()
+[2020-08-26 19:24:59,044: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/process.py", line 327, in _bootstrap
+    self.run()
+[2020-08-26 19:24:59,044: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/process.py", line 114, in run
+    self._target(*self._args, **self._kwargs)
+[2020-08-26 19:24:59,044: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 292, in __call__
+    sys.exit(self.workloop(pid=pid))
+[2020-08-26 19:24:59,044: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 362, in workloop
+    result = (True, prepare_result(fun(*args, **kwargs)))
+[2020-08-26 19:24:59,044: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/app/trace.py", line 612, in _fast_trace_task
+    uuid, args, kwargs, request,
+[2020-08-26 19:24:59,044: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/app/trace.py", line 412, in trace_task
+    R = retval = fun(*args, **kwargs)
+[2020-08-26 19:24:59,044: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/app/trace.py", line 704, in __protected_call__
+    return self.run(*args, **kwargs)
+[2020-08-26 19:24:59,044: WARNING/ForkPoolWorker-31] File "/home/cc/cocktail/modules/aws_manager.py", line 27, in check_spot_states
+    logging.info("**************",all_info)
+[2020-08-26 19:24:59,044: WARNING/ForkPoolWorker-31] Message: '**************'
+Arguments: (<pymongo.cursor.Cursor object at 0x7f505ddb6f98>,)
+[2020-08-26 19:25:11,011: INFO/ForkPoolWorker-31] Task modules.aws_manager.check_spot_states[c9dde13b-d334-420b-ace1-4278a8723e67] succeeded in 11.971784357912838s: None
+[2020-08-26 19:27:00,295: INFO/MainProcess] Received task: modules.aws_manager.check_spot_states[eaae96a4-9db5-4cd3-a34e-1cb1a808bfeb]  
+[2020-08-26 19:27:00,298: WARNING/ForkPoolWorker-31] --- Logging error ---
+[2020-08-26 19:27:00,299: WARNING/ForkPoolWorker-31] Traceback (most recent call last):
+[2020-08-26 19:27:00,299: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 994, in emit
+    msg = self.format(record)
+[2020-08-26 19:27:00,299: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 840, in format
+    return fmt.format(record)
+[2020-08-26 19:27:00,299: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/utils/log.py", line 153, in format
+    msg = logging.Formatter.format(self, record)
+[2020-08-26 19:27:00,299: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 577, in format
+    record.message = record.getMessage()
+[2020-08-26 19:27:00,299: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 338, in getMessage
+    msg = msg % self.args
+[2020-08-26 19:27:00,299: WARNING/ForkPoolWorker-31] TypeError: not all arguments converted during string formatting
+[2020-08-26 19:27:00,299: WARNING/ForkPoolWorker-31] Call stack:
+[2020-08-26 19:27:00,300: WARNING/ForkPoolWorker-31] File "/usr/local/bin/celery", line 8, in <module>
+    sys.exit(main())
+[2020-08-26 19:27:00,300: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/__main__.py", line 16, in main
+    _main()
+[2020-08-26 19:27:00,300: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 322, in main
+    cmd.execute_from_commandline(argv)
+[2020-08-26 19:27:00,300: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 499, in execute_from_commandline
+    super(CeleryCommand, self).execute_from_commandline(argv)))
+[2020-08-26 19:27:00,300: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/base.py", line 305, in execute_from_commandline
+    return self.handle_argv(self.prog_name, argv[1:])
+[2020-08-26 19:27:00,300: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 491, in handle_argv
+    return self.execute(command, argv)
+[2020-08-26 19:27:00,301: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 419, in execute
+    ).run_from_argv(self.prog_name, argv[1:], command=argv[0])
+[2020-08-26 19:27:00,301: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/worker.py", line 223, in run_from_argv
+    return self(*args, **options)
+[2020-08-26 19:27:00,301: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/base.py", line 253, in __call__
+    ret = self.run(*args, **kwargs)
+[2020-08-26 19:27:00,301: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/worker.py", line 259, in run
+    worker.start()
+[2020-08-26 19:27:00,301: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/worker/worker.py", line 208, in start
+    self.blueprint.start(self)
+[2020-08-26 19:27:00,301: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bootsteps.py", line 119, in start
+    step.start(parent)
+[2020-08-26 19:27:00,301: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bootsteps.py", line 369, in start
+    return self.obj.start()
+[2020-08-26 19:27:00,301: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/base.py", line 132, in start
+    self.on_start()
+[2020-08-26 19:27:00,301: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/prefork.py", line 117, in on_start
+    **self.options)
+[2020-08-26 19:27:00,301: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/asynpool.py", line 486, in __init__
+    super(AsynPool, self).__init__(processes, *args, **kwargs)
+[2020-08-26 19:27:00,301: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 1046, in __init__
+    self._create_worker_process(i)
+[2020-08-26 19:27:00,302: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/asynpool.py", line 503, in _create_worker_process
+    return super(AsynPool, self)._create_worker_process(i)
+[2020-08-26 19:27:00,302: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 1158, in _create_worker_process
+    w.start()
+[2020-08-26 19:27:00,302: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/process.py", line 124, in start
+    self._popen = self._Popen(self)
+[2020-08-26 19:27:00,302: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/context.py", line 333, in _Popen
+    return Popen(process_obj)
+[2020-08-26 19:27:00,302: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/popen_fork.py", line 24, in __init__
+    self._launch(process_obj)
+[2020-08-26 19:27:00,302: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/popen_fork.py", line 79, in _launch
+    code = process_obj._bootstrap()
+[2020-08-26 19:27:00,302: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/process.py", line 327, in _bootstrap
+    self.run()
+[2020-08-26 19:27:00,302: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/process.py", line 114, in run
+    self._target(*self._args, **self._kwargs)
+[2020-08-26 19:27:00,302: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 292, in __call__
+    sys.exit(self.workloop(pid=pid))
+[2020-08-26 19:27:00,302: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 362, in workloop
+    result = (True, prepare_result(fun(*args, **kwargs)))
+[2020-08-26 19:27:00,302: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/app/trace.py", line 612, in _fast_trace_task
+    uuid, args, kwargs, request,
+[2020-08-26 19:27:00,302: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/app/trace.py", line 412, in trace_task
+    R = retval = fun(*args, **kwargs)
+[2020-08-26 19:27:00,303: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/app/trace.py", line 704, in __protected_call__
+    return self.run(*args, **kwargs)
+[2020-08-26 19:27:00,303: WARNING/ForkPoolWorker-31] File "/home/cc/cocktail/modules/aws_manager.py", line 27, in check_spot_states
+    logging.info("**************",all_info)
+[2020-08-26 19:27:00,303: WARNING/ForkPoolWorker-31] Message: '**************'
+Arguments: (<pymongo.cursor.Cursor object at 0x7f505ddb6f60>,)
+[2020-08-26 19:27:12,180: INFO/ForkPoolWorker-31] Task modules.aws_manager.check_spot_states[eaae96a4-9db5-4cd3-a34e-1cb1a808bfeb] succeeded in 11.882486262358725s: None
+[2020-08-26 19:29:01,982: INFO/MainProcess] Received task: modules.aws_manager.check_spot_states[09268e38-cfed-43e1-b4b4-111c62b6621d]  
+[2020-08-26 19:29:01,984: WARNING/ForkPoolWorker-31] --- Logging error ---
+[2020-08-26 19:29:01,985: WARNING/ForkPoolWorker-31] Traceback (most recent call last):
+[2020-08-26 19:29:01,985: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 994, in emit
+    msg = self.format(record)
+[2020-08-26 19:29:01,985: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 840, in format
+    return fmt.format(record)
+[2020-08-26 19:29:01,985: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/utils/log.py", line 153, in format
+    msg = logging.Formatter.format(self, record)
+[2020-08-26 19:29:01,985: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 577, in format
+    record.message = record.getMessage()
+[2020-08-26 19:29:01,985: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 338, in getMessage
+    msg = msg % self.args
+[2020-08-26 19:29:01,986: WARNING/ForkPoolWorker-31] TypeError: not all arguments converted during string formatting
+[2020-08-26 19:29:01,986: WARNING/ForkPoolWorker-31] Call stack:
+[2020-08-26 19:29:01,986: WARNING/ForkPoolWorker-31] File "/usr/local/bin/celery", line 8, in <module>
+    sys.exit(main())
+[2020-08-26 19:29:01,986: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/__main__.py", line 16, in main
+    _main()
+[2020-08-26 19:29:01,987: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 322, in main
+    cmd.execute_from_commandline(argv)
+[2020-08-26 19:29:01,987: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 499, in execute_from_commandline
+    super(CeleryCommand, self).execute_from_commandline(argv)))
+[2020-08-26 19:29:01,987: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/base.py", line 305, in execute_from_commandline
+    return self.handle_argv(self.prog_name, argv[1:])
+[2020-08-26 19:29:01,987: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 491, in handle_argv
+    return self.execute(command, argv)
+[2020-08-26 19:29:01,987: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 419, in execute
+    ).run_from_argv(self.prog_name, argv[1:], command=argv[0])
+[2020-08-26 19:29:01,987: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/worker.py", line 223, in run_from_argv
+    return self(*args, **options)
+[2020-08-26 19:29:01,987: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/base.py", line 253, in __call__
+    ret = self.run(*args, **kwargs)
+[2020-08-26 19:29:01,987: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/worker.py", line 259, in run
+    worker.start()
+[2020-08-26 19:29:01,987: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/worker/worker.py", line 208, in start
+    self.blueprint.start(self)
+[2020-08-26 19:29:01,987: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bootsteps.py", line 119, in start
+    step.start(parent)
+[2020-08-26 19:29:01,987: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bootsteps.py", line 369, in start
+    return self.obj.start()
+[2020-08-26 19:29:01,988: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/base.py", line 132, in start
+    self.on_start()
+[2020-08-26 19:29:01,988: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/prefork.py", line 117, in on_start
+    **self.options)
+[2020-08-26 19:29:01,988: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/asynpool.py", line 486, in __init__
+    super(AsynPool, self).__init__(processes, *args, **kwargs)
+[2020-08-26 19:29:01,988: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 1046, in __init__
+    self._create_worker_process(i)
+[2020-08-26 19:29:01,988: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/asynpool.py", line 503, in _create_worker_process
+    return super(AsynPool, self)._create_worker_process(i)
+[2020-08-26 19:29:01,988: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 1158, in _create_worker_process
+    w.start()
+[2020-08-26 19:29:01,988: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/process.py", line 124, in start
+    self._popen = self._Popen(self)
+[2020-08-26 19:29:01,988: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/context.py", line 333, in _Popen
+    return Popen(process_obj)
+[2020-08-26 19:29:01,988: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/popen_fork.py", line 24, in __init__
+    self._launch(process_obj)
+[2020-08-26 19:29:01,988: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/popen_fork.py", line 79, in _launch
+    code = process_obj._bootstrap()
+[2020-08-26 19:29:01,988: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/process.py", line 327, in _bootstrap
+    self.run()
+[2020-08-26 19:29:01,988: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/process.py", line 114, in run
+    self._target(*self._args, **self._kwargs)
+[2020-08-26 19:29:01,989: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 292, in __call__
+    sys.exit(self.workloop(pid=pid))
+[2020-08-26 19:29:01,989: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 362, in workloop
+    result = (True, prepare_result(fun(*args, **kwargs)))
+[2020-08-26 19:29:01,989: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/app/trace.py", line 612, in _fast_trace_task
+    uuid, args, kwargs, request,
+[2020-08-26 19:29:01,989: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/app/trace.py", line 412, in trace_task
+    R = retval = fun(*args, **kwargs)
+[2020-08-26 19:29:01,989: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/app/trace.py", line 704, in __protected_call__
+    return self.run(*args, **kwargs)
+[2020-08-26 19:29:01,989: WARNING/ForkPoolWorker-31] File "/home/cc/cocktail/modules/aws_manager.py", line 27, in check_spot_states
+    logging.info("**************",all_info)
+[2020-08-26 19:29:01,989: WARNING/ForkPoolWorker-31] Message: '**************'
+Arguments: (<pymongo.cursor.Cursor object at 0x7f505d3caf28>,)
+[2020-08-26 19:29:13,857: INFO/ForkPoolWorker-31] Task modules.aws_manager.check_spot_states[09268e38-cfed-43e1-b4b4-111c62b6621d] succeeded in 11.872442516963929s: None
+[2020-08-26 19:31:03,386: INFO/MainProcess] Received task: modules.aws_manager.check_spot_states[5b8d392a-d5e9-40f9-a7b2-0022a3dabb78]  
+[2020-08-26 19:31:03,388: WARNING/ForkPoolWorker-31] --- Logging error ---
+[2020-08-26 19:31:03,389: WARNING/ForkPoolWorker-31] Traceback (most recent call last):
+[2020-08-26 19:31:03,389: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 994, in emit
+    msg = self.format(record)
+[2020-08-26 19:31:03,389: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 840, in format
+    return fmt.format(record)
+[2020-08-26 19:31:03,389: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/utils/log.py", line 153, in format
+    msg = logging.Formatter.format(self, record)
+[2020-08-26 19:31:03,389: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 577, in format
+    record.message = record.getMessage()
+[2020-08-26 19:31:03,389: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 338, in getMessage
+    msg = msg % self.args
+[2020-08-26 19:31:03,389: WARNING/ForkPoolWorker-31] TypeError: not all arguments converted during string formatting
+[2020-08-26 19:31:03,389: WARNING/ForkPoolWorker-31] Call stack:
+[2020-08-26 19:31:03,390: WARNING/ForkPoolWorker-31] File "/usr/local/bin/celery", line 8, in <module>
+    sys.exit(main())
+[2020-08-26 19:31:03,390: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/__main__.py", line 16, in main
+    _main()
+[2020-08-26 19:31:03,390: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 322, in main
+    cmd.execute_from_commandline(argv)
+[2020-08-26 19:31:03,390: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 499, in execute_from_commandline
+    super(CeleryCommand, self).execute_from_commandline(argv)))
+[2020-08-26 19:31:03,390: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/base.py", line 305, in execute_from_commandline
+    return self.handle_argv(self.prog_name, argv[1:])
+[2020-08-26 19:31:03,391: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 491, in handle_argv
+    return self.execute(command, argv)
+[2020-08-26 19:31:03,391: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 419, in execute
+    ).run_from_argv(self.prog_name, argv[1:], command=argv[0])
+[2020-08-26 19:31:03,391: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/worker.py", line 223, in run_from_argv
+    return self(*args, **options)
+[2020-08-26 19:31:03,391: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/base.py", line 253, in __call__
+    ret = self.run(*args, **kwargs)
+[2020-08-26 19:31:03,391: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/worker.py", line 259, in run
+    worker.start()
+[2020-08-26 19:31:03,391: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/worker/worker.py", line 208, in start
+    self.blueprint.start(self)
+[2020-08-26 19:31:03,391: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bootsteps.py", line 119, in start
+    step.start(parent)
+[2020-08-26 19:31:03,391: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bootsteps.py", line 369, in start
+    return self.obj.start()
+[2020-08-26 19:31:03,391: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/base.py", line 132, in start
+    self.on_start()
+[2020-08-26 19:31:03,391: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/prefork.py", line 117, in on_start
+    **self.options)
+[2020-08-26 19:31:03,391: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/asynpool.py", line 486, in __init__
+    super(AsynPool, self).__init__(processes, *args, **kwargs)
+[2020-08-26 19:31:03,391: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 1046, in __init__
+    self._create_worker_process(i)
+[2020-08-26 19:31:03,392: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/asynpool.py", line 503, in _create_worker_process
+    return super(AsynPool, self)._create_worker_process(i)
+[2020-08-26 19:31:03,392: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 1158, in _create_worker_process
+    w.start()
+[2020-08-26 19:31:03,392: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/process.py", line 124, in start
+    self._popen = self._Popen(self)
+[2020-08-26 19:31:03,392: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/context.py", line 333, in _Popen
+    return Popen(process_obj)
+[2020-08-26 19:31:03,392: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/popen_fork.py", line 24, in __init__
+    self._launch(process_obj)
+[2020-08-26 19:31:03,392: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/popen_fork.py", line 79, in _launch
+    code = process_obj._bootstrap()
+[2020-08-26 19:31:03,392: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/process.py", line 327, in _bootstrap
+    self.run()
+[2020-08-26 19:31:03,392: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/process.py", line 114, in run
+    self._target(*self._args, **self._kwargs)
+[2020-08-26 19:31:03,392: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 292, in __call__
+    sys.exit(self.workloop(pid=pid))
+[2020-08-26 19:31:03,392: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 362, in workloop
+    result = (True, prepare_result(fun(*args, **kwargs)))
+[2020-08-26 19:31:03,392: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/app/trace.py", line 612, in _fast_trace_task
+    uuid, args, kwargs, request,
+[2020-08-26 19:31:03,392: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/app/trace.py", line 412, in trace_task
+    R = retval = fun(*args, **kwargs)
+[2020-08-26 19:31:03,393: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/app/trace.py", line 704, in __protected_call__
+    return self.run(*args, **kwargs)
+[2020-08-26 19:31:03,393: WARNING/ForkPoolWorker-31] File "/home/cc/cocktail/modules/aws_manager.py", line 27, in check_spot_states
+    logging.info("**************",all_info)
+[2020-08-26 19:31:03,393: WARNING/ForkPoolWorker-31] Message: '**************'
+Arguments: (<pymongo.cursor.Cursor object at 0x7f505d41f208>,)
+[2020-08-26 19:31:15,316: INFO/ForkPoolWorker-31] Task modules.aws_manager.check_spot_states[5b8d392a-d5e9-40f9-a7b2-0022a3dabb78] succeeded in 11.928328898269683s: None
+[2020-08-26 19:33:05,132: INFO/MainProcess] Received task: modules.aws_manager.check_spot_states[d0fcc91d-1800-43fa-b5f3-56fbc47c391f]  
+[2020-08-26 19:33:05,134: WARNING/ForkPoolWorker-31] --- Logging error ---
+[2020-08-26 19:33:05,135: WARNING/ForkPoolWorker-31] Traceback (most recent call last):
+[2020-08-26 19:33:05,135: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 994, in emit
+    msg = self.format(record)
+[2020-08-26 19:33:05,135: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 840, in format
+    return fmt.format(record)
+[2020-08-26 19:33:05,135: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/utils/log.py", line 153, in format
+    msg = logging.Formatter.format(self, record)
+[2020-08-26 19:33:05,135: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 577, in format
+    record.message = record.getMessage()
+[2020-08-26 19:33:05,135: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 338, in getMessage
+    msg = msg % self.args
+[2020-08-26 19:33:05,135: WARNING/ForkPoolWorker-31] TypeError: not all arguments converted during string formatting
+[2020-08-26 19:33:05,135: WARNING/ForkPoolWorker-31] Call stack:
+[2020-08-26 19:33:05,136: WARNING/ForkPoolWorker-31] File "/usr/local/bin/celery", line 8, in <module>
+    sys.exit(main())
+[2020-08-26 19:33:05,136: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/__main__.py", line 16, in main
+    _main()
+[2020-08-26 19:33:05,136: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 322, in main
+    cmd.execute_from_commandline(argv)
+[2020-08-26 19:33:05,136: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 499, in execute_from_commandline
+    super(CeleryCommand, self).execute_from_commandline(argv)))
+[2020-08-26 19:33:05,137: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/base.py", line 305, in execute_from_commandline
+    return self.handle_argv(self.prog_name, argv[1:])
+[2020-08-26 19:33:05,137: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 491, in handle_argv
+    return self.execute(command, argv)
+[2020-08-26 19:33:05,137: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 419, in execute
+    ).run_from_argv(self.prog_name, argv[1:], command=argv[0])
+[2020-08-26 19:33:05,137: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/worker.py", line 223, in run_from_argv
+    return self(*args, **options)
+[2020-08-26 19:33:05,137: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/base.py", line 253, in __call__
+    ret = self.run(*args, **kwargs)
+[2020-08-26 19:33:05,137: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/worker.py", line 259, in run
+    worker.start()
+[2020-08-26 19:33:05,137: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/worker/worker.py", line 208, in start
+    self.blueprint.start(self)
+[2020-08-26 19:33:05,137: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bootsteps.py", line 119, in start
+    step.start(parent)
+[2020-08-26 19:33:05,137: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bootsteps.py", line 369, in start
+    return self.obj.start()
+[2020-08-26 19:33:05,138: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/base.py", line 132, in start
+    self.on_start()
+[2020-08-26 19:33:05,138: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/prefork.py", line 117, in on_start
+    **self.options)
+[2020-08-26 19:33:05,138: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/asynpool.py", line 486, in __init__
+    super(AsynPool, self).__init__(processes, *args, **kwargs)
+[2020-08-26 19:33:05,138: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 1046, in __init__
+    self._create_worker_process(i)
+[2020-08-26 19:33:05,138: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/asynpool.py", line 503, in _create_worker_process
+    return super(AsynPool, self)._create_worker_process(i)
+[2020-08-26 19:33:05,138: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 1158, in _create_worker_process
+    w.start()
+[2020-08-26 19:33:05,138: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/process.py", line 124, in start
+    self._popen = self._Popen(self)
+[2020-08-26 19:33:05,138: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/context.py", line 333, in _Popen
+    return Popen(process_obj)
+[2020-08-26 19:33:05,138: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/popen_fork.py", line 24, in __init__
+    self._launch(process_obj)
+[2020-08-26 19:33:05,138: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/popen_fork.py", line 79, in _launch
+    code = process_obj._bootstrap()
+[2020-08-26 19:33:05,139: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/process.py", line 327, in _bootstrap
+    self.run()
+[2020-08-26 19:33:05,139: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/process.py", line 114, in run
+    self._target(*self._args, **self._kwargs)
+[2020-08-26 19:33:05,139: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 292, in __call__
+    sys.exit(self.workloop(pid=pid))
+[2020-08-26 19:33:05,139: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 362, in workloop
+    result = (True, prepare_result(fun(*args, **kwargs)))
+[2020-08-26 19:33:05,139: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/app/trace.py", line 612, in _fast_trace_task
+    uuid, args, kwargs, request,
+[2020-08-26 19:33:05,139: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/app/trace.py", line 412, in trace_task
+    R = retval = fun(*args, **kwargs)
+[2020-08-26 19:33:05,139: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/app/trace.py", line 704, in __protected_call__
+    return self.run(*args, **kwargs)
+[2020-08-26 19:33:05,139: WARNING/ForkPoolWorker-31] File "/home/cc/cocktail/modules/aws_manager.py", line 27, in check_spot_states
+    logging.info("**************",all_info)
+[2020-08-26 19:33:05,139: WARNING/ForkPoolWorker-31] Message: '**************'
+Arguments: (<pymongo.cursor.Cursor object at 0x7f505d2f6a90>,)
+[2020-08-26 19:33:17,020: INFO/ForkPoolWorker-31] Task modules.aws_manager.check_spot_states[d0fcc91d-1800-43fa-b5f3-56fbc47c391f] succeeded in 11.885718638077378s: None
+[2020-08-26 19:35:06,204: INFO/MainProcess] Received task: modules.aws_manager.check_spot_states[8073d535-02af-4aa4-804e-78a5896c18f1]  
+[2020-08-26 19:35:06,206: WARNING/ForkPoolWorker-31] --- Logging error ---
+[2020-08-26 19:35:06,207: WARNING/ForkPoolWorker-31] Traceback (most recent call last):
+[2020-08-26 19:35:06,207: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 994, in emit
+    msg = self.format(record)
+[2020-08-26 19:35:06,207: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 840, in format
+    return fmt.format(record)
+[2020-08-26 19:35:06,207: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/utils/log.py", line 153, in format
+    msg = logging.Formatter.format(self, record)
+[2020-08-26 19:35:06,207: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 577, in format
+    record.message = record.getMessage()
+[2020-08-26 19:35:06,207: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 338, in getMessage
+    msg = msg % self.args
+[2020-08-26 19:35:06,207: WARNING/ForkPoolWorker-31] TypeError: not all arguments converted during string formatting
+[2020-08-26 19:35:06,207: WARNING/ForkPoolWorker-31] Call stack:
+[2020-08-26 19:35:06,208: WARNING/ForkPoolWorker-31] File "/usr/local/bin/celery", line 8, in <module>
+    sys.exit(main())
+[2020-08-26 19:35:06,208: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/__main__.py", line 16, in main
+    _main()
+[2020-08-26 19:35:06,208: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 322, in main
+    cmd.execute_from_commandline(argv)
+[2020-08-26 19:35:06,208: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 499, in execute_from_commandline
+    super(CeleryCommand, self).execute_from_commandline(argv)))
+[2020-08-26 19:35:06,208: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/base.py", line 305, in execute_from_commandline
+    return self.handle_argv(self.prog_name, argv[1:])
+[2020-08-26 19:35:06,208: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 491, in handle_argv
+    return self.execute(command, argv)
+[2020-08-26 19:35:06,209: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 419, in execute
+    ).run_from_argv(self.prog_name, argv[1:], command=argv[0])
+[2020-08-26 19:35:06,209: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/worker.py", line 223, in run_from_argv
+    return self(*args, **options)
+[2020-08-26 19:35:06,209: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/base.py", line 253, in __call__
+    ret = self.run(*args, **kwargs)
+[2020-08-26 19:35:06,209: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/worker.py", line 259, in run
+    worker.start()
+[2020-08-26 19:35:06,209: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/worker/worker.py", line 208, in start
+    self.blueprint.start(self)
+[2020-08-26 19:35:06,209: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bootsteps.py", line 119, in start
+    step.start(parent)
+[2020-08-26 19:35:06,209: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bootsteps.py", line 369, in start
+    return self.obj.start()
+[2020-08-26 19:35:06,209: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/base.py", line 132, in start
+    self.on_start()
+[2020-08-26 19:35:06,209: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/prefork.py", line 117, in on_start
+    **self.options)
+[2020-08-26 19:35:06,209: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/asynpool.py", line 486, in __init__
+    super(AsynPool, self).__init__(processes, *args, **kwargs)
+[2020-08-26 19:35:06,209: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 1046, in __init__
+    self._create_worker_process(i)
+[2020-08-26 19:35:06,210: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/asynpool.py", line 503, in _create_worker_process
+    return super(AsynPool, self)._create_worker_process(i)
+[2020-08-26 19:35:06,210: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 1158, in _create_worker_process
+    w.start()
+[2020-08-26 19:35:06,210: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/process.py", line 124, in start
+    self._popen = self._Popen(self)
+[2020-08-26 19:35:06,210: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/context.py", line 333, in _Popen
+    return Popen(process_obj)
+[2020-08-26 19:35:06,210: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/popen_fork.py", line 24, in __init__
+    self._launch(process_obj)
+[2020-08-26 19:35:06,210: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/popen_fork.py", line 79, in _launch
+    code = process_obj._bootstrap()
+[2020-08-26 19:35:06,210: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/process.py", line 327, in _bootstrap
+    self.run()
+[2020-08-26 19:35:06,210: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/process.py", line 114, in run
+    self._target(*self._args, **self._kwargs)
+[2020-08-26 19:35:06,210: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 292, in __call__
+    sys.exit(self.workloop(pid=pid))
+[2020-08-26 19:35:06,210: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 362, in workloop
+    result = (True, prepare_result(fun(*args, **kwargs)))
+[2020-08-26 19:35:06,210: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/app/trace.py", line 612, in _fast_trace_task
+    uuid, args, kwargs, request,
+[2020-08-26 19:35:06,210: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/app/trace.py", line 412, in trace_task
+    R = retval = fun(*args, **kwargs)
+[2020-08-26 19:35:06,211: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/app/trace.py", line 704, in __protected_call__
+    return self.run(*args, **kwargs)
+[2020-08-26 19:35:06,211: WARNING/ForkPoolWorker-31] File "/home/cc/cocktail/modules/aws_manager.py", line 27, in check_spot_states
+    logging.info("**************",all_info)
+[2020-08-26 19:35:06,211: WARNING/ForkPoolWorker-31] Message: '**************'
+Arguments: (<pymongo.cursor.Cursor object at 0x7f505d2f6ac8>,)
+[2020-08-26 19:35:18,189: INFO/ForkPoolWorker-31] Task modules.aws_manager.check_spot_states[8073d535-02af-4aa4-804e-78a5896c18f1] succeeded in 11.982800087891519s: None
+[2020-08-26 19:37:07,158: INFO/MainProcess] Received task: modules.aws_manager.check_spot_states[94d63ab2-c65d-41d5-ad72-759284aadca1]  
+[2020-08-26 19:37:07,161: WARNING/ForkPoolWorker-31] --- Logging error ---
+[2020-08-26 19:37:07,161: WARNING/ForkPoolWorker-31] Traceback (most recent call last):
+[2020-08-26 19:37:07,161: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 994, in emit
+    msg = self.format(record)
+[2020-08-26 19:37:07,161: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 840, in format
+    return fmt.format(record)
+[2020-08-26 19:37:07,161: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/utils/log.py", line 153, in format
+    msg = logging.Formatter.format(self, record)
+[2020-08-26 19:37:07,161: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 577, in format
+    record.message = record.getMessage()
+[2020-08-26 19:37:07,161: WARNING/ForkPoolWorker-31] File "/usr/lib/python3.6/logging/__init__.py", line 338, in getMessage
+    msg = msg % self.args
+[2020-08-26 19:37:07,162: WARNING/ForkPoolWorker-31] TypeError: not all arguments converted during string formatting
+[2020-08-26 19:37:07,162: WARNING/ForkPoolWorker-31] Call stack:
+[2020-08-26 19:37:07,162: WARNING/ForkPoolWorker-31] File "/usr/local/bin/celery", line 8, in <module>
+    sys.exit(main())
+[2020-08-26 19:37:07,162: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/__main__.py", line 16, in main
+    _main()
+[2020-08-26 19:37:07,163: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 322, in main
+    cmd.execute_from_commandline(argv)
+[2020-08-26 19:37:07,163: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 499, in execute_from_commandline
+    super(CeleryCommand, self).execute_from_commandline(argv)))
+[2020-08-26 19:37:07,163: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/base.py", line 305, in execute_from_commandline
+    return self.handle_argv(self.prog_name, argv[1:])
+[2020-08-26 19:37:07,163: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 491, in handle_argv
+    return self.execute(command, argv)
+[2020-08-26 19:37:07,163: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/celery.py", line 419, in execute
+    ).run_from_argv(self.prog_name, argv[1:], command=argv[0])
+[2020-08-26 19:37:07,163: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/worker.py", line 223, in run_from_argv
+    return self(*args, **options)
+[2020-08-26 19:37:07,163: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/base.py", line 253, in __call__
+    ret = self.run(*args, **kwargs)
+[2020-08-26 19:37:07,163: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bin/worker.py", line 259, in run
+    worker.start()
+[2020-08-26 19:37:07,163: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/worker/worker.py", line 208, in start
+    self.blueprint.start(self)
+[2020-08-26 19:37:07,163: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bootsteps.py", line 119, in start
+    step.start(parent)
+[2020-08-26 19:37:07,163: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/bootsteps.py", line 369, in start
+    return self.obj.start()
+[2020-08-26 19:37:07,164: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/base.py", line 132, in start
+    self.on_start()
+[2020-08-26 19:37:07,164: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/prefork.py", line 117, in on_start
+    **self.options)
+[2020-08-26 19:37:07,164: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/asynpool.py", line 486, in __init__
+    super(AsynPool, self).__init__(processes, *args, **kwargs)
+[2020-08-26 19:37:07,164: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 1046, in __init__
+    self._create_worker_process(i)
+[2020-08-26 19:37:07,164: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/concurrency/asynpool.py", line 503, in _create_worker_process
+    return super(AsynPool, self)._create_worker_process(i)
+[2020-08-26 19:37:07,164: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 1158, in _create_worker_process
+    w.start()
+[2020-08-26 19:37:07,164: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/process.py", line 124, in start
+    self._popen = self._Popen(self)
+[2020-08-26 19:37:07,164: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/context.py", line 333, in _Popen
+    return Popen(process_obj)
+[2020-08-26 19:37:07,164: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/popen_fork.py", line 24, in __init__
+    self._launch(process_obj)
+[2020-08-26 19:37:07,164: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/popen_fork.py", line 79, in _launch
+    code = process_obj._bootstrap()
+[2020-08-26 19:37:07,164: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/process.py", line 327, in _bootstrap
+    self.run()
+[2020-08-26 19:37:07,164: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/process.py", line 114, in run
+    self._target(*self._args, **self._kwargs)
+[2020-08-26 19:37:07,165: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 292, in __call__
+    sys.exit(self.workloop(pid=pid))
+[2020-08-26 19:37:07,165: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/billiard/pool.py", line 362, in workloop
+    result = (True, prepare_result(fun(*args, **kwargs)))
+[2020-08-26 19:37:07,165: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/app/trace.py", line 612, in _fast_trace_task
+    uuid, args, kwargs, request,
+[2020-08-26 19:37:07,165: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/app/trace.py", line 412, in trace_task
+    R = retval = fun(*args, **kwargs)
+[2020-08-26 19:37:07,165: WARNING/ForkPoolWorker-31] File "/usr/local/lib/python3.6/dist-packages/celery/app/trace.py", line 704, in __protected_call__
+    return self.run(*args, **kwargs)
+[2020-08-26 19:37:07,165: WARNING/ForkPoolWorker-31] File "/home/cc/cocktail/modules/aws_manager.py", line 27, in check_spot_states
+    logging.info("**************",all_info)
+[2020-08-26 19:37:07,165: WARNING/ForkPoolWorker-31] Message: '**************'
+Arguments: (<pymongo.cursor.Cursor object at 0x7f505d2f6a90>,)
+[2020-08-26 19:37:19,131: INFO/ForkPoolWorker-31] Task modules.aws_manager.check_spot_states[94d63ab2-c65d-41d5-ad72-759284aadca1] succeeded in 11.970462412107736s: None
+
+worker: Warm shutdown (MainProcess)
+ 
+ -------------- celery@galaxy-gpu v4.4.7 (cliffs)
+--- ***** ----- 
+-- ******* ---- Linux-4.15.0-101-generic-x86_64-with-Ubuntu-18.04-bionic 2020-08-26 19:20:53
+- *** --- * --- 
+- ** ---------- [config]
+- ** ---------- .> app:         aws-manager:0x7f50609306a0
+- ** ---------- .> transport:   redis://localhost:6379//
+- ** ---------- .> results:     redis://
+- *** --- * --- .> concurrency: 48 (prefork)
+-- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+--- ***** ----- 
+ -------------- [queues]
+                .> celery           exchange=celery(direct) key=celery
+                
+
+[tasks]
+  . modules.aws_manager.check_spot_states
+  . modules.aws_manager.kill_on_demand_instances
+  . modules.aws_manager.kill_spot_instances_by_num
+  . modules.aws_manager.launch_on_demand_instances
+  . modules.aws_manager.launch_spot_instances
+
