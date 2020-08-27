@@ -160,7 +160,7 @@ class Scheduler():
                     if des[i] > 0:
                         model = random.choice(models)
                         logging.info(f'Kill {des[i]} {IndexType[i]} instances for model: {name} {model}')
-                        ins_source.kill_ins(name, DEFAULT_REGION, IndexType[i], des[i], model)
+                        #ins_source.kill_ins(name, DEFAULT_REGION, IndexType[i], des[i], model)
 
                 total_cost += cost
                 logging.info(f'count: {self.count[name]}; cost: {cost}; total_cost: {total_cost}')
