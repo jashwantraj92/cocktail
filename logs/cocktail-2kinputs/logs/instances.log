@@ -1,0 +1,106 @@
+2020-08-26 19:36:04,816 INFO initiating collection : MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=False) Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=False), 'serving'), 'on_demand')
+2020-08-26 19:36:04,817 INFO initiating collection : MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=False) Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=False), 'serving'), 'spot')
+2020-08-26 19:36:04,818 INFO initiating collection : MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=False) Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=False), 'serving'), 'aws')
+2020-08-26 19:36:04,818 INFO initiating collection : MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=False) Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=False), 'serving'), 'pre_aws')
+2020-08-26 19:36:04,819 INFO initiating collection : MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=False) Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=False), 'serving'), 'instance')
+2020-08-26 19:36:04,819 INFO initiating collection : MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=False) Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=False), 'serving'), 'back_up')
+2020-08-26 19:36:04,819 INFO initiating collection : MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=False) Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=False), 'serving'), 'demand_aws')
+2020-08-26 19:36:04,820 INFO initiating collection : MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=False) Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=False), 'serving'), 'pre_demand_aws')
+2020-08-26 19:36:05.287701: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+Using TensorFlow backend.
+Init Complete...
+2020-08-26 19:36:07,345 INFO Initiating spot instance launch **********
+2020-08-26 19:36:07,346 INFO 1InceptionResNetV2['InceptionResNetV2', 'InceptionResNetV2', 'InceptionResNetV2']
+--- Logging error ---
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/logging/__init__.py", line 994, in emit
+    msg = self.format(record)
+  File "/usr/lib/python3.6/logging/__init__.py", line 840, in format
+    return fmt.format(record)
+  File "/usr/lib/python3.6/logging/__init__.py", line 577, in format
+    record.message = record.getMessage()
+  File "/usr/lib/python3.6/logging/__init__.py", line 338, in getMessage
+    msg = msg % self.args
+TypeError: not all arguments converted during string formatting
+Call stack:
+  File "main.py", line 51, in <module>
+    main()
+  File "main.py", line 42, in main
+    ins_source.initial_ins('tf', params['tag'])
+  File "/home/cc/cocktail/modules/instance_source.py", line 148, in initial_ins
+    aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['CPU'], 'instanceType':'c5.4xlarge', 'targetCapacity':math.ceil(10/(concurrency[i]*HANDLE_SIZE_C54X)), 'key_value':[('exp_round', tag)] }, Models)
+  File "/usr/local/lib/python3.6/dist-packages/celery/local.py", line 191, in __call__
+    return self._get_current_object()(*a, **kw)
+  File "/usr/local/lib/python3.6/dist-packages/celery/app/task.py", line 393, in __call__
+    return self.run(*args, **kwargs)
+  File "/home/cc/cocktail/modules/aws_manager.py", line 213, in launch_spot_instances
+    logging.info(f'Launch {params["targetCapacity"]} {params["instanceType"]} instances',client)
+Message: 'Launch 3 c5.4xlarge instances'
+Arguments: (<botocore.client.EC2 object at 0x7f45a526a320>,)
+2020-08-26 19:36:07,416 INFO Successful spot fleet request imageid
+2020-08-26 19:36:07,416 INFO get request config
+2020-08-26 19:36:08,607 INFO Created spot fleet request sfr-0203745c-3553-46c1-aa86-e98882628329
+2020-08-26 19:36:08,607 INFO Waiting for spot fleet instances
+2020-08-26 19:36:08,614 INFO Waiting for instances to be active
+2020-08-26 19:36:28,929 INFO Instances are active now.
+2020-08-26 19:36:29,167 INFO Setting the security group of instances.
+2020-08-26 19:36:30,545 INFO models are ['InceptionResNetV2', 'InceptionResNetV2', 'InceptionResNetV2'] instances are ['i-005600c9b2d89eecf', 'i-022ddddc7e8fbfe93', 'i-01268c8785794d629']
+2020-08-26 19:36:31,166 INFO Checking SSH connection
+2020-08-26 19:36:31,167 INFO ssk key is : /home/cc/aws-connect.pem
+2020-08-26 19:37:02,891 INFO Connected (version 2.0, client OpenSSH_7.2p2)
+2020-08-26 19:37:03,209 INFO Authentication (publickey) successful!
+2020-08-26 19:37:03,209 INFO ssk key is : /home/cc/aws-connect.pem
+2020-08-26 19:37:03,320 INFO Connected (version 2.0, client OpenSSH_7.2p2)
+2020-08-26 19:37:03,637 INFO Authentication (publickey) successful!
+2020-08-26 19:37:03,637 INFO ssk key is : /home/cc/aws-connect.pem
+2020-08-26 19:37:03,746 INFO Connected (version 2.0, client OpenSSH_7.2p2)
+2020-08-26 19:37:04,060 INFO Authentication (publickey) successful!
+2020-08-26 19:37:04,061 INFO Checked SSH connection
+2020-08-26 19:37:04,061 INFO Models are ['InceptionResNetV2', 'InceptionResNetV2', 'InceptionResNetV2']
+2020-08-26 19:37:04,061 INFO Models are InceptionResNetV2
+2020-08-26 19:37:04,061 INFO ssk key is : /home/cc/aws-connect.pem
+2020-08-26 19:37:04,155 INFO Connected (version 2.0, client OpenSSH_7.2p2)
+2020-08-26 19:37:04,467 INFO Authentication (publickey) successful!
+2020-08-26 19:37:05,374 INFO standard out is b''
+2020-08-26 19:37:05,375 INFO Models are InceptionResNetV2
+2020-08-26 19:37:05,375 INFO ssk key is : /home/cc/aws-connect.pem
+2020-08-26 19:37:05,469 INFO Connected (version 2.0, client OpenSSH_7.2p2)
+2020-08-26 19:37:05,778 INFO Authentication (publickey) successful!
+2020-08-26 19:37:06,439 INFO standard out is b''
+2020-08-26 19:37:06,440 INFO Models are InceptionResNetV2
+2020-08-26 19:37:06,440 INFO ssk key is : /home/cc/aws-connect.pem
+2020-08-26 19:37:06,534 INFO Connected (version 2.0, client OpenSSH_7.2p2)
+2020-08-26 19:37:06,846 INFO Authentication (publickey) successful!
+2020-08-26 19:37:07,545 INFO standard out is b''
+2020-08-26 19:37:07,545 INFO Models are Deployed now
+2020-08-26 19:37:10,557 INFO updateinstance [{'ip': 'ec2-3-17-186-201.us-east-2.compute.amazonaws.com', 'typ': 'c5.4xlarge', 'region': 'us-east-2', 'model': 'InceptionResNetV2'}, {'ip': 'ec2-18-223-209-7.us-east-2.compute.amazonaws.com', 'typ': 'c5.4xlarge', 'region': 'us-east-2', 'model': 'InceptionResNetV2'}, {'ip': 'ec2-18-191-212-153.us-east-2.compute.amazonaws.com', 'typ': 'c5.4xlarge', 'region': 'us-east-2', 'model': 'InceptionResNetV2'}] Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=False), 'serving'), 'instance')
+2020-08-26 19:37:10,563 INFO updateinstance [{'ip': 'ec2-3-17-186-201.us-east-2.compute.amazonaws.com', 'typ': 'c5.4xlarge', 'region': 'us-east-2', 'model': 'InceptionResNetV2'}, {'ip': 'ec2-18-223-209-7.us-east-2.compute.amazonaws.com', 'typ': 'c5.4xlarge', 'region': 'us-east-2', 'model': 'InceptionResNetV2'}, {'ip': 'ec2-18-191-212-153.us-east-2.compute.amazonaws.com', 'typ': 'c5.4xlarge', 'region': 'us-east-2', 'model': 'InceptionResNetV2'}] Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=False), 'serving'), 'instance')
+2020-08-26 19:37:10,565 INFO 4InceptionV3['InceptionV3']
+--- Logging error ---
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/logging/__init__.py", line 994, in emit
+    msg = self.format(record)
+  File "/usr/lib/python3.6/logging/__init__.py", line 840, in format
+    return fmt.format(record)
+  File "/usr/lib/python3.6/logging/__init__.py", line 577, in format
+    record.message = record.getMessage()
+  File "/usr/lib/python3.6/logging/__init__.py", line 338, in getMessage
+    msg = msg % self.args
+TypeError: not all arguments converted during string formatting
+Call stack:
+  File "main.py", line 51, in <module>
+    main()
+  File "main.py", line 42, in main
+    ins_source.initial_ins('tf', params['tag'])
+  File "/home/cc/cocktail/modules/instance_source.py", line 148, in initial_ins
+    aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['CPU'], 'instanceType':'c5.4xlarge', 'targetCapacity':math.ceil(10/(concurrency[i]*HANDLE_SIZE_C54X)), 'key_value':[('exp_round', tag)] }, Models)
+  File "/usr/local/lib/python3.6/dist-packages/celery/local.py", line 191, in __call__
+    return self._get_current_object()(*a, **kw)
+  File "/usr/local/lib/python3.6/dist-packages/celery/app/task.py", line 393, in __call__
+    return self.run(*args, **kwargs)
+  File "/home/cc/cocktail/modules/aws_manager.py", line 213, in launch_spot_instances
+    logging.info(f'Launch {params["targetCapacity"]} {params["instanceType"]} instances',client)
+Message: 'Launch 1 c5.4xlarge instances'
+Arguments: (<botocore.client.EC2 object at 0x7f45a4ff6f60>,)
+2020-08-26 19:37:10,578 INFO Successful spot fleet request imageid
+2020-08-26 19:37:10,578 INFO get request config
