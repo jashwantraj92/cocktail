@@ -25,6 +25,10 @@ pretrained_models = []
 app = Sanic(__name__)
 sem = None
 models = []
+pos			=	int(0.2*100);
+arr			=	np.zeros(10000);
+arr[:pos]	=	1;
+np.random.shuffle(arr);
 @app.listener('before_server_start')
 def init(sanic, loop):
     global sem,models,pretrained_models,maxVoteLabel,maxVoteClass
@@ -53,7 +57,7 @@ def init(sanic, loop):
 @app.route('/predict',methods=['POST'])
  
 async def test(request):
-    global threads,pretrained_models,maxVoteLabel,maxVoteClass,votearray,voteclasses,models
+    global threads,pretrained_models,maVoteLabel,maxVoteClass,votearray,voteclasses,models,arr
     votearray=[]
     voteclasses= []
 
@@ -82,9 +86,15 @@ async def test(request):
         x = tf.keras.preprocessing.image.img_to_array(new_image)
         x = tf.keras.applications.mobilenet.preprocess_input(np.array(img)[tf.newaxis,...])
         #model = int(question[1])
-        for i in range(len(pretrained_models)):
+        fail = random.choice(arr)
+        pretrained_model = pretrained_models
+        if (fail):
+          
+            pretrained_model.remove(random.choice(pretrained_model))
+        print("pretrained_model after shuffle are", pretrained_model)
+        for i in range(len(pretrained_model)):
             #tid = threading.Thread(target=predict, args=(pretrained_models[i],x,models[i]))
-            predict(pretrained_models[i],x,models[i])
+            predict(pretrained_model[i],x,models[i])
             #threads.append(tid)
             #tid.start()
         #for thread in threads:

@@ -1,7 +1,7 @@
 #coding: utf-8
 
 
-UPPER_LATENCY_BOUND = 200
+UPPER_LATENCY_BOUND = 500
 SLA_BOUND = 0.02
 scheme="ensembling"
 HANDLE_SIZE = 8
@@ -148,8 +148,8 @@ CREDENTIALS = {
 models=['InceptionResNetV2', 'InceptionV3', 'MobileNetV2', 'MobileNet', 'ResNet50V2', 'ResNet50','Xception','DenseNet201','DenseNet121','NASNetMobile','NASNetLarge']
 accuracy = [.75,.74,.76,.60]
 concurrency =[1,4,10,10,5,5,4,2,3,3,1]
-#latency = [120,100,150,75]
-latency = [355,100,155,65]
+latency = [120,100,150,70]
+#latency = [355,100,155,65]
 # model deploy cmd
 TF_DEPLOY_CMD ={
     'cpu': f'nohup sudo docker run -p 8501:8501 --name TFserving_resnet --mount type=bind,source=/home/ubuntu/resnet,target=/models/resnet -e MODEL_NAME=resnet -t tensorflow/serving  > server.log 2>&1 &',
