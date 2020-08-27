@@ -93,7 +93,7 @@ def send_trace_data(args, reader):
                 break
             print(row)
  
-            num = int(row[3])*2
+            num = int(row[3])*12
             constraints = row[2]
             for s in range(num):
                 data,filename = get_data()

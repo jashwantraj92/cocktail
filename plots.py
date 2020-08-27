@@ -158,8 +158,34 @@ def plot_data(df, merged_pdf,files):
     #    print(i,q)
     close_fig(merged_pdf)
   
+def plot_cost():
+
+    
+    cost_df = pd.read_csv('/home/cc/cocktail/cost.csv', header=0, index_col=False) 
+    #cost_df = pd.melt(cost_df, id_vars=["Policy", "Query"],
+    #                  value_vars=["p50", "p90", "p99"],
+    #                  var_name="percentile",
+    #                  value_name="#models")
+    print(cost_df) 
+    fig, ax = plt.subplots(figsize=(8, 4))
+    g = sns.catplot(x="Workload", y="Cost", hue="Scheme", data=cost_df,
+                    height=6, kind="bar", legend_out=False, aspect=2)
+    close_fig(merged_pdf)
+
 def plot_latency():    
-    latency_df = pd.read_csv('/home/cc/cocktail/latency.csv', header=0, index_col=False)
+    
+    model_scaling_df = pd.read_csv('/home/cc/cocktail/model-scaling.csv', header=0, index_col=False) 
+    model_scaling_df = pd.melt(model_scaling_df, id_vars=["Policy", "Query"],
+                      value_vars=["p50", "p90", "p99"],
+                      var_name="percentile",
+                      value_name="#models")
+    print(model_scaling_df) 
+    fig, ax = plt.subplots(figsize=(8, 4))
+    g = sns.catplot(x="Query", y="#models", hue="Policy", data=model_scaling_df,
+                    height=6, kind="bar", legend_out=False, aspect=2)
+    close_fig(merged_pdf)
+    latency_df = pd.read_csv('/home/cc/cocktail/2kinputs-latency.csv', header=0, index_col=False)
+    lateny_df = latency_df[latency_df['Latency']>250]
     print(latency_df)
     fig, ax = plt.subplots(figsize=(8, 4))
     
@@ -173,22 +199,39 @@ def plot_latency():
     #ax.set_xlim([0,1250])
     ax.set_ylabel('Response Latency (ms)')
     close_fig(merged_pdf)
-    const1_df = latency_df(latency_df['Latency'<=220])
-    const1_df['const'] = "Const1"
-    const2_df = latency_df.(latency_df['Latency'<=350])
-    const2_df = const2_df.drop(latency_df['Latency'<=220])
-    const2_df['const'] = "Const2"
-    const3_df = latency_df(latency_df['Latency']>350)
-    const3_df['const'] = "Const3"
-    frames= [const1_df,const2_df,const3_df]
-    all_df = pd.concat(frames)
+    basline_df = latency_df[latency_df['Policy']=="Cocktail"]
+    const1_df = basline_df[basline_df['Latency']<=290]
+    const1_df = const1_df.assign(const="Const1")
+    const2_df = basline_df[basline_df['Latency']<=400]
+    #const2_df = const2_df.drop(latency_df['Latency']<=220)
+    #const2_df['const'] = "Const2"
+    const2_df = const2_df.assign(const="Const2")
+    const3_df = basline_df[basline_df['Latency']>400]
+    #const3_df['const'] = "Const3"
+    const3_df = const3_df.assign(const="Const3")
+    frames1= [const1_df,const2_df,const3_df]
+    Cocktail_df = latency_df[latency_df['Policy']=="Baseline"]
+    const1_df = Cocktail_df[Cocktail_df['Latency']<=223]
+    const1_df = const1_df.assign(const="Const1")
+    const2_df = Cocktail_df[Cocktail_df['Latency']<=523]
+    #const2_df = const2_df.drop(latency_df['Latency']<=220)
+    #const2_df['const'] = "Const2"
+    const2_df = const2_df.assign(const="Const2")
+    const3_df = Cocktail_df[Cocktail_df['Latency']>523]
+    #const3_df['const'] = "Const3"
+    const3_df = const3_df.assign(const="Const3")
+    frames2= [const1_df,const2_df,const3_df]
+    for i in frames1:
+        frames2.append(i)
+
+    all_df = pd.concat(frames2)
     fig, ax = plt.subplots(figsize=(8, 4))
     
     g = sns.boxplot(y='Latency', x='const',
-                                hue='policy'
+                                hue='Policy',
                                 data = all_df,
                                 showfliers = False,
-                                palette = latency_3color_palette,width=0.6,
+                                palette = "OrRd",width=0.6,
                                 linewidth = None)
             #ax.set_ylim([0,1500])
     #ax.set_xlim([0,1250])
@@ -235,4 +278,5 @@ for files in args.filename.split():
     print(df['overall_accuracy'].quantile([0.1, .25, .5, 0.75, 0.9, 0.99]))
     print("***********************************")
 plot_latency()
+plot_cost()
 write_pdf(merged_pdf)
