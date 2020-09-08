@@ -1,0 +1,13 @@
+Model,Policy,Percent
+NasNetLarge,BL-Match,86
+NasNetLarge,BL-Tie,5
+NasNetLarge,BL-Better,4
+NasNetLarge,BL-Unmatch,5
+InceptionResNetV2,BL-Match,68
+InceptionResNetV2,BL-Tie,4
+InceptionResNetV2,BL-Better,9
+InceptionResNetV2,BL-Unmatch,19
+Xception,BL-Match,55
+Xception,BL-Tie,13
+Xception,BL-Better,10
+Xception,BL-Unmatch,22
