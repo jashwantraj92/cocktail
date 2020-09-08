@@ -1,0 +1,8 @@
+Policy,Accuracy,Query
+Top-50,1.48,NASNetLarge
+Top-50,1.39,IncepResV2
+Top-50,1.12,Xception
+Baseline,1.65,NASNetLarge
+Baseline,1.5,IncepResV2
+Baseline,1.3,Xception
+

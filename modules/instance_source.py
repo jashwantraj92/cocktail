@@ -143,10 +143,10 @@ class SpotSource(_InstanceSource):
 
         logging.info('Initiating spot instance launch **********')
         for i in range(len(models)):
-            Models = [models[i] for j in range(math.ceil(10/(concurrency[i]*HANDLE_SIZE_C54X)))]
+            Models = [models[i] for j in range(math.ceil(1/(concurrency[i]*HANDLE_SIZE_C54X)))]
             logging.info(f'{concurrency[i]}{models[i]}{Models}')
-            aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['CPU'], 'instanceType':'c5.4xlarge', 'targetCapacity':math.ceil(10/(concurrency[i]*HANDLE_SIZE_C54X)), 'key_value':[('exp_round', tag)] }, Models)
-            #aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['GPU'], 'instanceType':'p2.xlarge', 'targetCapacity':1, 'key_value':[('exp_round', tag)] }, models)
+            #aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['CPU'], 'instanceType':'c5.4xlarge', 'targetCapacity':math.ceil(10/(concurrency[i]*HANDLE_SIZE_C54X)), 'key_value':[('exp_round', tag)] }, Models)
+            aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['GPU'], 'instanceType':'g3s.xlarge', 'targetCapacity':1, 'key_value':[('exp_round', tag)] }, Models)
         # aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['CPU'], 'instanceType':'c5.large', 'targetCapacity':8, 'key_value':[('exp_round', tag)] })
         # aws_manager.launch_spot_instances(name, {'imageId':AMIS[DEFAULT_REGION]['GPU'], 'instanceType':'p2.xlarge', 'targetCapacity':1, 'key_value':[('exp_round', tag)] })
 

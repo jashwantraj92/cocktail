@@ -15,7 +15,7 @@ from PIL import Image
 #tf.enable_eager_execution()
 from sanic import Sanic
 from sanic.response import json
-import time
+import time,random
 votearray = []
 voteclasses =[] 
 maxVoteLabel=None
