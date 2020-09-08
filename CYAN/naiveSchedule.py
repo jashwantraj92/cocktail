@@ -646,7 +646,7 @@ def main():
 	num_matching_pred	=	0;
 	num_non_matching_pred	=	0;
 	weighted_matching	=	0;
-	baselineModel = eval('tf.keras.applications.NASNetLarge()')
+	baselineModel = eval('tf.keras.applications.EfficientNetB0()')
 	step_length = batch
 	correct_predictions = defaultdict(list)
 	logfile = str(time.time()) + "-" + str(slo_latency)+ "-" + str(slo_accuracy) + "-"  + str(batch) +  "-output.csv"
