@@ -1,0 +1,250 @@
+"batchId ,",1.0,",overall_accuracy, ",75.0,",step_accuracy, ",75.0,",models, ","Counter({'InceptionV3': 1, 'MobileNet': 1})",",",2,",","[('MobileNetV2', <tensorflow.python.keras.engine.functional.Functional object at 0x7f3ab07e7470>)]"
+"batchId ,",2.0,",overall_accuracy, ",73.75,",step_accuracy, ",72.5,",models, ","Counter({'InceptionV3': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",3.0,",overall_accuracy, ",72.66666666666667,",step_accuracy, ",70.5,",models, ","Counter({'InceptionV3': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",4.0,",overall_accuracy, ",70.625,",step_accuracy, ",64.5,",models, ","Counter({'InceptionV3': 1, 'MobileNet': 1, 'MobileNetV2': 1})",",",3,",",['MobileNetV2']
+"batchId ,",5.0,",overall_accuracy, ",71.0,",step_accuracy, ",72.5,",models, ","Counter({'InceptionV3': 1, 'MobileNet': 1, 'MobileNetV2': 1})",",",3,",",None
+"batchId ,",6.0,",overall_accuracy, ",71.33333333333334,",step_accuracy, ",73.0,",models, ","Counter({'InceptionV3': 1, 'MobileNetV2': 1})",",",2,",","[('MobileNet', <tensorflow.python.keras.engine.functional.Functional object at 0x7f3ab0401f60>)]"
+"batchId ,",7.0,",overall_accuracy, ",70.42857142857143,",step_accuracy, ",65.0,",models, ","Counter({'InceptionV3': 1, 'MobileNetV2': 1, 'MobileNet': 1})",",",3,",",['MobileNet']
+"batchId ,",8.0,",overall_accuracy, ",71.0625,",step_accuracy, ",75.5,",models, ","Counter({'InceptionV3': 1, 'MobileNetV2': 1})",",",2,",","[['MobileNet', <tensorflow.python.keras.engine.functional.Functional object at 0x7f39c86bae48>]]"
+"batchId ,",9.0,",overall_accuracy, ",71.44444444444444,",step_accuracy, ",74.5,",models, ",Counter({'InceptionV3': 1}),",",1,",","[['MobileNetV2', <tensorflow.python.keras.engine.functional.Functional object at 0x7f39d0332ef0>]]"
+"batchId ,",10.0,",overall_accuracy, ",71.1,",step_accuracy, ",68.0,",models, ","Counter({'InceptionV3': 1, 'MobileNet': 1})",",",2,",",['MobileNet']
+"batchId ,",11.0,",overall_accuracy, ",70.86363636363636,",step_accuracy, ",68.5,",models, ","Counter({'InceptionV3': 1, 'MobileNet': 1, 'MobileNetV2': 1})",",",3,",",['MobileNetV2']
+"batchId ,",12.0,",overall_accuracy, ",70.66666666666667,",step_accuracy, ",68.5,",models, ","Counter({'InceptionV3': 1, 'MobileNet': 1, 'MobileNetV2': 1})",",",3,",",None
+"batchId ,",13.0,",overall_accuracy, ",70.8076923076923,",step_accuracy, ",72.5,",models, ","Counter({'InceptionV3': 1, 'MobileNet': 1, 'MobileNetV2': 1})",",",3,",",None
+"batchId ,",14.0,",overall_accuracy, ",70.60714285714286,",step_accuracy, ",68.0,",models, ","Counter({'InceptionV3': 1, 'MobileNet': 1, 'MobileNetV2': 1})",",",3,",",None
+"batchId ,",15.0,",overall_accuracy, ",70.86666666666666,",step_accuracy, ",74.5,",models, ","Counter({'InceptionV3': 1, 'MobileNetV2': 1})",",",2,",","[['MobileNet', <tensorflow.python.keras.engine.functional.Functional object at 0x7f39c8353390>]]"
+"batchId ,",16.0,",overall_accuracy, ",70.5625,",step_accuracy, ",66.0,",models, ","Counter({'InceptionV3': 1, 'MobileNetV2': 1, 'MobileNet': 1})",",",3,",",['MobileNet']
+"batchId ,",17.0,",overall_accuracy, ",70.73529411764706,",step_accuracy, ",73.5,",models, ","Counter({'InceptionV3': 1, 'MobileNet': 1})",",",2,",","[['MobileNetV2', <tensorflow.python.keras.engine.functional.Functional object at 0x7f399849bef0>]]"
+"batchId ,",18.0,",overall_accuracy, ",70.33333333333334,",step_accuracy, ",63.5,",models, ","Counter({'InceptionV3': 1, 'MobileNet': 1, 'MobileNetV2': 1})",",",3,",",['MobileNetV2']
+"batchId ,",19.0,",overall_accuracy, ",70.39473684210526,",step_accuracy, ",71.5,",models, ","Counter({'InceptionV3': 1, 'MobileNet': 1, 'MobileNetV2': 1})",",",3,",",None
+"batchId ,",20.0,",overall_accuracy, ",70.6,",step_accuracy, ",74.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",","[('InceptionV3', <tensorflow.python.keras.engine.functional.Functional object at 0x7f3b0c2452b0>)]"
+"batchId ,",21.0,",overall_accuracy, ",70.35714285714286,",step_accuracy, ",65.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",22.0,",overall_accuracy, ",70.06818181818181,",step_accuracy, ",64.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",23.0,",overall_accuracy, ",70.17391304347827,",step_accuracy, ",72.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",24.0,",overall_accuracy, ",70.20833333333333,",step_accuracy, ",71.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",25.0,",overall_accuracy, ",69.92,",step_accuracy, ",63.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",26.0,",overall_accuracy, ",69.88461538461539,",step_accuracy, ",69.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",27.0,",overall_accuracy, ",69.83333333333334,",step_accuracy, ",68.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",28.0,",overall_accuracy, ",69.64285714285714,",step_accuracy, ",64.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",29.0,",overall_accuracy, ",69.82758620689656,",step_accuracy, ",75.0,",models, ",Counter({'MobileNetV2': 1}),",",1,",","[['MobileNet', <tensorflow.python.keras.engine.functional.Functional object at 0x7f39980deb00>]]"
+"batchId ,",30.0,",overall_accuracy, ",69.78333333333333,",step_accuracy, ",68.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",['MobileNet']
+"batchId ,",31.0,",overall_accuracy, ",69.58064516129032,",step_accuracy, ",63.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",32.0,",overall_accuracy, ",69.5,",step_accuracy, ",67.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",33.0,",overall_accuracy, ",69.65151515151516,",step_accuracy, ",74.5,",models, ",Counter({'MobileNetV2': 1}),",",1,",","[['MobileNet', <tensorflow.python.keras.engine.functional.Functional object at 0x7f396464df28>]]"
+"batchId ,",34.0,",overall_accuracy, ",69.6470588235294,",step_accuracy, ",69.5,",models, ",Counter({'MobileNetV2': 1}),",",1,",",None
+"batchId ,",35.0,",overall_accuracy, ",69.6,",step_accuracy, ",68.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",['MobileNet']
+"batchId ,",36.0,",overall_accuracy, ",69.48611111111111,",step_accuracy, ",65.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",37.0,",overall_accuracy, ",69.4054054054054,",step_accuracy, ",66.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",38.0,",overall_accuracy, ",69.25,",step_accuracy, ",63.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",39.0,",overall_accuracy, ",69.1025641025641,",step_accuracy, ",63.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",40.0,",overall_accuracy, ",69.1125,",step_accuracy, ",69.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",41.0,",overall_accuracy, ",69.1341463414634,",step_accuracy, ",70.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",42.0,",overall_accuracy, ",69.14285714285714,",step_accuracy, ",69.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",43.0,",overall_accuracy, ",69.05813953488372,",step_accuracy, ",65.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",44.0,",overall_accuracy, ",69.0,",step_accuracy, ",66.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",45.0,",overall_accuracy, ",69.03333333333333,",step_accuracy, ",70.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",46.0,",overall_accuracy, ",69.04347826086956,",step_accuracy, ",69.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",47.0,",overall_accuracy, ",69.06382978723404,",step_accuracy, ",70.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",48.0,",overall_accuracy, ",69.03125,",step_accuracy, ",67.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",49.0,",overall_accuracy, ",69.08163265306122,",step_accuracy, ",71.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",50.0,",overall_accuracy, ",69.12,",step_accuracy, ",71.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",51.0,",overall_accuracy, ",69.19607843137256,",step_accuracy, ",73.0,",models, ",Counter({'MobileNet': 1}),",",1,",","[['MobileNetV2', <tensorflow.python.keras.engine.functional.Functional object at 0x7f397c2342b0>]]"
+"batchId ,",52.0,",overall_accuracy, ",69.125,",step_accuracy, ",65.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",['MobileNetV2']
+"batchId ,",53.0,",overall_accuracy, ",68.98113207547169,",step_accuracy, ",61.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",54.0,",overall_accuracy, ",68.96296296296296,",step_accuracy, ",68.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",55.0,",overall_accuracy, ",69.02727272727273,",step_accuracy, ",72.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",56.0,",overall_accuracy, ",69.0,",step_accuracy, ",67.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",57.0,",overall_accuracy, ",68.98245614035088,",step_accuracy, ",68.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",58.0,",overall_accuracy, ",69.0603448275862,",step_accuracy, ",73.5,",models, ",Counter({'MobileNetV2': 1}),",",1,",","[['MobileNet', <tensorflow.python.keras.engine.functional.Functional object at 0x7f39642d33c8>]]"
+"batchId ,",59.0,",overall_accuracy, ",69.04237288135593,",step_accuracy, ",68.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",['MobileNet']
+"batchId ,",60.0,",overall_accuracy, ",69.05,",step_accuracy, ",69.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",61.0,",overall_accuracy, ",69.08196721311477,",step_accuracy, ",71.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",62.0,",overall_accuracy, ",69.03225806451613,",step_accuracy, ",66.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",63.0,",overall_accuracy, ",68.96031746031746,",step_accuracy, ",64.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",64.0,",overall_accuracy, ",68.9453125,",step_accuracy, ",68.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",65.0,",overall_accuracy, ",69.02307692307691,",step_accuracy, ",74.0,",models, ",Counter({'MobileNet': 1}),",",1,",","[['MobileNetV2', <tensorflow.python.keras.engine.functional.Functional object at 0x7f394c3ba3c8>]]"
+"batchId ,",66.0,",overall_accuracy, ",69.03030303030303,",step_accuracy, ",69.5,",models, ",Counter({'MobileNet': 1}),",",1,",",None
+"batchId ,",67.0,",overall_accuracy, ",69.08955223880598,",step_accuracy, ",73.0,",models, ",Counter({'MobileNet': 1}),",",1,",",None
+"batchId ,",68.0,",overall_accuracy, ",69.13235294117646,",step_accuracy, ",72.0,",models, ",Counter({'MobileNet': 1}),",",1,",",None
+"batchId ,",69.0,",overall_accuracy, ",69.06521739130434,",step_accuracy, ",64.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",['MobileNetV2']
+"batchId ,",70.0,",overall_accuracy, ",68.96428571428571,",step_accuracy, ",62.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",71.0,",overall_accuracy, ",68.93661971830986,",step_accuracy, ",67.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",72.0,",overall_accuracy, ",68.91666666666667,",step_accuracy, ",67.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",73.0,",overall_accuracy, ",68.7945205479452,",step_accuracy, ",60.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",74.0,",overall_accuracy, ",68.82432432432432,",step_accuracy, ",71.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",75.0,",overall_accuracy, ",68.82000000000001,",step_accuracy, ",68.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",76.0,",overall_accuracy, ",68.74342105263158,",step_accuracy, ",63.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",77.0,",overall_accuracy, ",68.6948051948052,",step_accuracy, ",65.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",78.0,",overall_accuracy, ",68.69871794871794,",step_accuracy, ",69.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",79.0,",overall_accuracy, ",68.67721518987342,",step_accuracy, ",67.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",80.0,",overall_accuracy, ",68.575,",step_accuracy, ",60.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",81.0,",overall_accuracy, ",68.54938271604938,",step_accuracy, ",66.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",82.0,",overall_accuracy, ",68.54268292682927,",step_accuracy, ",68.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",83.0,",overall_accuracy, ",68.5421686746988,",step_accuracy, ",68.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",84.0,",overall_accuracy, ",68.51785714285714,",step_accuracy, ",66.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",85.0,",overall_accuracy, ",68.48823529411764,",step_accuracy, ",66.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",86.0,",overall_accuracy, ",68.51162790697674,",step_accuracy, ",70.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",87.0,",overall_accuracy, ",68.51149425287356,",step_accuracy, ",68.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",88.0,",overall_accuracy, ",68.47727272727273,",step_accuracy, ",65.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",89.0,",overall_accuracy, ",68.42134831460675,",step_accuracy, ",63.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",90.0,",overall_accuracy, ",68.34444444444443,",step_accuracy, ",61.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",91.0,",overall_accuracy, ",68.34615384615384,",step_accuracy, ",68.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",92.0,",overall_accuracy, ",68.31521739130434,",step_accuracy, ",65.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",93.0,",overall_accuracy, ",68.34408602150538,",step_accuracy, ",71.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",94.0,",overall_accuracy, ",68.34042553191489,",step_accuracy, ",68.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",95.0,",overall_accuracy, ",68.28421052631579,",step_accuracy, ",63.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",96.0,",overall_accuracy, ",68.23958333333333,",step_accuracy, ",64.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",97.0,",overall_accuracy, ",68.2319587628866,",step_accuracy, ",67.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",98.0,",overall_accuracy, ",68.23979591836735,",step_accuracy, ",69.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",99.0,",overall_accuracy, ",68.22727272727272,",step_accuracy, ",67.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",100.0,",overall_accuracy, ",68.21000000000001,",step_accuracy, ",66.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",101.0,",overall_accuracy, ",68.23267326732673,",step_accuracy, ",70.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",102.0,",overall_accuracy, ",68.2156862745098,",step_accuracy, ",66.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",103.0,",overall_accuracy, ",68.2864077669903,",step_accuracy, ",75.5,",models, ",Counter({'MobileNet': 1}),",",1,",","[['MobileNetV2', <tensorflow.python.keras.engine.functional.Functional object at 0x7f392c1950f0>]]"
+"batchId ,",104.0,",overall_accuracy, ",68.32211538461539,",step_accuracy, ",72.0,",models, ",Counter({'MobileNet': 1}),",",1,",",None
+"batchId ,",105.0,",overall_accuracy, ",68.39047619047619,",step_accuracy, ",75.5,",models, ",Counter({'MobileNet': 1}),",",1,",",None
+"batchId ,",106.0,",overall_accuracy, ",68.44811320754717,",step_accuracy, ",74.5,",models, ",Counter({'MobileNet': 1}),",",1,",",None
+"batchId ,",107.0,",overall_accuracy, ",68.48130841121495,",step_accuracy, ",72.0,",models, ",Counter({'MobileNet': 1}),",",1,",",None
+"batchId ,",108.0,",overall_accuracy, ",68.50462962962963,",step_accuracy, ",71.0,",models, ",Counter({'MobileNet': 1}),",",1,",",None
+"batchId ,",109.0,",overall_accuracy, ",68.5091743119266,",step_accuracy, ",69.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",['MobileNetV2']
+"batchId ,",110.0,",overall_accuracy, ",68.45454545454545,",step_accuracy, ",62.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",111.0,",overall_accuracy, ",68.38738738738739,",step_accuracy, ",61.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",112.0,",overall_accuracy, ",68.37946428571429,",step_accuracy, ",67.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",113.0,",overall_accuracy, ",68.34070796460176,",step_accuracy, ",64.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",114.0,",overall_accuracy, ",68.30263157894737,",step_accuracy, ",64.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",115.0,",overall_accuracy, ",68.34347826086956,",step_accuracy, ",73.0,",models, ",Counter({'MobileNetV2': 1}),",",1,",","[['MobileNet', <tensorflow.python.keras.engine.functional.Functional object at 0x7f394c063c88>]]"
+"batchId ,",116.0,",overall_accuracy, ",68.3146551724138,",step_accuracy, ",65.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",['MobileNet']
+"batchId ,",117.0,",overall_accuracy, ",68.31196581196582,",step_accuracy, ",68.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",118.0,",overall_accuracy, ",68.27966101694915,",step_accuracy, ",64.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",119.0,",overall_accuracy, ",68.29411764705883,",step_accuracy, ",70.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",120.0,",overall_accuracy, ",68.30416666666666,",step_accuracy, ",69.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",121.0,",overall_accuracy, ",68.33884297520662,",step_accuracy, ",72.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",122.0,",overall_accuracy, ",68.3688524590164,",step_accuracy, ",72.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",123.0,",overall_accuracy, ",68.38211382113822,",step_accuracy, ",70.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",124.0,",overall_accuracy, ",68.34274193548387,",step_accuracy, ",63.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",125.0,",overall_accuracy, ",68.356,",step_accuracy, ",70.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",126.0,",overall_accuracy, ",68.30952380952381,",step_accuracy, ",62.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",127.0,",overall_accuracy, ",68.28740157480316,",step_accuracy, ",65.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",128.0,",overall_accuracy, ",68.26953125,",step_accuracy, ",66.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",129.0,",overall_accuracy, ",68.25581395348837,",step_accuracy, ",66.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",130.0,",overall_accuracy, ",68.28846153846155,",step_accuracy, ",72.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",131.0,",overall_accuracy, ",68.29389312977099,",step_accuracy, ",69.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",132.0,",overall_accuracy, ",68.24621212121212,",step_accuracy, ",62.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",133.0,",overall_accuracy, ",68.1842105263158,",step_accuracy, ",60.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",134.0,",overall_accuracy, ",68.17910447761194,",step_accuracy, ",67.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",135.0,",overall_accuracy, ",68.19259259259259,",step_accuracy, ",70.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",136.0,",overall_accuracy, ",68.20588235294117,",step_accuracy, ",70.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",137.0,",overall_accuracy, ",68.2080291970803,",step_accuracy, ",68.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",138.0,",overall_accuracy, ",68.23913043478261,",step_accuracy, ",72.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",139.0,",overall_accuracy, ",68.1978417266187,",step_accuracy, ",62.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",140.0,",overall_accuracy, ",68.21785714285714,",step_accuracy, ",71.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",141.0,",overall_accuracy, ",68.20567375886525,",step_accuracy, ",66.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",142.0,",overall_accuracy, ",68.20070422535211,",step_accuracy, ",67.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",143.0,",overall_accuracy, ",68.20979020979021,",step_accuracy, ",69.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",144.0,",overall_accuracy, ",68.20138888888889,",step_accuracy, ",67.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",145.0,",overall_accuracy, ",68.21034482758621,",step_accuracy, ",69.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",146.0,",overall_accuracy, ",68.22260273972603,",step_accuracy, ",70.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",147.0,",overall_accuracy, ",68.24829931972789,",step_accuracy, ",72.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",148.0,",overall_accuracy, ",68.2195945945946,",step_accuracy, ",64.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",149.0,",overall_accuracy, ",68.20805369127517,",step_accuracy, ",66.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",150.0,",overall_accuracy, ",68.16666666666666,",step_accuracy, ",62.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",151.0,",overall_accuracy, ",68.13907284768212,",step_accuracy, ",64.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",152.0,",overall_accuracy, ",68.1217105263158,",step_accuracy, ",65.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",153.0,",overall_accuracy, ",68.16013071895425,",step_accuracy, ",74.0,",models, ",Counter({'MobileNetV2': 1}),",",1,",","[['MobileNet', <tensorflow.python.keras.engine.functional.Functional object at 0x7f38e8679748>]]"
+"batchId ,",154.0,",overall_accuracy, ",68.16558441558442,",step_accuracy, ",69.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",['MobileNet']
+"batchId ,",155.0,",overall_accuracy, ",68.15806451612903,",step_accuracy, ",67.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",156.0,",overall_accuracy, ",68.17307692307692,",step_accuracy, ",70.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",157.0,",overall_accuracy, ",68.17197452229298,",step_accuracy, ",68.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",158.0,",overall_accuracy, ",68.17721518987342,",step_accuracy, ",69.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",159.0,",overall_accuracy, ",68.17295597484276,",step_accuracy, ",67.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",160.0,",overall_accuracy, ",68.196875,",step_accuracy, ",72.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",161.0,",overall_accuracy, ",68.16459627329192,",step_accuracy, ",63.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",162.0,",overall_accuracy, ",68.20061728395062,",step_accuracy, ",74.0,",models, ",Counter({'MobileNetV2': 1}),",",1,",","[['MobileNet', <tensorflow.python.keras.engine.functional.Functional object at 0x7f38e83174e0>]]"
+"batchId ,",163.0,",overall_accuracy, ",68.20245398773007,",step_accuracy, ",68.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",['MobileNet']
+"batchId ,",164.0,",overall_accuracy, ",68.17073170731707,",step_accuracy, ",63.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",165.0,",overall_accuracy, ",68.17272727272727,",step_accuracy, ",68.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",166.0,",overall_accuracy, ",68.13855421686748,",step_accuracy, ",62.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",167.0,",overall_accuracy, ",68.16467065868264,",step_accuracy, ",72.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",168.0,",overall_accuracy, ",68.18154761904762,",step_accuracy, ",71.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",169.0,",overall_accuracy, ",68.2189349112426,",step_accuracy, ",74.5,",models, ",Counter({'MobileNet': 1}),",",1,",","[['MobileNetV2', <tensorflow.python.keras.engine.functional.Functional object at 0x7f38fc2f5128>]]"
+"batchId ,",170.0,",overall_accuracy, ",68.25294117647059,",step_accuracy, ",74.0,",models, ",Counter({'MobileNet': 1}),",",1,",",None
+"batchId ,",171.0,",overall_accuracy, ",68.25438596491227,",step_accuracy, ",68.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",['MobileNetV2']
+"batchId ,",172.0,",overall_accuracy, ",68.25,",step_accuracy, ",67.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",173.0,",overall_accuracy, ",68.26878612716763,",step_accuracy, ",71.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",174.0,",overall_accuracy, ",68.25574712643679,",step_accuracy, ",66.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",175.0,",overall_accuracy, ",68.25428571428571,",step_accuracy, ",68.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",176.0,",overall_accuracy, ",68.23011363636363,",step_accuracy, ",64.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",177.0,",overall_accuracy, ",68.2683615819209,",step_accuracy, ",75.0,",models, ",Counter({'MobileNet': 1}),",",1,",","[['MobileNetV2', <tensorflow.python.keras.engine.functional.Functional object at 0x7f38b80df860>]]"
+"batchId ,",178.0,",overall_accuracy, ",68.25842696629213,",step_accuracy, ",66.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",['MobileNetV2']
+"batchId ,",179.0,",overall_accuracy, ",68.25139664804469,",step_accuracy, ",67.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",180.0,",overall_accuracy, ",68.27777777777779,",step_accuracy, ",73.0,",models, ",Counter({'MobileNetV2': 1}),",",1,",","[['MobileNet', <tensorflow.python.keras.engine.functional.Functional object at 0x7f38b876aeb8>]]"
+"batchId ,",181.0,",overall_accuracy, ",68.2707182320442,",step_accuracy, ",67.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",['MobileNet']
+"batchId ,",182.0,",overall_accuracy, ",68.27197802197801,",step_accuracy, ",68.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",183.0,",overall_accuracy, ",68.28415300546447,",step_accuracy, ",70.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",184.0,",overall_accuracy, ",68.29347826086956,",step_accuracy, ",70.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",185.0,",overall_accuracy, ",68.28108108108108,",step_accuracy, ",66.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",186.0,",overall_accuracy, ",68.27688172043011,",step_accuracy, ",67.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",187.0,",overall_accuracy, ",68.26470588235294,",step_accuracy, ",66.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",188.0,",overall_accuracy, ",68.26329787234042,",step_accuracy, ",68.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",189.0,",overall_accuracy, ",68.27513227513228,",step_accuracy, ",70.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",190.0,",overall_accuracy, ",68.27894736842104,",step_accuracy, ",69.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",191.0,",overall_accuracy, ",68.282722513089,",step_accuracy, ",69.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",192.0,",overall_accuracy, ",68.28125,",step_accuracy, ",68.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",193.0,",overall_accuracy, ",68.27979274611398,",step_accuracy, ",68.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",194.0,",overall_accuracy, ",68.27061855670104,",step_accuracy, ",66.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",195.0,",overall_accuracy, ",68.2948717948718,",step_accuracy, ",73.0,",models, ",Counter({'MobileNet': 1}),",",1,",","[['MobileNetV2', <tensorflow.python.keras.engine.functional.Functional object at 0x7f38b01e02b0>]]"
+"batchId ,",196.0,",overall_accuracy, ",68.3061224489796,",step_accuracy, ",70.5,",models, ",Counter({'MobileNet': 1}),",",1,",",None
+"batchId ,",197.0,",overall_accuracy, ",68.30456852791879,",step_accuracy, ",68.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",['MobileNetV2']
+"batchId ,",198.0,",overall_accuracy, ",68.3030303030303,",step_accuracy, ",68.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",199.0,",overall_accuracy, ",68.31155778894473,",step_accuracy, ",70.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",200.0,",overall_accuracy, ",68.3325,",step_accuracy, ",72.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",201.0,",overall_accuracy, ",68.318407960199,",step_accuracy, ",65.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",202.0,",overall_accuracy, ",68.31435643564356,",step_accuracy, ",67.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",203.0,",overall_accuracy, ",68.3128078817734,",step_accuracy, ",68.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",204.0,",overall_accuracy, ",68.31372549019608,",step_accuracy, ",68.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",205.0,",overall_accuracy, ",68.32682926829268,",step_accuracy, ",71.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",206.0,",overall_accuracy, ",68.31553398058252,",step_accuracy, ",66.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",207.0,",overall_accuracy, ",68.29951690821257,",step_accuracy, ",65.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",208.0,",overall_accuracy, ",68.30528846153847,",step_accuracy, ",69.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",209.0,",overall_accuracy, ",68.3133971291866,",step_accuracy, ",70.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",210.0,",overall_accuracy, ",68.33809523809524,",step_accuracy, ",73.5,",models, ",Counter({'MobileNet': 1}),",",1,",","[['MobileNetV2', <tensorflow.python.keras.engine.functional.Functional object at 0x7f38a0773128>]]"
+"batchId ,",211.0,",overall_accuracy, ",68.3436018957346,",step_accuracy, ",69.5,",models, ",Counter({'MobileNet': 1}),",",1,",",None
+"batchId ,",212.0,",overall_accuracy, ",68.35377358490567,",step_accuracy, ",70.5,",models, ",Counter({'MobileNet': 1}),",",1,",",None
+"batchId ,",213.0,",overall_accuracy, ",68.35446009389672,",step_accuracy, ",68.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",['MobileNetV2']
+"batchId ,",214.0,",overall_accuracy, ",68.3714953271028,",step_accuracy, ",72.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",215.0,",overall_accuracy, ",68.34186046511628,",step_accuracy, ",62.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",216.0,",overall_accuracy, ",68.34953703703704,",step_accuracy, ",70.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",217.0,",overall_accuracy, ",68.36405529953917,",step_accuracy, ",71.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",218.0,",overall_accuracy, ",68.3532110091743,",step_accuracy, ",66.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",219.0,",overall_accuracy, ",68.37899543378995,",step_accuracy, ",74.0,",models, ",Counter({'MobileNet': 1}),",",1,",","[['MobileNetV2', <tensorflow.python.keras.engine.functional.Functional object at 0x7f38a0095198>]]"
+"batchId ,",220.0,",overall_accuracy, ",68.38181818181818,",step_accuracy, ",69.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",['MobileNetV2']
+"batchId ,",221.0,",overall_accuracy, ",68.36425339366515,",step_accuracy, ",64.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",222.0,",overall_accuracy, ",68.38513513513513,",step_accuracy, ",73.0,",models, ",Counter({'MobileNet': 1}),",",1,",","[['MobileNetV2', <tensorflow.python.keras.engine.functional.Functional object at 0x7f387b996ac8>]]"
+"batchId ,",223.0,",overall_accuracy, ",68.37668161434978,",step_accuracy, ",66.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",['MobileNetV2']
+"batchId ,",224.0,",overall_accuracy, ",68.359375,",step_accuracy, ",64.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",225.0,",overall_accuracy, ",68.36444444444444,",step_accuracy, ",69.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",226.0,",overall_accuracy, ",68.36504424778761,",step_accuracy, ",68.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",227.0,",overall_accuracy, ",68.37444933920705,",step_accuracy, ",70.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",228.0,",overall_accuracy, ",68.37280701754386,",step_accuracy, ",68.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",229.0,",overall_accuracy, ",68.35807860262008,",step_accuracy, ",65.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",230.0,",overall_accuracy, ",68.37608695652175,",step_accuracy, ",72.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",231.0,",overall_accuracy, ",68.36580086580086,",step_accuracy, ",66.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",232.0,",overall_accuracy, ",68.34482758620689,",step_accuracy, ",63.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",233.0,",overall_accuracy, ",68.34549356223177,",step_accuracy, ",68.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",234.0,",overall_accuracy, ",68.35042735042734,",step_accuracy, ",69.5,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",None
+"batchId ,",235.0,",overall_accuracy, ",68.37234042553192,",step_accuracy, ",73.5,",models, ",Counter({'MobileNet': 1}),",",1,",","[['MobileNetV2', <tensorflow.python.keras.engine.functional.Functional object at 0x7f387b334f60>]]"
+"batchId ,",236.0,",overall_accuracy, ",68.36652542372882,",step_accuracy, ",67.0,",models, ","Counter({'MobileNet': 1, 'MobileNetV2': 1})",",",2,",",['MobileNetV2']
+"batchId ,",237.0,",overall_accuracy, ",68.38818565400844,",step_accuracy, ",73.5,",models, ",Counter({'MobileNetV2': 1}),",",1,",","[['MobileNet', <tensorflow.python.keras.engine.functional.Functional object at 0x7f38a85c09e8>]]"
+"batchId ,",238.0,",overall_accuracy, ",68.35924369747899,",step_accuracy, ",61.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",['MobileNet']
+"batchId ,",239.0,",overall_accuracy, ",68.36192468619247,",step_accuracy, ",69.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",240.0,",overall_accuracy, ",68.34166666666667,",step_accuracy, ",63.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",241.0,",overall_accuracy, ",68.33609958506224,",step_accuracy, ",67.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",242.0,",overall_accuracy, ",68.32851239669422,",step_accuracy, ",66.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",243.0,",overall_accuracy, ",68.33539094650206,",step_accuracy, ",70.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",244.0,",overall_accuracy, ",68.34426229508198,",step_accuracy, ",70.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",245.0,",overall_accuracy, ",68.35510204081633,",step_accuracy, ",71.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",246.0,",overall_accuracy, ",68.3678861788618,",step_accuracy, ",71.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",247.0,",overall_accuracy, ",68.36437246963563,",step_accuracy, ",67.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",248.0,",overall_accuracy, ",68.36290322580645,",step_accuracy, ",68.0,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",249.0,",overall_accuracy, ",68.35943775100401,",step_accuracy, ",67.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
+"batchId ,",250.0,",overall_accuracy, ",68.356,",step_accuracy, ",67.5,",models, ","Counter({'MobileNetV2': 1, 'MobileNet': 1})",",",2,",",None
