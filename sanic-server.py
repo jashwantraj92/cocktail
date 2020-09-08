@@ -15,7 +15,7 @@ from PIL import Image
 #tf.enable_eager_execution()
 from sanic import Sanic
 from sanic.response import json
-import time
+import time,random
 votearray = []
 voteclasses =[] 
 maxVoteLabel=None
@@ -25,10 +25,12 @@ pretrained_models = []
 app = Sanic(__name__)
 sem = None
 models = []
-pos			=	int(0.2*100);
-arr			=	np.zeros(10000);
+pos			=	int(0.5*100);
+arr			=	np.zeros(1000);
 arr[:pos]	=	1;
 np.random.shuffle(arr);
+arr=[0,1]
+distribution=[0.5,0.5]
 @app.listener('before_server_start')
 def init(sanic, loop):
     global sem,models,pretrained_models,maxVoteLabel,maxVoteClass
@@ -51,6 +53,7 @@ def init(sanic, loop):
         print(pretrained_model, "Result before saving",
               tf.keras.applications.mobilenet.decode_predictions(
                  result_before_save.numpy())[0][0])
+        print(arr)
     #sem = asyncio.Semaphore(concurrency_per_worker, loop=loop)
 
 
@@ -66,7 +69,6 @@ async def test(request):
         question = request.json['data']
         filename = request.json['file']
       
-        print(f'Received request',receive_time, filename)
         data = question
         img = data
         #print(img,"***")
@@ -86,12 +88,12 @@ async def test(request):
         x = tf.keras.preprocessing.image.img_to_array(new_image)
         x = tf.keras.applications.mobilenet.preprocess_input(np.array(img)[tf.newaxis,...])
         #model = int(question[1])
-        fail = random.choice(arr)
+        fail = random.choices(arr,distribution)
+        print(f'Received request',receive_time, filename, fail)
         pretrained_model = pretrained_models
-        if (fail):
-          
+        if (fail[0] == 1):
             pretrained_model.remove(random.choice(pretrained_model))
-        print("pretrained_model after shuffle are", pretrained_model)
+            print("***********************pretrained_model after shuffle are", len(pretrained_model), len(pretrained_models))
         for i in range(len(pretrained_model)):
             #tid = threading.Thread(target=predict, args=(pretrained_models[i],x,models[i]))
             predict(pretrained_model[i],x,models[i])
@@ -100,7 +102,7 @@ async def test(request):
         #for thread in threads:
         #    thread.join()
         end_time = time.time()
-        print(pretrained_models,threads)
+        #print(pretrained_models,threads)
         threads.clear() 
         maxVoteLabel	=	max(set(votearray), key = votearray.count)
         maxVoteClass	=	max(set(voteclasses), key = voteclasses.count)
