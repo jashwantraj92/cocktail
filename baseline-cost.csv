@@ -1,11 +1,11 @@
 Policy,Cost,Query
-Single,2.02,NASNetLarge
-Single,2.02,IncepResV2
-Single,0.404,Xception
-Ensemble,2.496,NASNetLarge
-Ensemble,1.716,IncepResV2
-Ensemble,1.17,Xception
-Spot-Ensemble,1.92,NASNetLarge
-Spot-Ensemble,1.32,IncepResV2
-Spot-Ensemble,0.9,Xception
+Single,2.02,Nas
+Single,2.02,IRV2
+Single,0.404,Xcep
+Ensemble,2.496,Nas
+Ensemble,1.716,IRV2
+Ensemble,1.17,Xcep
+Spot-Ensemble,1.92,Nas
+Spot-Ensemble,1.32,IRV2
+Spot-Ensemble,0.9,Xcep
 
