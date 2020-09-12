@@ -1,10 +1,14 @@
 Policy,Query,p50,p90,p99
-Clipper,Type1,8.9,10,10
-Clipper,Type2,5.2,7,8
-Clipper,Type3,5.2,6,7
+Dynamic,Type1,8.9,10,10
+Dynamic,Type2,6.2,7,8
+Dynamic,Type3,5.2,6,7
 Concord,Type1,4,7,10
-Concord,Type2,5,7,8
+Concord,Type2,4.2,7,8
 Concord,Type3,4,6,7
+Clipper,Type1,10,10,10
+Clipper,Type2,8,8,8
+Clipper,Type3,7,7,7
+
 
 
 

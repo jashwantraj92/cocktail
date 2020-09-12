@@ -1,12 +1,12 @@
-Model,Percent
-InceptionResNetV2,249,99.6
-DenseNet20,245,98
-NASNetMobile,211,84.4
-DenseNet121,165,66
-Xception,113,45.2
-MobileNet,48,19.2
-InceptionV3,22,8.8
-MobileNetV2,20,8
-ResNet50V2,8,3.2
-ResNet50,6,2.4
+Model,#images,Percent
+IRV2,249,99.6
+DNet201,245,98
+NASMob,211,84.4
+DNet121,165,66
+Xcep,113,45.2
+MNet,48,19.2
+Incep,22,8.8
+MNetV2,20,8
+R50V2,8,3.2
+RNet50,6,2.4
 
