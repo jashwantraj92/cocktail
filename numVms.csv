@@ -1,10 +1,10 @@
 policy,workload,wiki,twitter
-infaas,workload1,11.7845118,18.4210526
-cocktail,workload1,37.8787879,41.6842105
-clipper,workload1,85.2794613,86.1052632
-dynamic,workload1,75,74
-infaas,workload2,22,19.11
-cocktail,workload2,77.170418,73.5294118
-clipper,workload2,85.2794613,87.1052632
-dynamic,workload2,75,77
+InFaas,workload1,11.7845118,18.4210526
+Clipper,workload1,85.2794613,86.1052632
+Dynamic,workload1,75,74
+Cocktail,workload1,37.8787879,41.6842105
+InFaas,workload2,22,19.11
+Clipper,workload2,85.2794613,87.1052632
+Dynamic,workload2,75,77
+Cocktail,workload2,77.170418,73.5294118
 

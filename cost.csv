@@ -1,18 +1,18 @@
-Cost,Scheme,Workload,Trace
-41.78,Cocktail,workload2,WIKI
+Cost($),Scheme,Workload,Trace
 55.8,InFaas,workload2,WIKI
-48.51,Dynamic,workload2,WIKI
 52.33,Clipper,workload2,WIKI
-55.28,Cocktail,workload1,WIKI
+48.51,Dynamic,workload2,WIKI
+41.78,Cocktail,workload2,WIKI
 80.4,InFaas,workload1,WIKI
-70.6,Dynamic,workload1,WIKI
 75.56,Clipper,workload1,WIKI
-82.78,Cocktail,workload2,Twitter
+70.6,Dynamic,workload1,WIKI
+55.28,Cocktail,workload1,WIKI
 115.8,InFaas,workload2,Twitter
-110.14,Dynamic,workload2,Twitter
 115.25,Clipper,workload2,Twitter
-80.64,Cocktail,workload1,Twitter
+110.14,Dynamic,workload2,Twitter
+82.78,Cocktail,workload2,Twitter
 125.8,InFaas,workload1,Twitter
-119.5,Dynamic,workload1,Twitter
 123.5,Clipper,workload1,Twitter
+119.5,Dynamic,workload1,Twitter
+80.64,Cocktail,workload1,Twitter
 

@@ -1,4 +1,4 @@
-Model,#images,Percent
+Model,#images,Importance(%)
 IRV2,249,99.6
 DNet201,245,98
 NASMob,211,84.4
