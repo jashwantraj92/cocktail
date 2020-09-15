@@ -201,7 +201,7 @@ ax.set_rlabel_position(0)
 plt.yticks([0.2,0.4,0.6,0.8],["0.2","0.4","0.6","0.8"], color="black", size=20)
 #plt.ylim(0,40)
  
- 
+ '''
 # ------- PART 2: Add plots
  
 # Plot each individual = each line of the data
@@ -238,6 +238,45 @@ plt.legend( loc='lower center',
                 fontsize=23
                 # labels=figs_normalized_barlabels
                 )
+'''
+
+# ------- PART 2: Add plots
+ 
+# Plot each individual = each line of the data
+# I don't do a loop, because plotting more than 3 groups makes the chart unreadable
+ 
+# Ind1
+values=df.loc[0].drop('Model').values.flatten().tolist()
+values += values[:1]
+# ax.plot(angles, values, linewidth=2, linestyle='solid', color="blue",label="InFaas")
+ax.fill_between(angles, values, 1, 'b', color="blue", alpha=0.7)
+ 
+# Ind2
+values=df.loc[1].drop('Model').values.flatten().tolist()
+values += values[:1]
+# ax.plot(angles, values, linewidth=2, linestyle='solid',color="red", label="Clipper")
+ax.fill_between(angles, values, 1, 'r', color="red",alpha=0.7)
+
+values=df.loc[2].drop('Model').values.flatten().tolist()
+values += values[:1]
+ax.plot(angles, values, linewidth=1, linestyle='solid', color="green",label="Cocktail")
+ax.fill_between(angles, values, 1, 'y', alpha=0.3,color="green")
+plt.legend( loc='lower center',
+                # bbox_to_anchor=(0.5, 1.1),
+                bbox_to_anchor=(0.5, -0.35),
+                ncol=3,
+                frameon=True,
+                fancybox=True, 
+                framealpha=0.4,
+                shadow=False,
+                edgecolor="black",
+                labelspacing=0,
+                columnspacing=0.1,
+                handletextpad=0.5,
+                fontsize=23
+                # labels=figs_normalized_barlabels
+                )
+
 
 """
 #plt.title(title, size=11, color=color, y=1.1)
