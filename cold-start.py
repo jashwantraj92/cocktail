@@ -146,7 +146,7 @@ def plot():
     g = sns.barplot(x="Model", y="RTT2", data=cold_start_df ,palette="Blues", linewidth=3, label="RTT")
     #g = sns.lineplot(x="Model", y="RTT2", data=cold_start_df, marker="<", color="orange", linewidth=3, label="RTT", dashes=True, markersize=20)
     plt.legend(loc='upper center',
-               bbox_to_anchor=(0.5, 1.2),
+               bbox_to_anchor=(0.5, 1.1),
                ncol=2,
                frameon=False,
                fancybox=False,
@@ -166,12 +166,14 @@ plot()
 
 df = pd.DataFrame({
 'Model': ['InFaaS','Clipper','Cocktail'],
-'Cost': [0.36,0.89,0.26],
-'Latency': [0.837,0.3931,0.38],
-'Accuracy-loss': [0.8,0.53,0.26]
+'$Cost^{-1}$': [0.36,0.89,0.26],
+'$Latency^{-1}$': [0.837,0.3931,0.38],
+'Accuracy': [0.8,0.53,0.26]
 })
  
- 
+df['$Cost^{-1}$'] =  1 -df['$Cost^{-1}$']
+df['$Latency^{-1}$'] = 1 - df['$Latency^{-1}$']
+df['Accuracy'] = 1 - df['Accuracy']
  
 # ------- PART 1: Create background
  
@@ -184,7 +186,7 @@ angles = [n / float(N) * 2 * pi for n in range(N)]
 angles += angles[:1]
  
 # Initialise the spider plot
-fig, ax = plt.subplots(figsize=(8, 4))
+fig, ax = plt.subplots(figsize=(4, 3))
 
 ax = plt.subplot(111, polar=True)
 
@@ -194,14 +196,15 @@ ax.set_theta_offset(pi / 2)
 ax.set_theta_direction(-1)
  
 # Draw one axe per variable + add labels labels yet
-plt.xticks(angles[:-1], categories, color='black', size=23)
+plt.xticks(angles[:-1], categories, color='black', size=18)
  
 # Draw ylabels
 ax.set_rlabel_position(0)
-plt.yticks([0.2,0.4,0.6,0.8],["0.2","0.4","0.6","0.8"], color="black", size=20)
+plt.yticks([0.25,0.5,0.75],["0.25","0.5","0.75"], color="black", size=15)
+ax.set_ylim(0,1)
 #plt.ylim(0,40)
  
- '''
+
 # ------- PART 2: Add plots
  
 # Plot each individual = each line of the data
@@ -210,24 +213,26 @@ plt.yticks([0.2,0.4,0.6,0.8],["0.2","0.4","0.6","0.8"], color="black", size=20)
 # Ind1
 values=df.loc[0].drop('Model').values.flatten().tolist()
 values += values[:1]
-ax.plot(angles, values, linewidth=2, linestyle='solid', color="blue",label="InFaas")
-ax.fill_between(angles, values, 'b', color="blue", alpha=0.1)
+ax.plot(angles, values, linewidth=2, linestyle='dotted', color="blue",label="InFaas")
+ax.fill(angles, values, 'b', color="blue", alpha=0.1)
  
 # Ind2
 values=df.loc[1].drop('Model').values.flatten().tolist()
 values += values[:1]
-ax.plot(angles, values, linewidth=2, linestyle='solid',color="red", label="Clipper")
-ax.fill(angles, values, 'r', color="red",alpha=0.1)
+ax.plot(angles, values, linewidth=2, linestyle='dotted',color="red", label="Clipper")
+ax.fill_between(angles, values, 'r', color="red",alpha=0.1)
 
 values=df.loc[2].drop('Model').values.flatten().tolist()
 values += values[:1]
 ax.plot(angles, values, linewidth=2, linestyle='solid', color="green",label="Cocktail")
 ax.fill(angles, values, 'y', alpha=0.1,color="green")
+
+
 plt.legend( loc='lower center',
                 # bbox_to_anchor=(0.5, 1.1),
-                bbox_to_anchor=(0.5, -0.35),
+                bbox_to_anchor=(0.5, -0.3),
                 ncol=3,
-                frameon=True,
+                frameon=False,
                 fancybox=True, 
                 framealpha=0.4,
                 shadow=False,
@@ -235,11 +240,11 @@ plt.legend( loc='lower center',
                 labelspacing=0,
                 columnspacing=0.1,
                 handletextpad=0.5,
-                fontsize=23
+                fontsize=18
                 # labels=figs_normalized_barlabels
                 )
-'''
 
+'''
 # ------- PART 2: Add plots
  
 # Plot each individual = each line of the data
@@ -249,18 +254,18 @@ plt.legend( loc='lower center',
 values=df.loc[0].drop('Model').values.flatten().tolist()
 values += values[:1]
 # ax.plot(angles, values, linewidth=2, linestyle='solid', color="blue",label="InFaas")
-ax.fill_between(angles, values, 1, 'b', color="blue", alpha=0.7)
+ax.fill_between(angles, values ,'b', color="blue", alpha=0.7)
  
 # Ind2
 values=df.loc[1].drop('Model').values.flatten().tolist()
 values += values[:1]
 # ax.plot(angles, values, linewidth=2, linestyle='solid',color="red", label="Clipper")
-ax.fill_between(angles, values, 1, 'r', color="red",alpha=0.7)
+ax.fill_between(angles, values,'r', color="red",alpha=0.7)
 
 values=df.loc[2].drop('Model').values.flatten().tolist()
 values += values[:1]
 ax.plot(angles, values, linewidth=1, linestyle='solid', color="green",label="Cocktail")
-ax.fill_between(angles, values, 1, 'y', alpha=0.3,color="green")
+ax.fill_between(angles, values, 'y', alpha=0.3,color="green")
 plt.legend( loc='lower center',
                 # bbox_to_anchor=(0.5, 1.1),
                 bbox_to_anchor=(0.5, -0.35),
@@ -276,13 +281,11 @@ plt.legend( loc='lower center',
                 fontsize=23
                 # labels=figs_normalized_barlabels
                 )
-
-
-"""
 #plt.title(title, size=11, color=color, y=1.1)
 
 # ------- PART 2: Apply to all individuals
 # initialize the figure
+
 my_dpi=96
 plt.figure(figsize=(1000/my_dpi, 1000/my_dpi), dpi=my_dpi)
 
@@ -292,9 +295,8 @@ my_palette = plt.cm.get_cmap("Set2", len(df.index))
 # Loop to plot
 for row in range(0, len(df.index)):
     make_spider( row=row, title='group '+df['group'][row], color=my_palette(row))
-"""
 my_palette = plt.cm.get_cmap("Set2", len(df.index))
-
+'''
 #plt.legend(loc='lower center', bbox_to_anchor=(0.5, -0.35), ncol = 2, fontsize= 'x-large')
 close_fig(merged_pdf)
 write_pdf(merged_pdf)

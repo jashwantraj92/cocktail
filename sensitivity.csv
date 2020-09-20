@@ -1,4 +1,4 @@
-#Models,Accuracy,Interval,const
+#Models,Accuracy,Sampling-Interval,const
 4.4,82.12,10,const-1
 4.44,82.78,30,const-1
 4.89,82.79,60,const-1

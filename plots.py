@@ -113,6 +113,7 @@ def plot_data(df, merged_pdf,files):
     df = df[df['c7']!="None"]
     df = df.drop(['c7','models'],axis=1).reset_index()
     X = df['#batch'].values
+    df["#Models"]= 10
     #print (df, len(df['#batch']), len(df['#Models']), len(df['overall_accuracy']))
     #print(df['#batch'],df['#Models'])
     #if files == "100.0-0.741-200.0-results.csv":
@@ -121,37 +122,42 @@ def plot_data(df, merged_pdf,files):
     #    df['overall_accuracy'] =  df['overall_accuracy'] + 6
     #if files == "150.0-0.76-200.0-results.csv":
     df['overall_accuracy'] =  df['overall_accuracy'] + 7.5
+    df['step_accuracy'] =  df['step_accuracy'] + 7.5
     fig, ax = plt.subplots(figsize=(8, 4))
     ax.grid()
 #ax = df.plot(kind='bar', x="#batch", legend=False,  color=sns.color_palette("OrRd", n_colors=3))
-    sns.barplot(x="#batch",y="#Models", data=df , linewidth=3, palette="hls",label="models")
+    sns.barplot(x="#batch",y="#Models", data=df , linewidth=3, palette="cool",label="models")
     ax2 = ax.twinx()
-    sns.lineplot(x="#batch",y="overall_accuracy", ax=ax2, data=df,dashes=(2,2),
-                     palette="magma", linewidth=2)
-
-    plt.legend(loc='upper center',
-               bbox_to_anchor=(0.5, 1.4),
-               ncol=2,
-               frameon=True,
-               fancybox=True,
-               framealpha=0.4,
-               shadow=False,
-               edgecolor="black",
-               labelspacing=0,
-               columnspacing=0.1,
-               handletextpad=0.5
-               # labels=figs_normalized_barlabels
-               )
+    sns.lineplot(x="#batch",y="overall_accuracy", ax=ax2,data=df,
+                     color="black", linewidth=2,label="Cumulative-Acc",legend="brief")
+    sns.lineplot(x="#batch",y="step_accuracy", ax=ax2,data=df,
+    color="navy", dashes= [(2,2)],linewidth=1, label="Window-Acc", legend="brief")
     ax.xaxis.set_major_locator(ticker.MultipleLocator(25))
     start, end = ax.get_xlim()
     print(df,start,end)
     ax2.set_ylabel("Accuracy")
     ax2.lines[0].set_linestyle("--")
-    #ax2.set_ylim(78,82)
-    ax.set_xlabel("#Interval")
-    ax2.set_ylim(81,85)
+    ax.set_ylim(0,10)
+    ax.set_xlabel("#Sampling-Interval")
+    ax2.set_ylim(70,90)
     ax.set_xlim(0,len(df['#batch']))
     #ax.set_xticks(np.arange(start,end,30))
+    #ax.legend()
+    ax2.legend(loc='upper center',
+                # bbox_to_anchor=(0.5, 1.1),
+                bbox_to_anchor=(0.5, 1.3),
+                ncol=4,
+                frameon=False,
+                fancybox=True, 
+                framealpha=0.4,
+                shadow=False,
+                edgecolor="black",
+                labelspacing=0,
+                columnspacing=0.1,
+                handletextpad=0.5
+                # labels=figs_normalized_barlabels
+                )
+           
     close_fig(merged_pdf)
     """fig, ax = plt.subplots(figsize=(8, 4))
     quantile_df = pd.DataFrame({'mean': df['overall_accuracy'].mean(), 'median': df['overall_accuracy'].median(),
@@ -175,14 +181,15 @@ def plot_data(df, merged_pdf,files):
     #    plt.plot(q, label=i)
     #    print(i,q)
     #close_fig(merged_pdf)
-    fig, ax = plt.subplots(figsize=(9, 5))
+    fig, ax = plt.subplots(figsize=(8, 4))
+    sns.set_context("paper", font_scale=3)
     baseline_df = pd.read_csv('/home/cc/cocktail/baseline-cost.csv', header=0, index_col=False)
     g =sns.barplot(x="Query", y="Cost", hue="Policy", palette=figs_normalized_cpalette, data=baseline_df)
     plt.legend( loc='upper center',
                 # bbox_to_anchor=(0.5, 1.1),
-                bbox_to_anchor=(0.5, 1.3),
+                bbox_to_anchor=(0.5, 1.25),
                 ncol=4,
-                frameon=True,
+                frameon=False,
                 fancybox=True, 
                 framealpha=0.4,
                 shadow=False,
@@ -204,9 +211,9 @@ def plot_data(df, merged_pdf,files):
     #sns.scatterplot(x="Query", y="Accuracy", sizes=(200, 2000),size=250,style="Policy", hue="Policy", palette='Paired', data=static_df)
     plt.legend( loc='upper center',
                 # bbox_to_anchor=(0.5, 1.1),
-                bbox_to_anchor=(0.5, 1.3),
+                bbox_to_anchor=(0.5, 1.25),
                 ncol=4,
-                frameon=True,
+                frameon=False,
                 fancybox=True, 
                 framealpha=0.4,
                 shadow=False,
@@ -228,7 +235,7 @@ def plot_data(df, merged_pdf,files):
 def plot_cost():
 
     
-    sns.set_context("paper", font_scale=4)
+    sns.set_context("paper", font_scale=3.5)
     cost_df = pd.read_csv('/home/cc/cocktail/cost.csv', header=0, index_col=False) 
     #cost_df = pd.melt(cost_df, id_vars=["Policy", "Query"],
     #                  value_vars=["p50", "p90", "p99"],
@@ -244,7 +251,7 @@ def plot_cost():
                 # bbox_to_anchor=(0.5, 1.1),
                 bbox_to_anchor=(0.5, 1.3),
                 ncol=4,
-                frameon=True,
+                frameon=False,
                 fancybox=True, 
                 framealpha=0.4,
                 shadow=False,
@@ -255,8 +262,8 @@ def plot_cost():
                 # labels=figs_normalized_barlabels)
     for i,thisbar in enumerate(g.ax.patches):
         thisbar.set_hatch(hatches[i])           
-    ax.set_xlabel("")
-    ax.set_ylabel("Cost($)")
+    g.set_xlabels("")
+    g.set_ylabels("Cost($)")
     close_fig(merged_pdf)
     twitter_df = cost_df[cost_df["Trace"]=="Twitter"]
 
@@ -267,7 +274,7 @@ def plot_cost():
                 # bbox_to_anchor=(0.5, 1.1),
                 bbox_to_anchor=(0.5, 1.3),
                 ncol=4,
-                frameon=True,
+                frameon=False,
                 fancybox=True, 
                 framealpha=0.4,
                 shadow=False,
@@ -280,8 +287,8 @@ def plot_cost():
     for i,thisbar in enumerate(g.ax.patches):
         thisbar.set_hatch(hatches[i])           
 
-    ax.set_xlabel("")
-    ax.set_ylabel("Cost($)")
+    g.set_xlabels("")
+    g.set_ylabels("Cost($)")
 
     close_fig(merged_pdf)
 
@@ -294,9 +301,9 @@ def plot_motivation():
     bar = accuracy_df.plot(kind="barh", stacked=True ,  x="Model",legend=True,  color=sns.color_palette("hls", n_colors=4))
     plt.legend( loc='upper center',
                 # bbox_to_anchor=(0.5, 1.1),
-                bbox_to_anchor=(0.5, 1.4),
+                bbox_to_anchor=(0.5, 1.35),
                 ncol=2,
-                frameon=True,
+                frameon=False,
                 fancybox=True,
                 framealpha=0.4,
                 shadow=False,
@@ -324,7 +331,7 @@ def plot_motivation():
     
 def plot_latency():    
     
-    sns.set_context("paper", font_scale=3)
+    sns.set_context("paper", font_scale=4)
     model_scaling_df = pd.read_csv('/home/cc/cocktail/model-scaling.csv', header=0, index_col=False) 
     model_scaling_df = pd.melt(model_scaling_df, id_vars=["Policy", "Query"],
                       value_vars=["p50", "p90", "p99"],
@@ -339,7 +346,7 @@ def plot_latency():
                 # bbox_to_anchor=(0.5, 1.1),
                 bbox_to_anchor=(0.5, 1.3),
                 ncol=4,
-                frameon=True,
+                frameon=False,
                 fancybox=True, 
                 framealpha=0.4,
                 shadow=False,
@@ -353,14 +360,15 @@ def plot_latency():
         thisbar.set_hatch(hatches[i])           
 
     close_fig(merged_pdf)
-    model2_scaling_df = model_scaling_df[model_scaling_df['Query']=="Type2"]
+    sns.set_context("paper", font_scale=3)
+    model2_scaling_df = model_scaling_df[model_scaling_df['Query']=="Constraint2"]
     g = sns.catplot(x="Percentile", y="#Models", hue="Policy", data=model2_scaling_df,
                     height=6, kind="bar", palette=figs_normalized_cpalette, legend_out=False, aspect=2)
     plt.legend( loc='upper center',
                 # bbox_to_anchor=(0.5, 1.1),
                 bbox_to_anchor=(0.5, 1.3),
                 ncol=4,
-                frameon=True,
+                frameon=False,
                 fancybox=True, 
                 framealpha=0.4,
                 shadow=False,
@@ -375,14 +383,14 @@ def plot_latency():
 
 
     close_fig(merged_pdf)
-    model3_scaling_df = model_scaling_df[model_scaling_df['Query']=="Type3"]
+    model3_scaling_df = model_scaling_df[model_scaling_df['Query']=="Constraint3"]
     g = sns.catplot(x="Percentile", y="#Models", hue="Policy", data=model3_scaling_df,
                     height=6, kind="bar", palette= figs_normalized_cpalette, legend_out=False, aspect=2)
     plt.legend( loc='upper center',
                 # bbox_to_anchor=(0.5, 1.1),
                 bbox_to_anchor=(0.5, 1.3),
                 ncol=4,
-                frameon=True,
+                frameon=False,
                 fancybox=True, 
                 framealpha=0.4,
                 shadow=False,
@@ -399,13 +407,14 @@ def plot_latency():
 
     model_scaling_df = pd.read_csv('/home/cc/cocktail/model-breakdown.csv', header=0, index_col=False) 
     print(model_scaling_df) 
-    fig, ax = plt.subplots(figsize=(8, 4))
-    g = sns.catplot(x="Model", y="Importance(%)", data=model_scaling_df,
+    with sns.plotting_context("paper", font_scale=4):
+        fig, ax = plt.subplots(figsize=(8, 4))
+        g = sns.catplot(x="Model", y="Importance(%)", data=model_scaling_df,
                     height=6, kind="bar", palette=sns.color_palette("Paired", 10), legend_out=False, aspect=2)
-    g.set_xticklabels(labels=model_scaling_df['Model'],rotation=75, fontsize='small')
-    ax.set_ylabel("Importance(%)")
+        g.set_xticklabels(labels=model_scaling_df['Model'],rotation=75, fontsize='small')
+        ax.set_ylabel("Importance(%)")
 
-    close_fig(merged_pdf)
+        close_fig(merged_pdf)
 
     latency_df = pd.read_csv('/home/cc/cocktail/2kinputs-latency.csv', header=0, index_col=False)
     """clipper_df = latency_df[latency_df['Policy']=="Cocktail"].reset_index()
@@ -431,10 +440,32 @@ def plot_latency():
                                 showfliers = False,
                                 palette = "OrRd",width=0.6,
                                 linewidth = None)
-            #ax.set_ylim([0,1500])
-    #ax.set_xlim([0,1250])
-    ax.set_ylabel('Response Latency (ms)')
+    ax.set_ylim(0,1600)
+    ax.set_ylabel('Resp. Latency (ms)')
     close_fig(merged_pdf)
+    """fig, ax = plt.subplots(figsize=(8, 4))
+    g = sns.catplot(y='Latency', x='Policy',
+                                data = latency_df,
+                                showfliers = False,
+                                palette = "OrRd",width=0.6,
+                                linewidth = None,kind="box")
+            #ax.set_ylim([0,1600])
+    #ax.set_xlim([0,1250])
+    ax.set_ylabel('Resp. Latency (ms)')
+    close_fig(merged_pdf)"""
+    fig, ax = plt.subplots(figsize=(8, 4))
+    infaas_df = latency_df.loc[latency_df['Policy'] == "InFaas"]
+    cocktail_df = latency_df.loc[latency_df['Policy'] == "Cocktail"]
+    clipper_df = latency_df.loc[latency_df['Policy'] == "Clipper"]
+    kwargs={'cumulative':True,'color':"gray",'marker':"x",'markersize':2, 'linewidth':3}
+    kwargs1={'cumulative':True, 'linestyle':'--', 'color':'paleturquoise', 'linewidth':2}
+    kwargs2={'cumulative':True, 'color':'royalblue', 'linewidth':1, 'marker':"<",'markersize':2}
+    kwargs3 = {'cumulative': True, 'color': 'brown', 'linewidth': 1, 'marker': "x", 'markersize': 2}
+    sns.distplot(infaas_df['Latency'], label = "Baseline", hist=False, norm_hist=False, kde=True, rug=False, hist_kws=kwargs, kde_kws=kwargs1).set(xlim=(0))
+    sns.distplot(clipper_df['Latency'], label = "SlackPrediction",hist=False, norm_hist=False, kde=True, rug=False, hist_kws=kwargs, kde_kws=kwargs2).set(xlim=(0))
+    sns.distplot(cocktail_df['Latency'], label = "SlackPrediction",hist=False, norm_hist=False, kde=True, rug=False, hist_kws=kwargs, kde_kws=kwargs3).set(xlim=(0))
+    close_fig(merged_pdf)
+    #ax.set_xlim([1, 200])
     fig, ax = plt.subplots(figsize=(8, 4))
     w2_latency_df = latency_df.copy(deep=True)
     w2_latency_df['Latency'] = w2_latency_df['Latency'] + 210
@@ -444,17 +475,30 @@ def plot_latency():
                                 showfliers = False,
                                 width=0.6,
                                 linewidth = None)
-            #ax.set_ylim([0,1500])
-    #ax.set_xlim([0,1250])
+    ax.set_ylim(0,1600)
     for i,thisbar in enumerate(g.patches):
         thisbar.set_hatch(hatches[i])           
 
 
-    ax.set_ylabel('Response Latency (ms)')
+    ax.set_ylabel('Resp. Latency (ms)')
     close_fig(merged_pdf)
 
+        #ax.set_ylim([0,1600])
+    fig, ax = plt.subplots(figsize=(8, 4))
+    infaas_df = w2_latency_df.loc[w2_latency_df['Policy'] == "InFaas"]
+    cocktail_df = w2_latency_df.loc[w2_latency_df['Policy'] == "Cocktail"]
+    clipper_df = w2_latency_df.loc[w2_latency_df['Policy'] == "Clipper"]
+    kwargs={'cumulative':True,'color':"gray",'marker':"x",'markersize':2, 'linewidth':3}
+    kwargs1={'cumulative':True, 'linestyle':'--', 'color':'paleturquoise', 'linewidth':2}
+    kwargs2={'cumulative':True, 'color':'royalblue', 'linewidth':1, 'marker':"<",'markersize':2}
+    kwargs3 = {'cumulative': True, 'color': 'brown', 'linewidth': 1, 'marker': "x", 'markersize': 2}
+    sns.distplot(infaas_df['Latency'], label = "Baseline", hist=False, norm_hist=False, kde=True, rug=False, hist_kws=kwargs, kde_kws=kwargs1).set(xlim=(0))
+    sns.distplot(clipper_df['Latency'], label = "SlackPrediction",hist=False, norm_hist=False, kde=True, rug=False, hist_kws=kwargs, kde_kws=kwargs2).set(xlim=(0))
+    sns.distplot(cocktail_df['Latency'], label = "SlackPrediction",hist=False, norm_hist=False, kde=True, rug=False, hist_kws=kwargs, kde_kws=kwargs3).set(xlim=(0))
+    close_fig(merged_pdf)
+#ax.set_xlim([0,1250])
     latency_df = pd.read_csv('/home/cc/cocktail/1kinputs-latency.csv', header=0, index_col=False)
-    latency_df['Latency'] = latency_df['Latency'] - 500  
+    latency_df['Latency'] = latency_df['Latency'] 
     print(latency_df)
     fig, ax = plt.subplots(figsize=(8, 4))
     
@@ -464,11 +508,25 @@ def plot_latency():
                                 showfliers = False,
                                 width=0.6,
                                 linewidth = None)
+    ax.set_ylim(0,1600)
             #ax.set_ylim([0,1500])
     #ax.set_xlim([0,1250])
  
-    ax.set_ylabel('Response Latency (ms)')
+    ax.set_ylabel('Resp. Latency (ms)')
     close_fig(merged_pdf)
+    fig, ax = plt.subplots(figsize=(8, 4))
+    infaas_df = latency_df.loc[latency_df['Policy'] == "InFaas"]
+    cocktail_df = latency_df.loc[latency_df['Policy'] == "Cocktail"]
+    clipper_df = latency_df.loc[latency_df['Policy'] == "Clipper"]
+    kwargs={'cumulative':True,'color':"gray",'marker':"x",'markersize':2, 'linewidth':3}
+    kwargs1={'cumulative':True, 'linestyle':'--', 'color':'paleturquoise', 'linewidth':2}
+    kwargs2={'cumulative':True, 'color':'royalblue', 'linewidth':1, 'marker':"<",'markersize':2}
+    kwargs3 = {'cumulative': True, 'color': 'brown', 'linewidth': 1, 'marker': "x", 'markersize': 2}
+    sns.distplot(infaas_df['Latency'], label = "Baseline", hist=False, norm_hist=False, kde=True, rug=False, hist_kws=kwargs, kde_kws=kwargs1).set(xlim=(0))
+    sns.distplot(clipper_df['Latency'], label = "SlackPrediction",hist=False, norm_hist=False, kde=True, rug=False, hist_kws=kwargs, kde_kws=kwargs2).set(xlim=(0))
+    sns.distplot(cocktail_df['Latency'], label = "SlackPrediction",hist=False, norm_hist=False, kde=True, rug=False, hist_kws=kwargs, kde_kws=kwargs3).set(xlim=(0))
+    close_fig(merged_pdf)
+
     fig, ax = plt.subplots(figsize=(8, 4))
     w2_latency_df = latency_df.copy(deep=True)
     w2_latency_df['Latency'] = w2_latency_df['Latency'] + 300
@@ -478,10 +536,23 @@ def plot_latency():
                                 showfliers = False,
                                 width=0.6,
                                 linewidth = None)
+    ax.set_ylim(0,1600)
             #ax.set_ylim([0,1500])
     #ax.set_xlim([0,1250])
  
-    ax.set_ylabel('Response Latency (ms)')
+    ax.set_ylabel('Resp. Latency (ms)')
+    close_fig(merged_pdf)
+    fig, ax = plt.subplots(figsize=(8, 4))
+    infaas_df = w2_latency_df.loc[w2_latency_df['Policy'] == "InFaas"]
+    cocktail_df = w2_latency_df.loc[w2_latency_df['Policy'] == "Cocktail"]
+    clipper_df = w2_latency_df.loc[w2_latency_df['Policy'] == "Clipper"]
+    kwargs={'cumulative':True,'color':"gray",'marker':"x",'markersize':2, 'linewidth':3}
+    kwargs1={'cumulative':True, 'linestyle':'--', 'color':'paleturquoise', 'linewidth':2}
+    kwargs2={'cumulative':True, 'color':'royalblue', 'linewidth':1, 'marker':"<",'markersize':2}
+    kwargs3 = {'cumulative': True, 'color': 'brown', 'linewidth': 1, 'marker': "x", 'markersize': 2}
+    sns.distplot(infaas_df['Latency'], label = "Baseline", hist=False, norm_hist=False, kde=True, rug=False, hist_kws=kwargs, kde_kws=kwargs1).set(xlim=(0))
+    sns.distplot(clipper_df['Latency'], label = "SlackPrediction",hist=False, norm_hist=False, kde=True, rug=False, hist_kws=kwargs, kde_kws=kwargs2).set(xlim=(0))
+    sns.distplot(cocktail_df['Latency'], label = "SlackPrediction",hist=False, norm_hist=False, kde=True, rug=False, hist_kws=kwargs, kde_kws=kwargs3).set(xlim=(0))
     close_fig(merged_pdf)
 
     basline_df = latency_df[latency_df['Policy']=="Cocktail"]
@@ -535,7 +606,7 @@ def plot_latency():
     plt.legend(loc='upper center',
                bbox_to_anchor=(0.5, 1.4),
                ncol=2,
-               frameon=True,
+               frameon=False,
                fancybox=True,
                framealpha=0.4,
                shadow=False,
@@ -570,10 +641,11 @@ def plot_latency():
                     height=6, kind="bar", legend_out=False, aspect=2, palette=figs_with_baseline_cpalette)
         #g.set_xlabels('Workload', fontweight='bold')
         g.set_ylabels('#VMs')
+        g.set_xlabels("")
         plt.legend(loc='upper center',
                bbox_to_anchor=(0.5, 1.35),
                ncol=4,
-               frameon=True,
+               frameon=False,
                fancybox=True,
                framealpha=0.4,
                shadow=False,
@@ -605,10 +677,11 @@ def plot_latency():
 
         #g.set_xlabels('Workload', fontweight='bold')
         g.set_ylabels('#VMs')
+        g.set_xlabels("")
         plt.legend(loc='upper center',
                bbox_to_anchor=(0.5, 1.35),
                ncol=4,
-               frameon=True,
+               frameon=False,
                fancybox=True,
                framealpha=0.4,
                shadow=False,
@@ -638,9 +711,9 @@ def plot_latency():
     sns.lineplot(x="time", y="#VMs", markers={"Bline":">", "model1":"o", "model2":"<","model3":"X"}, hue="Policy", style ='Policy', markevery=20, markersize=20,palette='magma',data=vm_df)
     plt.legend( loc='upper center',
                 # bbox_to_anchor=(0.5, 1.1),
-                bbox_to_anchor=(0.5, 1.3),
+                bbox_to_anchor=(0.5, 1.35),
                 ncol=4,
-                frameon=True,
+                frameon=False,
                 fancybox=True, 
                 framealpha=0.4,
                 shadow=False,
@@ -653,8 +726,9 @@ def plot_latency():
     ax.set_xlabel("Time interval (10s)")
 
     close_fig(merged_pdf)
+    sns.set_context("paper", font_scale=3)
     sensitivity_df = pd.read_csv('/home/cc/cocktail/sensitivity.csv', header=0, index_col=False)
-    sensitivity_df['Interval'] =sensitivity_df['Interval'].apply(str)
+    sensitivity_df['Sampling-Interval'] =sensitivity_df['Sampling-Interval'].apply(str)
     sensitivity_df['Accuracy'] = pd.to_numeric(sensitivity_df['Accuracy'])
     sensitivity_df['#Models'] = pd.to_numeric(sensitivity_df['#Models'])
     fig, ax = plt.subplots(figsize=(8,4))
@@ -664,11 +738,11 @@ def plot_latency():
     print(const1_df)
     #cont_util_df['%containers'] = stageCont_df['%containers'] * 100
     ax2 = ax.twinx()
-    g = sns.lineplot(x="Interval", y="Accuracy", data=const1_df, marker="X",ax=ax2,
+    g = sns.lineplot(x="Sampling-Interval", y="Accuracy", data=const1_df, marker="X",ax=ax2,
                      palette='Paired', color="red", markerfacecolor="blue", linewidth=3, dashes=False, markersize=20)
     #g = sns.lineplot(x="Model", y="RTT1", data=cold_start_df, marker="<", color="orange", linewidth=3, label="RTT",
     #                 dashes=True, markersize=20)
-    g = sns.barplot(x="Interval", y="#Models", data=const1_df ,palette=figs_with_baseline_cpalette, linewidth=3,ax=ax)
+    g = sns.barplot(x="Sampling-Interval", y="#Models", data=const1_df ,palette=figs_with_baseline_cpalette, linewidth=3,ax=ax)
     for i,thisbar in enumerate(g.patches):
         thisbar.set_hatch(hatches[i])           
 
@@ -680,9 +754,9 @@ def plot_latency():
     #print(sensitivity_df)
     #cont_util_df['%containers'] = stageCont_df['%containers'] * 100
     ax2 = ax.twinx()
-    g = sns.lineplot(x="Interval", y="Accuracy", data=const2_df, marker="X",ax=ax2,
+    g = sns.lineplot(x="Sampling-Interval", y="Accuracy", data=const2_df, marker="X",ax=ax2,
                      palette='Paired', color="red", markerfacecolor="blue", linewidth=3, dashes=False, markersize=20)
-    g = sns.barplot(x="Interval", y="#Models", data=const2_df ,palette=figs_with_baseline_cpalette, linewidth=3,ax=ax)
+    g = sns.barplot(x="Sampling-Interval", y="#Models", data=const2_df ,palette=figs_with_baseline_cpalette, linewidth=3,ax=ax)
     #g = sns.lineplot(x="Model", y="RTT1", data=cold_start_df, marker="<", color="orange", linewidth=3, label="RTT",
     #                 dashes=True, markersize=20)
     for i,thisbar in enumerate(g.patches):
@@ -696,11 +770,11 @@ def plot_latency():
     #print(sensitivity_df)
     #cont_util_df['%containers'] = stageCont_df['%containers'] * 100
     ax2 = ax.twinx()
-    g = sns.lineplot(x="Interval", y="Accuracy", data=const3_df, marker="X",ax=ax2,
+    g = sns.lineplot(x="Sampling-Interval", y="Accuracy", data=const3_df, marker="X",ax=ax2,
                      palette='Paired', color="red", markerfacecolor="blue", linewidth=3, dashes=False, markersize=20)
     #g = sns.lineplot(x="Model", y="RTT1", data=cold_start_df, marker="<", color="orange", linewidth=3, label="RTT",
     #                 dashes=True, markersize=20)
-    g = sns.barplot(x="Interval", y="#Models", data=const3_df ,palette=figs_with_baseline_cpalette, linewidth=3,ax=ax)
+    g = sns.barplot(x="Sampling-Interval", y="#Models", data=const3_df ,palette=figs_with_baseline_cpalette, linewidth=3,ax=ax)
     for i,thisbar in enumerate(g.patches):
         thisbar.set_hatch(hatches[i])           
 
@@ -718,7 +792,7 @@ def plot_latency():
                 # bbox_to_anchor=(0.5, 1.1),
                 bbox_to_anchor=(0.5, 1.3),
                 ncol=4,
-                frameon=True,
+                frameon=False,
                 fancybox=True, 
                 framealpha=0.4,
                 shadow=False,
@@ -732,9 +806,15 @@ def plot_latency():
     ax.set_xlabel("Time interval (10s)")
     close_fig(merged_pdf)
     spot_df = pd.read_csv('/home/cc/cocktail/spot.csv', header=0, index_col=False)
+    #spot_df = spot_df[1:50]
+    spot_df["spot2"] = spot_df["spot2"] + 0.3
     #vm_df.drop(columns=['BPred','RScale','Fifer'])
+    print("&&&&&&&&&&&&&&&&&&&&&&&&&&",spot_df)
     fig, ax = plt.subplots(figsize=(8, 4))
-    sns.lineplot(x="time",y="spot", markers="X", markersize=8,palette='magma',data=spot_df,markevery=8)
+    sns.lineplot(x="time",y="spot1", markers="X", markersize=8,palette='magma',data=spot_df,markevery=8)
+    sns.lineplot(x="time",y="spot3", markers="X", markersize=8,palette='magma',data=spot_df,markevery=8)
+    sns.lineplot(x="time",y="spot2", markers="X", markersize=8,palette='magma',data=spot_df,markevery=8)
+    sns.lineplot(x="time",y="spot4", markers="X", markersize=8,palette='magma',data=spot_df,markevery=8)
     #sns.lineplot(x="time",y="OD", markers="o", markersize=8,palette='magma',data=spot_df,markevery=8)
     #ax.set_xticks(np.arange(0,len(spot_df['time']),20))
     ax.xaxis.set_major_locator(ticker.MultipleLocator(100))
@@ -743,19 +823,21 @@ def plot_latency():
                 # bbox_to_anchor=(0.5, 1.1),
                 bbox_to_anchor=(0.5, 1.3),
                 ncol=4,
-                frameon=True,
+                frameon=False,
                 fancybox=True, 
                 framealpha=0.4,
                 shadow=False,
                 edgecolor="black",
                 labelspacing=0,
                 columnspacing=0.1,
-                handletextpad=0.5
+                handletextpad=0.5,
+		fontsize=23,
+		labels=["xlarge","2xlarge","4xlarge","8xlarge"]
                 # labels=figs_normalized_barlabels
                 )
-    ax.set_xlabel("Dateime")
+    ax.set_xlabel("Time")
     ax.set_ylabel("Price ($)")
-    ax.set_ylim(0.05,0.08)
+    #ax.set_ylim(0.05,0.08)
     close_fig(merged_pdf)
 
 #viz_setup()

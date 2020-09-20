@@ -1,8 +1,8 @@
 Policy,Accuracy,Query
-Top-50,1.48,Nas
-Top-50,1.39,IRV2
-Top-50,1.12,Xcep
-Baseline,1.65,Nas
-Baseline,1.5,IRV2
-Baseline,1.3,Xcep
+Static,1.48,Nas
+Static,1.39,IRV2
+Static,1.12,Xcep
+Single,1.65,Nas
+Single,1.5,IRV2
+Single,1.3,Xcep
 
