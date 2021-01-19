@@ -32,7 +32,7 @@ def get_model(model_url, max_seq_length):
 
 max_seq_length = 64
 labse_model, labse_layer = get_model(
-    model_url="https://tfhub.dev/google/LaBSE/1", max_seq_length=max_seq_length)
+    model_url="https://tfhub.dev/google/albert_base/1", max_seq_length=max_seq_length)
 vocab_file = labse_layer.resolved_object.vocab_file.asset_path.numpy()
 do_lower_case = labse_layer.resolved_object.do_lower_case.numpy()
 tokenizer = bert.bert_tokenization.FullTokenizer(vocab_file, do_lower_case)

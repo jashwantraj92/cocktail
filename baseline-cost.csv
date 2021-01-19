@@ -1,11 +1,11 @@
 Policy,Cost,Query
-Single,2.02,Nas
-Single,2.02,IRV2
-Single,0.404,Xcep
-Ensemble,2.496,Nas
-Ensemble,1.716,IRV2
-Ensemble,1.17,Xcep
-Spot-Ensemble,1.92,Nas
-Spot-Ensemble,1.32,IRV2
-Spot-Ensemble,0.9,Xcep
+Single-OD,2.02,NasLarge
+Single-OD,1.12,IRV2
+Single-OD,0.404,Xcep
+Ensemble-OD,2.496,NasLarge
+Ensemble-OD,1.716,IRV2
+Ensemble-OD,1.17,Xcep
+Ensemble-spot,1.92,NasLarge
+Ensemble-spot,1.32,IRV2
+Ensemble-spot,0.9,Xcep
 
