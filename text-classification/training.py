@@ -1,4 +1,5 @@
-from transformers import BertTokenizer, BertModel,AdamW, get_linear_schedule_with_warmup
+from transformers import BertTokenizer, BertModel,AlbertModel,DistilBertModel,RobertaModel,AdamW, get_linear_schedule_with_warmup
+#from transformers import BertTokenizer, BertModel,AdamW, get_linear_schedule_with_warmup
 from transformers import BertTokenizer
 from transformers import AlbertTokenizer, AlbertModel
 from transformers import RobertaTokenizer, RobertaModel
@@ -20,11 +21,25 @@ from torch.utils.data import Dataset, DataLoader
 import torch,sys
 import logging
 logging.basicConfig(level=logging.ERROR)
-PRE_TRAINED_MODEL_NAME = sys.argv[1]
+Model = sys.argv[1]+"Model"
+print(Model)
+PRE_TRAINED_MODEL_NAME = sys.argv[2]
+RANDOM_SEED = 42
+np.random.seed(RANDOM_SEED)
+torch.manual_seed(RANDOM_SEED)
+gpuid = int(sys.argv[3])
+model_output = sys.argv[1]
+if gpuid < 0:
+    device = torch.device("cpu")
+else:
+    device = torch.device("cuda:"+str(gpuid))
+
+"""PRE_TRAINED_MODEL_NAME = sys.argv[1]
 RANDOM_SEED = 42
 np.random.seed(RANDOM_SEED)
 torch.manual_seed(RANDOM_SEED)
 device = torch.device("cuda:1")
+>>>>>>> refs/remotes/origin/master"""
 df = pd.read_csv("reviews.csv")
 print(df.head())
 print("$$$$$$$$$$$$$$$$$$$$$$$$$$$")
@@ -37,10 +52,13 @@ def to_sentiment(rating):
   else:
     return 2
 df['sentiment'] = df.score.apply(to_sentiment)
+<<<<<<< HEAD
+
+print(df.score,df.sentiment)
 class_names = ['negative', 'neutral', 'positive']
 
 tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
-bert_model = BertModel.from_pretrained(PRE_TRAINED_MODEL_NAME)
+bert_model = eval(Model).from_pretrained(PRE_TRAINED_MODEL_NAME)
 sample_txt = "Replace me by any text you'd like."
 encoded_input = tokenizer(sample_txt, return_tensors='pt')
 #output = bert_model(**encoded_input)
@@ -124,7 +142,7 @@ print(data['input_ids'].shape)
 print(data['attention_mask'].shape)
 print(data['targets'].shape)
 print("###############################################")
-bert_model = BertModel.from_pretrained(PRE_TRAINED_MODEL_NAME)
+bert_model = eval(Model).from_pretrained(PRE_TRAINED_MODEL_NAME)
 
 last_hidden_state, pooled_output = bert_model(
 input_ids=encoding['input_ids'],
@@ -138,7 +156,7 @@ attention_mask=encoding['attention_mask']
 class SentimentClassifier(nn.Module):
   def __init__(self, n_classes):
     super(SentimentClassifier, self).__init__()
-    self.bert = BertModel.from_pretrained(PRE_TRAINED_MODEL_NAME)
+    self.bert = eval(Model).from_pretrained(PRE_TRAINED_MODEL_NAME)
     self.drop = nn.Dropout(p=0.3)
     self.out = nn.Linear(self.bert.config.hidden_size, n_classes)
   def forward(self, input_ids, attention_mask):
@@ -156,7 +174,7 @@ class SentimentClassifier(nn.Module):
 model = SentimentClassifier(len(class_names))
 model = model.to(device)
 input_ids = data['input_ids'].to(device)
-attention_mask = data['attention_mask'].to(device)
+attention_mask = data['attention_mask'].to(device) 
 print(input_ids.shape) # batch size x seq length
 print(attention_mask.shape) # batch size x seq length
 F.softmax(model(input_ids, attention_mask), dim=1)
@@ -263,5 +281,41 @@ for epoch in range(EPOCHS):
   history['val_acc'].append(val_acc)
   history['val_loss'].append(val_loss)
   if val_acc > best_accuracy:
-    torch.save(model.state_dict(), 'best_model_state.bin')
+    torch.save(model.state_dict(), model_output)
     best_accuracy = val_acc
+"""
+unmasker = pipeline('fill-mask', model='bert-base-uncased')
+unmasker("The man worked as a [MASK].")
+tokenizer = AlbertTokenizer.from_pretrained('albert-base-v2')
+model = AlbertModel.from_pretrained("albert-base-v2"
+text = "Replace me by any text you'd like."
+encoded_input = tokenizer(text, return_tensors='pt')
+output = model(**encoded_input)
+print(output)
+tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
+model = RobertaModel.from_pretrained('roberta-base')
+text = "Replace me by any text you'd like."
+encoded_input = tokenizer(text, return_tensors='pt')
+output = model(**encoded_input)
+print(output)
+tokenizer = AlbertTokenizer.from_pretrained('albert-xxlarge-v2')
+model = AlbertModel.from_pretrained("albert-xxlarge-v2")
+text = "Replace me by any text you'd like."
+encoded_input = tokenizer(text, return_tensors='tf')
+output = model(encoded_input)
+print(output)
+from transformers import GPT2Tokenizer, GPT2Model
+tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+model = GPT2Model.from_pretrained('gpt2')
+text = "Replace me by any text you'd like."
+encoded_input = tokenizer(text, return_tensors='pt')
+output = model(**encoded_input)
+print(output)
+
+#print(output)
+
+model = TFModel.from_pretrained("bert-base-uncased")
+text = "Replace me by any text you'd like."
+encoded_input = tokenizer(text, return_tensors='tf')
+output = model(encoded_input)
+print(output)"""
