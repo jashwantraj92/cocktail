@@ -1,0 +1,13 @@
+|---------------------------------------------------------------------------|
+| GPU reserved segments |      63    |      63    |      63    |       0    |
+|       from large pool |      53    |      53    |      53    |       0    |
+|       from small pool |      10    |      10    |      10    |       0    |
+|---------------------------------------------------------------------------|
+| Non-releasable allocs |      56    |      75    |   46716 K  |   46716 K  |
+|       from large pool |       0    |      38    |   13691 K  |   13691 K  |
+|       from small pool |      56    |      72    |   33025 K  |   33025 K  |
+|===========================================================================|
+Evaluating Network.....
+Test set: Epoch: 200, Average loss: 0.0096, Accuracy: 0.7063, Time consumed:3.31s
+
+saving weights file to checkpoint/shufflenet/Saturday_06_February_2021_21h_40m_29s/shufflenet-200-regular.pth
