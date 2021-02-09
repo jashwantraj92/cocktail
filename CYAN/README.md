@@ -1,156 +1,184 @@
-## Bitfusion Test Assignment
+# Pytorch-cifar100
 
-The project contains a simple C library (`lattice`, located in the `lib` directory) and a short test program (`latticexample`, located in the `bin` directory) that uses said library.
-It uses CMake to build, but since it's so simple you can use any other build system (such as simple Makefiles). 
+practice on cifar100 using pytorch
 
-The functions in this library don't do much, and for your convenience they print out their names and most of their arguments. 
+## Requirements
 
-We want you to introduce an intercepting ("interposing") layer that can be placed between the test program and the library. 
-This interposing layer would take the place of the native ("base") lattice library, do some highly advanced processing, pass the call to the base library, optionally do some more processing, then return a return value to the test program. 
-All this has to be done in utmost isolation, without any changes to the test program, and without the test program ever realizing it is not talking to the base library directly. 
+This is my experiment eviroument
+- python3.6
+- pytorch1.6.0+cu101
+- tensorboard 2.2.2(optional)
 
-### Design Requirements
 
-The solution needs to meet the following requirements:
+## Usage
 
-1.  The code for the interposing layer has to be automatically generated. 
-    We plan to add many more functions to the library in the future, and we do not want to manually write an interposing layer for each function. 
-    You should write a code generator, in the language and format of your choice, that will output the code for intercepting each function. 
-    The code generator tool can take the `lattice.h` header file as input, but not the implementation files (`lattice.c` and `main.c`).
-    The automated tool can be *guided* - in addition to reading the header file, you can give it some manual description of the functions of their arguments,
-    either directly in the `lattice.h` header file or in a separate configuration file. 
-    Still, it is beneficial to keep this manual configuration to a minimum, in order to make supporting new functions easier and faster. 
-    - You are free to write your own helper functions which are then called from the generated code, or use existing external libraries. 
-      The guiding principle being the automation is that new functions can be supported without adding any new custom code, not that everything has to be generated.
-    - Some help about the contents of the input and output files can be found in the Notes and Suggestions section. 
-
-2.  The interposing itself has to be able to be swapped directly in place of the base `lattice` library. 
-    You cannot make modifications to the test program `latticeexample`. 
-    It is preferred (but not required) that you setup the project so that the base and interposed libraries can be swapped without recompiling the test program. 
-    - This is done by creating a new library that has the exact same function names and signatures as the base library, but your own implementation of these functions. 
-    - See the Notes and Suggestions section for information about how to achieve this on Linux and Windows. 
-
-3.  The interposing layer has to be able to load the base library and call its functions. 
-    It is not meant as a replacement, but just as a thin layer that sits between the program and the library. 
-    - Since the interposed library has the same function names as the base library, it cannot be linked to the base library at compile time. 
-      The base library and its functions have to be loaded at runtime. 
-    - The `dlopen`/`dlsym` (Linux) and `LoadLibrary` (Windows) family of functions may be useful here. 
-    
-### Functionality
-
-Now, to the actual functionality of the interposed layer. 
-This is divided into three development stages
-
-1.  **Intercept and Forward**: The first stage is to directly forward all arguments to the base library, and forward the return value back to the caller. 
-    At this stage, you do not need any introspection in the arguments and their types, as you just forward them. 
-
-2.  **Dump Info**: The second stage is to print out a detailed log of all called functions, their inputs, outputs, and return values, to a file. 
-    Try to think of good ways to print different data types: integers, strings, pointers, buffers. 
-    At this stage you need to know the argument types in order to be able to make useful logs, such as printing out string contents. 
-
-3.  **Modify In-Place**: The third stage is to modify the data in-place, transparently to the test program and base library. 
-    To verify that your interposed layer is working, scan all integer parameters, and double them if and only if they are odd numbers
-    For this stage you need to know the argument types and also be able to read and write their values. 
-
-    For **extra credit**, you may think of your own devious ways to manipulate the data, but here are some suggestions. 
-    - (easy) Reverse all strings before calling the functions
-    - (easy) Randomly return an error even though the function succeeded
-    - (intermediate) XOR input and output buffers against some constant value
-    - (intermediate) Double all strings (append another copy of the string at the end of each string)
-    - (hard) Search all buffers for certain patterns (byte sequences that look look like as pointers, integers, or strings) and log them
-    - (hard) Perform search-and-replace on strings
-
-### Notes and Suggestions
-
-The section contains some guidance to both explain the assignment itself and to help you with the parts that are not the main focus of the assignment. 
-
-#### Code generation and function descriptions
-
-In this assignment, we want you to create a code generator - a piece of software that will read the input files and from them generate the implementation code for a new interposed library. 
-
-The main input file will be the `lattice.h` header file, which contains all the involved types, functions, and their signatures. 
-The functions have been designed to be simple to parse, you can parse them manually, or use an established C language parser like `libclang`. 
-You can assume any new functions that we add in the future will contain similarly simple argument types. 
-
-But no matter how simple or advanced your parser is, there is some required information that cannot be obtain purely by looking at the function signatures. 
-- Is this `const char*` used as an opaque pointer value, or is representing a string?
-- Is this `size_t` representing a size of some buffer? If so, is it the number of bytes, the number of 4-byte integers, or something else?
-- Which size parameter corresponds to which buffer? 
-- Is this `int*` parameter pointing to a list of integers, an optional parameter, or an output parameter?
-
-In our `lattice` library, these questions are answered in the documentation comments, but a code generation tool will not be able to meaningfully read those. 
-Additionally, you may peek into the `lattice.c` implementation file for clarifications, but the code generator may not. 
-
-To this end, you should create some machine-readable disambiguations. 
-These can be included in the `lattice.h` header itself, but may also be in a separate configuration file. 
-You can use any format you like for this - text, YAML, JSON, UML, code - but it should be easy to write for humans. 
-Your code generator will then read this configuration in order to get the missing information about the functions and their arguments. 
-
-Using the information gained from the header file and the configuration file, it will then be able to output the function implementation code. 
-
-#### The generated code
-
-The generated code for a single function should roughly look like this (in pseudocode):
-
-```
-// The function name and signature has to match those from lattice.h
-int single_int(int a)
-{
-    // Do any manipulation of the input arguments here
-    
-    // Load the base library symbol of the same name, and cast it to a function pointer of the appropriate type
-    // Replace get_base_library_symbol() with something that calls the platform-specific functions
-    typedef (...) single_int_fn;
-    single_int_fn base_function = get_base_library_symbol("single_int");
-    
-    // Call the base library function, passing all the arguments
-    int ret = base_function(a);
-    
-    // Do any manipulation of the output arguments here
-    
-    // Return the return value
-    return ret;
-}
+### 1. enter directory
+```bash
+$ cd pytorch-cifar100
 ```
 
-It is up to you to fill the missig parts - the function pointer type, the way to dynamically load the base function, and any manipulation of the arguments. 
+### 2. dataset
+I will use cifar100 dataset from torchvision since it's more convenient, but I also
+kept the sample code for writing your own dataset module in dataset folder, as an
+example for people don't know how to write it.
 
-#### Library interposing
+### 3. run tensorbard(optional)
+Install tensorboard
+```bash
+$ pip install tensorboard
+$ mkdir runs
+Run tensorboard
+$ tensorboard --logdir='runs' --port=6006 --host='localhost'
+```
 
-In order for a library to successfully pose as another library, it has to contain the same function names and signatures. 
+### 4. train the model
+You need to specify the net you want to train using arg -net
 
-On Linux, there are then two methods of loading it at runtime:
-- Use LD_PRELOAD to directly preload the library: `LD_PRELOAD=/path/to/interposed/liblatticeinterposed.so ./bin/latticeexample`
-- Make it have the *exact same filename* as the base library ant set LD_LIBRARY_PATH to the containing folder:
-  `LD_LIBRARY_PATH=/path/to/interposed/ ./bin/latticeexample`
+```bash
+# use gpu to train vgg16
+$ python train.py -net vgg16 -gpu
+```
 
-If you cannot make it work at runtime, you can modify the project structure so that `latticexample` links to the interposed library instead of the base one. 
-The important part is to not change the `latticexample` test program code, you can re-compile and re-link it. 
+sometimes, you might want to use warmup training by set ```-warm``` to 1 or 2, to prevent network
+diverge during early training phase.
 
-Note that even in this case, the interposed library still has to dynamically load the base library and its symbols at runtime. 
+The supported net args are:
+```
+squeezenet
+mobilenet
+mobilenetv2
+shufflenet
+shufflenetv2
+vgg11
+vgg13
+vgg16
+vgg19
+densenet121
+densenet161
+densenet201
+googlenet
+inceptionv3
+inceptionv4
+inceptionresnetv2
+xception
+resnet18
+resnet34
+resnet50
+resnet101
+resnet152
+preactresnet18
+preactresnet34
+preactresnet50
+preactresnet101
+preactresnet152
+resnext50
+resnext101
+resnext152
+attention56
+attention92
+seresnet18
+seresnet34
+seresnet50
+seresnet101
+seresnet152
+nasnet
+wideresnet
+stochasticdepth18
+stochasticdepth34
+stochasticdepth50
+stochasticdepth101
+```
+Normally, the weights file with the best accuracy would be written to the disk with name suffix 'best'(default in checkpoint folder).
 
-#### Dynamic loading of libraries and symbols
 
-Because of how linking in C works, you cannot link the interposed library directly to the base library, because it has the same function names. 
-Instead, in this assignment you are expected to load it dynamically at runtime. 
-This step is generally platform-specific, you are free to use whatever platform you like, and for the test assignment we don't need cross-platform compatibility. 
+### 5. test the model
+Test the model using test.py
+```bash
+$ python test.py -net vgg16 -weights path_to_vgg16_weights_file
+```
 
-On Linux, this is achieved using `dlopen()` and `dlsym()`. 
-The `dlopen` function opens and loads the library itself. 
-For this test assignment, you can safely use a hardcoded path to the library. 
-The `dlsym` function loads a symbol (in our case it will be a function) from the library by name. 
-On Windows, the equivalent functions are `LoadLibrary` and `GetProcAddress`, respectively. 
+## Implementated NetWork
 
-On either platform, both `dlsym()` and `GetProcAddress` will give you a pointer. 
-In order to call this as a function, you will need to cast it to a function pointer of the appropriate type. 
-Function pointer types in C are rather unintuitive, they can be made a little clearer with a `typedef`, but you may still want to consult some documentation online.
-For example, for a function with a signature of `int add(int a, int b)`, the function pointer type and a way to call it is:
+- vgg [Very Deep Convolutional Networks for Large-Scale Image Recognition](https://arxiv.org/abs/1409.1556v6)
+- googlenet [Going Deeper with Convolutions](https://arxiv.org/abs/1409.4842v1)
+- inceptionv3 [Rethinking the Inception Architecture for Computer Vision](https://arxiv.org/abs/1512.00567v3)
+- inceptionv4, inception_resnet_v2 [Inception-v4, Inception-ResNet and the Impact of Residual Connections on Learning](https://arxiv.org/abs/1602.07261)
+- xception [Xception: Deep Learning with Depthwise Separable Convolutions](https://arxiv.org/abs/1610.02357)
+- resnet [Deep Residual Learning for Image Recognition](https://arxiv.org/abs/1512.03385v1)
+- resnext [Aggregated Residual Transformations for Deep Neural Networks](https://arxiv.org/abs/1611.05431v2)
+- resnet in resnet [Resnet in Resnet: Generalizing Residual Architectures](https://arxiv.org/abs/1603.08029v1)
+- densenet [Densely Connected Convolutional Networks](https://arxiv.org/abs/1608.06993v5)
+- shufflenet [ShuffleNet: An Extremely Efficient Convolutional Neural Network for Mobile Devices](https://arxiv.org/abs/1707.01083v2)
+- shufflenetv2 [ShuffleNet V2: Practical Guidelines for Efficient CNN Architecture Design](https://arxiv.org/abs/1807.11164v1)
+- mobilenet [MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications](https://arxiv.org/abs/1704.04861)
+- mobilenetv2 [MobileNetV2: Inverted Residuals and Linear Bottlenecks](https://arxiv.org/abs/1801.04381)
+- residual attention network [Residual Attention Network for Image Classification](https://arxiv.org/abs/1704.06904)
+- senet [Squeeze-and-Excitation Networks](https://arxiv.org/abs/1709.01507)
+- squeezenet [SqueezeNet: AlexNet-level accuracy with 50x fewer parameters and <0.5MB model size](https://arxiv.org/abs/1602.07360v4)
+- nasnet [Learning Transferable Architectures for Scalable Image Recognition](https://arxiv.org/abs/1707.07012v4)
+- wide residual network[Wide Residual Networks](https://arxiv.org/abs/1605.07146)
+- stochastic depth networks[Deep Networks with Stochastic Depth](https://arxiv.org/abs/1603.09382)
 
-````
-typedef int (*add_fn)(int, int);
-add_fn base_add = get_base_library_symbol("add");
-int ret = base_add(1, 2);
-````
+## Training Details
+I didn't use any training tricks to improve accuray, if you want to learn more about training tricks,
+please refer to my another [repo](https://github.com/weiaicunzai/Bag_of_Tricks_for_Image_Classification_with_Convolutional_Neural_Networks), contains
+various common training tricks and their pytorch implementations.
 
-When calling dynamically loaded functions, it is very important that the number and types of arguments match those of the base library function. 
-If they don't, you will not get any warnings, but the program may (or may not) crash. 
+
+I follow the hyperparameter settings in paper [Improved Regularization of Convolutional Neural Networks with Cutout](https://arxiv.org/abs/1708.04552v2), which is init lr = 0.1 divide by 5 at 60th, 120th, 160th epochs, train for 200
+epochs with batchsize 128 and weight decay 5e-4, Nesterov momentum of 0.9. You could also use the hyperparameters from paper [Regularizing Neural Networks by Penalizing Confident Output Distributions](https://arxiv.org/abs/1701.06548v1) and [Random Erasing Data Augmentation](https://arxiv.org/abs/1708.04896v2), which is initial lr = 0.1, lr divied by 10 at 150th and 225th epochs, and training for 300 epochs with batchsize 128, this is more commonly used. You could decrese the batchsize to 64 or whatever suits you, if you dont have enough gpu memory.
+
+You can choose whether to use TensorBoard to visualize your training procedure
+
+## Results
+The result I can get from a certain model, since I use the same hyperparameters to train all the networks, some networks might not get the best result from these hyperparameters, you could try yourself by finetuning the hyperparameters to get
+better result.
+
+|dataset|network|params|top1 err|top5 err|epoch(lr = 0.1)|epoch(lr = 0.02)|epoch(lr = 0.004)|epoch(lr = 0.0008)|total epoch|
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:
+|cifar100|mobilenet|3.3M|34.02|10.56|60|60|40|40|200|
+|cifar100|mobilenetv2|2.36M|31.92|09.02|60|60|40|40|200|
+|cifar100|squeezenet|0.78M|30.59|8.36|60|60|40|40|200|
+|cifar100|shufflenet|1.0M|29.94|8.35|60|60|40|40|200|
+|cifar100|shufflenetv2|1.3M|30.49|8.49|60|60|40|40|200|
+|cifar100|vgg11_bn|28.5M|31.36|11.85|60|60|40|40|200|
+|cifar100|vgg13_bn|28.7M|28.00|9.71|60|60|40|40|200|
+|cifar100|vgg16_bn|34.0M|27.07|8.84|60|60|40|40|200|
+|cifar100|vgg19_bn|39.0M|27.77|8.84|60|60|40|40|200|
+|cifar100|resnet18|11.2M|24.39|6.95|60|60|40|40|200|
+|cifar100|resnet34|21.3M|23.24|6.63|60|60|40|40|200|
+|cifar100|resnet50|23.7M|22.61|6.04|60|60|40|40|200|
+|cifar100|resnet101|42.7M|22.22|5.61|60|60|40|40|200|
+|cifar100|resnet152|58.3M|22.31|5.81|60|60|40|40|200|
+|cifar100|preactresnet18|11.3M|27.08|8.53|60|60|40|40|200|
+|cifar100|preactresnet34|21.5M|24.79|7.68|60|60|40|40|200|
+|cifar100|preactresnet50|23.9M|25.73|8.15|60|60|40|40|200|
+|cifar100|preactresnet101|42.9M|24.84|7.83|60|60|40|40|200|
+|cifar100|preactresnet152|58.6M|22.71|6.62|60|60|40|40|200|
+|cifar100|resnext50|14.8M|22.23|6.00|60|60|40|40|200|
+|cifar100|resnext101|25.3M|22.22|5.99|60|60|40|40|200|
+|cifar100|resnext152|33.3M|22.40|5.58|60|60|40|40|200|
+|cifar100|attention59|55.7M|33.75|12.90|60|60|40|40|200|
+|cifar100|attention92|102.5M|36.52|11.47|60|60|40|40|200|
+|cifar100|densenet121|7.0M|22.99|6.45|60|60|40|40|200|
+|cifar100|densenet161|26M|21.56|6.04|60|60|60|40|200|
+|cifar100|densenet201|18M|21.46|5.9|60|60|40|40|200|
+|cifar100|googlenet|6.2M|21.97|5.94|60|60|40|40|200|
+|cifar100|inceptionv3|22.3M|22.81|6.39|60|60|40|40|200|
+|cifar100|inceptionv4|41.3M|24.14|6.90|60|60|40|40|200|
+|cifar100|inceptionresnetv2|65.4M|27.51|9.11|60|60|40|40|200|
+|cifar100|xception|21.0M|25.07|7.32|60|60|40|40|200|
+|cifar100|seresnet18|11.4M|23.56|6.68|60|60|40|40|200|
+|cifar100|seresnet34|21.6M|22.07|6.12|60|60|40|40|200|
+|cifar100|seresnet50|26.5M|21.42|5.58|60|60|40|40|200|
+|cifar100|seresnet101|47.7M|20.98|5.41|60|60|40|40|200|
+|cifar100|seresnet152|66.2M|20.66|5.19|60|60|40|40|200|
+|cifar100|nasnet|5.2M|22.71|5.91|60|60|40|40|200|
+|cifar100|wideresnet-40-10|55.9M|21.25|5.77|60|60|40|40|200|
+|cifar100|stochasticdepth18|11.22M|31.40|8.84|60|60|40|40|200|
+|cifar100|stochasticdepth34|21.36M|27.72|7.32|60|60|40|40|200|
+|cifar100|stochasticdepth50|23.71M|23.35|5.76|60|60|40|40|200|
+|cifar100|stochasticdepth101|42.69M|21.28|5.39|60|60|40|40|200|
+
+
+

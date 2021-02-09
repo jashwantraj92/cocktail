@@ -52,7 +52,6 @@ def to_sentiment(rating):
   else:
     return 2
 df['sentiment'] = df.score.apply(to_sentiment)
-<<<<<<< HEAD
 
 print(df.score,df.sentiment)
 class_names = ['negative', 'neutral', 'positive']
@@ -243,8 +242,8 @@ def eval_model(model, data_loader, loss_fn, device, n_examples):
   return correct_predictions.double() / n_examples, np.mean(losses)
 history = defaultdict(list)
 best_accuracy = 0
-"""model = SentimentClassifier(len(class_names))
-model.load_state_dict(torch.load('best_model_state.bin'))
+model = SentimentClassifier(len(class_names))
+model.load_state_dict(torch.load('/home/cc/Albert-Sentiment-Analysis/output/albert-xlarge-v2/pytorch_model.bin'))
 model = model.to(device)
 test_acc, _ = eval_model(
   model,
@@ -253,7 +252,8 @@ test_acc, _ = eval_model(
   device,
   len(df_test)
 )
-print(test_acc.item())"""
+print(test_acc.item())
+"""
 for epoch in range(EPOCHS):
   print(f'Epoch {epoch + 1}/{EPOCHS}')
   print('-' * 10)
@@ -283,6 +283,7 @@ for epoch in range(EPOCHS):
   if val_acc > best_accuracy:
     torch.save(model.state_dict(), model_output)
     best_accuracy = val_acc
+"""
 """
 unmasker = pipeline('fill-mask', model='bert-base-uncased')
 unmasker("The man worked as a [MASK].")

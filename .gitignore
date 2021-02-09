@@ -1,3 +1,6 @@
 *.pyc
 *.gz
 aws-keys
+pytorch-cifar100/checkpoint
+pytorch-cifar100/runs
+pytorch-cifar100/data

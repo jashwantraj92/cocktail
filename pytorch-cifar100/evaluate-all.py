@@ -20,18 +20,20 @@ from torchsummary import summary
 from conf import settings
 from utils import get_network, get_test_dataloader
 
-def evaluate(model,net):
+def evaluate(model,net, classes):
     net.load_state_dict(torch.load(model))
-    print(net)
+    #print(net)
     net.eval()
 
     correct_1 = 0.0
     correct_5 = 0.0
     total = 0
-
+    
+    ground_truth = 0
     with torch.no_grad():
+        print(len(cifar100_test_loader.dataset))
         for n_iter, (image, label) in enumerate(cifar100_test_loader):
-            print("iteration: {}\ttotal {} iterations".format(n_iter + 1, len(cifar100_test_loader)))
+            #print("iteration: {}\ttotal {} iterations".format(n_iter + 1, len(cifar100_test_loader)))
 
             if args.gpu:
                 image = image.cuda()
@@ -42,29 +44,35 @@ def evaluate(model,net):
 
             output = net(image)
             _, pred = output.topk(5, 1, largest=True, sorted=True)
-
+            correct_label = classes[label[0]]
             label = label.view(label.size(0), -1).expand_as(pred)
             correct = pred.eq(label).float()
-            predicted = torch.max(output,1)
-            print('Predicted: ', ' '.join('%5s' % classes[predicted[j]]
-                              for j in range(4)))
-            #print(classes[predictions[0]])
+            _,predicted = torch.max(output.data,1)
+            if classes[predicted[0]] == correct_label:
+                ground_truth+=1
+            #print('Predicted: ', ' '.join('%5s' % classes[predicted[j]] for j in range(1)))
+            #print(output,"\n******\n",predicted,"\n******\n",pred,"\n******\n",label)
             #compute top 5
+            #if label == predicted:
+            #correctness += (predicted == label).sum().item()
+            #print(label[0])
+            #print("matched",' '.join('%5s' % classes[label[0][j]] for j in range(4)))
+            #print(label)
             correct_5 += correct[:, :5].sum()
 
             #compute top1
             correct_1 += correct[:, :1].sum()
-            if n_iter >=1:
-                break
+            #print(Correct_1)
 
     if args.gpu:
         print('GPU INFO.....')
         print(torch.cuda.memory_summary(), end='')
 
     print()
-    print("Top 1 err: ", 1 - correct_1 / len(cifar100_test_loader.dataset))
-    print("Top 5 err: ", 1 - correct_5 / len(cifar100_test_loader.dataset))
+    print("Top 1 accuracy: ", correct_1 / len(cifar100_test_loader.dataset))
+    print("Top 5 accuracy: ", correct_5 / len(cifar100_test_loader.dataset))
     print("Parameter numbers: {}".format(sum(p.numel() for p in net.parameters())))
+    print("Ground truth ", ground_truth)
 
 if __name__ == '__main__':
 
@@ -90,8 +98,8 @@ if __name__ == '__main__':
         args.net = networks[i]
         net = get_network(args)
         #print(net)
-        print(summary(net,batch_size=-1, device='cuda'))
+        #print(summary(net,batch_size=-1, device='cuda'))
         model = models[i]
-        evaluate(model,net)
+        evaluate(model,net,classes)
 
 
