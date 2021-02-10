@@ -16,7 +16,7 @@ import torch
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 from torchsummary import summary
-
+import time
 from conf import settings
 from utils import get_network, get_test_dataloader
 
@@ -32,7 +32,7 @@ def evaluate(model,net):
     with torch.no_grad():
         for n_iter, (image, label) in enumerate(cifar100_test_loader):
             #print("iteration: {}\ttotal {} iterations".format(n_iter + 1, len(cifar100_test_loader)))
-
+            stime = time.time()
             if args.gpu:
                 image = image.cuda()
                 label = label.cuda()
@@ -42,7 +42,7 @@ def evaluate(model,net):
 
             output = net(image)
             _, pred = output.topk(5, 1, largest=True, sorted=True)
-
+            print("time taken ",time.time()-stime)
             label = label.view(label.size(0), -1).expand_as(pred)
             correct = pred.eq(label).float()
             _,predicted = torch.max(output,1)

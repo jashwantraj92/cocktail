@@ -111,34 +111,35 @@ def pdf_fun(accuracy, verbose):
 		print(sum(arr)/10000);
 	return arr;
 MobileNetV1			=	pdf_fun(69.36,0);
-MobileNetV2			=	pdf_fun(68.2,0);
-InceptionV4			=	pdf_fun(76.74,0);
-ResNet50V2			=	pdf_fun(79.2,0);
-ResNet152			=	pdf_fun(79.14,0);
-ResNext151			=	pdf_fun(79.3,0);
-SqueezeNet			=	pdf_fun(70.1,0);
-ShuffleNet			=	pdf_fun(70.63,0);
-DenseNet201			=	pdf_fun(79.8,0);
-DenseNet121			=	pdf_fun(78.72,0);
-Xception			=	pdf_fun(77.8,0);
-NASNetMobile		=	pdf_fun(77.9,0);
+mobilenetv2			=	pdf_fun(68.2,0);
+inceptionv4			=	pdf_fun(76.74,0);
+resnet50V2			=	pdf_fun(79.2,0);
+resnet152			=	pdf_fun(79.14,0);
+resnext152			=	pdf_fun(79.3,0);
+squeezenet			=	pdf_fun(70.1,0);
+shufflenet			=	pdf_fun(70.63,0);
+densenet201			=	pdf_fun(79.8,0);
+densenet121			=	pdf_fun(78.72,0);
+xception			=	pdf_fun(77.8,0);
+nasnet		=	pdf_fun(77.9,0);
 NASNetLarge			=	pdf_fun(76,0);
-InceptionResnetV2	=	pdf_fun(73.6,0);
+inceptionresnet	=	pdf_fun(73.6,0);
 vgg16				=	pdf_fun(72.3,0);
-ResNet50			=	pdf_fun(64,0);
+resnet50			=	pdf_fun(79.2,0);
+resnet18			=	pdf_fun(76.26,0);
 
 """MobileNetV1			=	pdf_fun(70.40,0);
-MobileNetV2			=	pdf_fun(71.30,0);
+mobilenetv2			=	pdf_fun(71.30,0);
 InceptionV3			=	pdf_fun(77.90,0);
-ResNet50V2			=	pdf_fun(74.90,0);
-DenseNet201			=	pdf_fun(76.00,0);
-DenseNet121			=	pdf_fun(77.30,0);
-Xception			=	pdf_fun(75.00,0);
-NASNetMobile			=	pdf_fun(79.00,0);
+resnet50V2			=	pdf_fun(74.90,0);
+densenet201			=	pdf_fun(76.00,0);
+densenet121			=	pdf_fun(77.30,0);
+xception			=	pdf_fun(75.00,0);
+nasnet			=	pdf_fun(79.00,0);
 NASNetLarge			=	pdf_fun(82.00,0);
-InceptionResnetV2		=	pdf_fun(80.30,0);
+inceptionresnet		=	pdf_fun(80.30,0);
 vgg16				=	pdf_fun(71.30,0);
-ResNet50			=	pdf_fun(74.90,0);"""
+resnet50			=	pdf_fun(74.90,0);"""
 
 # End PDFs
 ###############################################################
@@ -230,16 +231,18 @@ current_latency		=	0;		# max of all instances latency
 current_accuracy	=	0;		#
 current_cost		=	0;		# sum of all instance cost
 instance_list		=	[];
-model_lat_list		=	[151.96, 119.2, 74, 152.21, 102.35, 98.22, 78.18, 41.5, 259, 43.45,200,185,65]
+model_lat_list		=	[151.96, 119.2, 74, 152.21, 102.35, 98.22, 120, 41, 200,43.45 ,201,196,20.5,35]
 #top_accuracy_list	=	[82.3,80.30, 79.00, 77.90, 77.30, 76.00, 75.00, 74.90, 74.40, 71.30, 71.30, 70.40]
-top_accuracy_list	=	[80.3,77.8, 76.74, 79.8, 78.72, 79.2, 77.9, 68.2,72.3, 70.1, 79.14,79.31,70.63 ]
-model_name_list		=	['InceptionResNetV2', 'Xception', 'InceptionV4', 'DenseNet201', 'DenseNet121', 'ResNet50', 'NASNetMobile', 'MobileNetV2', 'VGG16', 'SqueezeNet', 'ResNet152' ,'ResNext151','ShuffleNet']
+top_accuracy_list	=	[80.3,77.8, 76.74, 79.8, 78.72, 79.2, 77.9, 68.2,72.3, 70.1, 79.14,79.31,70.63 ,76.26]
+model_name_list		=	['inceptionresnet', 'xception', 'inceptionv4', 'densenet201', 'densenet121', 'resnet50', 'nasnet', 'mobilenetv2', 'vgg16', 'squeezenet', 'resnet152' ,'resnext152','shufflenet','resnet18']
 accuracy_list=defaultdict(float)
 for i in range(len(top_accuracy_list)):
 	accuracy_list[model_name_list[i]] = top_accuracy_list[i]
 
 active_model_list	=	[];
 union_model_list	=	[];
+models = {'inceptionresnet':'inceptionresnet', 'xception':'xception', 'inceptionv4':'inceptionv4', 'densenet201':'densenet201', 'densenet121':'densenet121', 'resnet50':'resnet50', 'nasnet':'nasnet', 'mobilenetv2':'mobilenetv2', 'vgg16':'vgg16', 'squeezenet':'squeezenet', 'resnet152':'resnet152' ,'resnext152':'resnext152','shufflenet':'shufflenet','resnet18':'resnet18'}
+paths = {'inceptionresnet':'/home/cc/cocktail/pytorch-cifar100/checkpoint/models/xception/xcepition-180-best.ph', 'xception':'/home/cc/cocktail/pytorch-cifar100/checkpoint/models/xception/xception-180-best.pth', 'inceptionv4':'/home/cc/cocktail/pytorch-cifar100/checkpoint/models/inceptionv4/inceptionv4-167-best.pth', 'densenet201':'/home/cc/cocktail/pytorch-cifar100/checkpoint/models/densenet201/densenet201-180-best.pth', 'densenet121':'/home/cc/cocktail/pytorch-cifar100/checkpoint/densenet121/Sunday_07_February_2021_14h_15m_18s/densenet121-195-best.pth', 'resnet50':'/home/cc/cocktail/pytorch-cifar100/checkpoint/models/resnet50/resnet50-197-best.pth', 'nasnet':'/home/cc/cocktail/pytorch-cifar100/checkpoint/models/nasnet/nasnet-182-best.pth', 'mobilenetv2':'/home/cc/cocktail/pytorch-cifar100/checkpoint/models/mobilenetv2/mobilenetv2-162-best.pth', 'vgg16':'/home/cc/cocktail/pytorch-cifar100/checkpoint/models/vgg16/vgg16-185-best.pth', 'squeezenet':'/home/cc/cocktail/pytorch-cifar100/checkpoint/models/squeezenet/squeezenet-195-best.pth', 'resnet152':'/home/cc/cocktail/pytorch-cifar100/checkpoint/models/resnet152/resnet152-170-best.pth' ,'resnext152':'/home/cc/cocktail/pytorch-cifar100/checkpoint/models/resnext152/resnext152-197-best.pth','shufflenet':'/home/cc/cocktail/pytorch-cifar100/checkpoint/shufflenet/Saturday_06_February_2021_21h_40m_29s/shufflenet-200-regular.pth', 'resnet18':'/home/cc/cocktail/pytorch-cifar100/checkpoint/models/resnet18/resnet18-200-best.pth'}
 
 def handler(signal_received, frame):
     # Handle any cleanup here
@@ -438,47 +441,50 @@ def get_model_key(model_name, verbose):
 	if (model_name == 'MobileNet'):
 		model = MobileNetV1
 	
-	elif (model_name == 'MobileNetV2'):
-		model = MobileNetV2
+	elif (model_name == 'mobilenetv2'):
+		model = mobilenetv2
 	
-	elif (model_name == 'InceptionV4'):
-		model = InceptionV4
+	elif (model_name == 'inceptionv4'):
+		model = inceptionv4
 		
-	elif (model_name == 'ResNet50'):
-		model = ResNet50V2
+	elif (model_name == 'resnet50'):
+		model = resnet50V2
+	
+	elif (model_name == 'resnet18'):
+		model = resnet18
+	
+	elif (model_name == 'densenet201'):
+		model = densenet201
 		
-	elif (model_name == 'DenseNet201'):
-		model = DenseNet201
+	elif (model_name == 'densenet121'):
+		model = densenet121
 		
-	elif (model_name == 'DenseNet121'):
-		model = DenseNet121
+	elif (model_name == 'xception'):
+		model = xception
 		
-	elif (model_name == 'Xception'):
-		model = Xception
-		
-	elif (model_name == 'NASNetMobile'):
-		model = NASNetMobile
+	elif (model_name == 'nasnet'):
+		model = nasnet
 	
 	elif (model_name == 'NASNetLarge'):
 		model = NASNetLarge
 		
-	elif (model_name == 'InceptionResNetV2'):
-		model = InceptionResnetV2
+	elif (model_name == 'inceptionresnet'):
+		model = inceptionresnet
 		
-	elif (model_name == 'VGG16'):
+	elif (model_name == 'vgg16'):
 		model = vgg16
 	
-	elif (model_name == 'ResNet152'):
-		model = ResNet152
+	elif (model_name == 'resnet152'):
+		model = resnet152
 
-	elif (model_name == 'ResNext151'):
-		model = ResNext151
+	elif (model_name == 'resnext152'):
+		model = resnext152
 
-	elif (model_name == 'SqueezeNet'):
-		model = SqueezeNet
+	elif (model_name == 'squeezenet'):
+		model = squeezenet
 
-	elif (model_name == 'ShuffleNet'):
-		model = ShuffleNet
+	elif (model_name == 'shufflenet'):
+		model = shufflenet
 
 	else:
 		model = [];
@@ -573,6 +579,7 @@ def vote_based_scaling(step_accuracy,overall_accuracy,correct_predictions,pretra
 				return "None"
 
 def aggressive_scaling(step_accuracy,overall_accuracy,correct_predictions,pretrained_model_list):
+        global paths,models
         print("aggressive_scaling " ,step_accuracy, overall_accuracy, (slo_accuracy + 0.02)*100)
         if ((step_accuracy) >= ((slo_accuracy + 0.02)*100)) and len(correct_predictions) > 1:
                 index,drop_model = min((len(correct_predictions[key]),key) for key in correct_predictions )
@@ -589,9 +596,14 @@ def aggressive_scaling(step_accuracy,overall_accuracy,correct_predictions,pretra
                     model = find_model(remaining_models)
                     if model:
                         print("model added", model)
-                        cmd = 'tf.keras.applications.' + str(model[0]) + '()';
-                        pretrained_model = eval(cmd)
-                        pretrained_model_list.append([model[0],pretrained_model])
+                        #cmd = 'tf.keras.applications.' + str(model[0]) + '()';  
+                        model_net = get_network(models[model[0]])       
+                        model_path = paths[model[0]]
+                        model_net.load_state_dict(torch.load(model_path))
+                        model_net.eval()
+						#checkpoint/inceptionresnetv2/Saturday_06_February_2021_21h_56m_03s/inceptionresnetv2-100-regular.pth
+                        #pretrained_model = eval(cmd)
+                        pretrained_model_list.append([models[model[0]],model_net,model_path])
                         return model
                     else:
                         print("***no model available to add *********")
@@ -639,8 +651,6 @@ def main():
 	pretrained_model_list	=	[]
 	results = []
 	accuracies = defaultdict()
-	models = {'InceptionResNetV2':'inceptionresnet', 'Xception':'xception', 'InceptionV4':'inceptionv4', 'DenseNet201':'densenet201', 'DenseNet121':'densenet121', 'ResNet50':'resnet50', 'NASNetMobile':'nasnet', 'MobileNetV2':'mobilenetv2', 'VGG16':'vgg16', 'SqueezeNet':'squeezenet', 'ResNet152':'resnet151' ,'ResNext151':'resnext152','ShuffleNet':'shufflenet'}
-	paths = {'InceptionResNetV2':'/home/cc/cocktail/pytorch-cifar100/checkpoint/models/xception/xception-180-best.pth', 'Xception':'/home/cc/cocktail/pytorch-cifar100/checkpoint/models/xception/xception-180-best.pth', 'InceptionV4':'/home/cc/cocktail/pytorch-cifar100/checkpoint/models/inceptionv4/inceptionv4-167-best.pth', 'DenseNet201':'/home/cc/cocktail/pytorch-cifar100/checkpoint/models/densenet201/densenet201-180-best.pth', 'DenseNet121':'/home/cc/cocktail/pytorch-cifar100/checkpoint/densenet121/Sunday_07_February_2021_14h_15m_18s/densenet121-195-best.pth', 'ResNet50':'/home/cc/cocktail/pytorch-cifar100/checkpoint/models/resnet50/resnet50-197-best.pth', 'NASNetMobile':'/home/cc/cocktail/pytorch-cifar100/checkpoint/models/nasnet/nasnet-182-best.pth', 'MobileNetV2':'/home/cc/cocktail/pytorch-cifar100/checkpoint/models/mobilenetv2/mobilenetv2-162-best.pth', 'VGG16':'/home/cc/cocktail/pytorch-cifar100/checkpoint/models/vgg16/vgg16-185-best.pth', 'SqueezeNet':'/home/cc/cocktail/pytorch-cifar100/checkpoint/models/squeezenet/squeezenet-195-best.pth', 'ResNet152':'/home/cc/cocktail/pytorch-cifar100/checkpoint/models/resnet152/resnet152-170-best.pth' ,'ResNext151':'/home/cc/cocktail/pytorch-cifar100/checkpoint/models/resnext152/resnext152-197-best.pth','ShuffleNet':'/home/cc/cocktail/pytorch-cifar100/checkpoint/shufflenet/Saturday_06_February_2021_21h_40m_29s/shufflenet-200-regular.pth'}
 	if top5:
 		if len(union_model_list)-5 > 0:
 			for i in union_model_list:
