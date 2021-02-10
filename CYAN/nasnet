@@ -1,0 +1,14 @@
+
+|---------------------------------------------------------------------------|
+| GPU reserved segments |     508    |     508    |     508    |       0    |
+|       from large pool |     463    |     463    |     463    |       0    |
+|       from small pool |      45    |      45    |      45    |       0    |
+|---------------------------------------------------------------------------|
+| Non-releasable allocs |     192    |     320    |  170245 K  |  170244 K  |
+|       from large pool |       0    |     311    |   36017 K  |   36017 K  |
+|       from small pool |     192    |     223    |  134227 K  |  134227 K  |
+|===========================================================================|
+Evaluating Network.....
+Test set: Epoch: 200, Average loss: 0.0068, Accuracy: 0.7791, Time consumed:11.67s
+
+saving weights file to checkpoint/nasnet/Saturday_06_February_2021_21h_38m_36s/nasnet-200-regular.pth
