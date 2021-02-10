@@ -34,14 +34,14 @@ def evaluate(model,net, classes):
         print(len(cifar100_test_loader.dataset))
         for n_iter, (image, label) in enumerate(cifar100_test_loader):
             #print("iteration: {}\ttotal {} iterations".format(n_iter + 1, len(cifar100_test_loader)))
-
+            total+=1
             if args.gpu:
                 image = image.cuda()
                 label = label.cuda()
                 print('GPU INFO.....')
                 print(torch.cuda.memory_summary(), end='')
 
-
+            #print(label,total)
             output = net(image)
             _, pred = output.topk(5, 1, largest=True, sorted=True)
             correct_label = classes[label[0]]
@@ -88,8 +88,8 @@ if __name__ == '__main__':
         settings.CIFAR100_TRAIN_MEAN,
         settings.CIFAR100_TRAIN_STD,
         #settings.CIFAR100_PATH,
-        num_workers=4,
-        batch_size=args.b,
+        num_workers=1,
+        batch_size=1,
     )
     models = args.weights.split(" ")
     networks = args.net.split(" ")
