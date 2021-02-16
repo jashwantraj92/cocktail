@@ -23,6 +23,8 @@ import pprint
 import sys
 import matplotlib.ticker as ticker
 import plotly.graph_objects as go
+import matplotlib
+matplotlib.use('Agg')
 
 #hatches = ['-', '+', 'x', '\\', '*', 'o','-', '+', 'x', '\\', '*', 'o']
 hatches=["","","","","","","","","","","","","",""]
@@ -360,6 +362,64 @@ def plot_latency():
         thisbar.set_hatch(hatches[i])           
 
     close_fig(merged_pdf)
+    model_scaling_df = pd.read_csv('/home/cc/cocktail/cifar-numModels.csv', header=0, index_col=False) 
+    model_scaling_df = pd.melt(model_scaling_df, id_vars=["Policy", "Query"],
+                      value_vars=["p50", "p90", "p99"],
+                      var_name="Percentile",
+                      value_name="#Models")
+    print(model_scaling_df) 
+    fig, ax = plt.subplots(figsize=(8, 4))
+    model1_scaling_df = model_scaling_df[model_scaling_df['Percentile']=="p50"]
+    g = sns.catplot(x="Query", y="#Models", hue="Policy", data=model1_scaling_df,
+                    height=6, kind="bar", palette= figs_normalized_cpalette, legend_out=False, aspect=2)
+    plt.legend( loc='upper center',
+                # bbox_to_anchor=(0.5, 1.1),
+                bbox_to_anchor=(0.5, 1.3),
+                ncol=4,
+                frameon=False,
+                fancybox=True, 
+                framealpha=0.4,
+                shadow=False,
+                edgecolor="black",
+                labelspacing=0,
+                columnspacing=0.1,
+                handletextpad=0.5
+                # labels=figs_normalized_barlabels
+                )
+    for i,thisbar in enumerate(g.ax.patches):
+        thisbar.set_hatch(hatches[i])           
+
+    close_fig(merged_pdf)
+    model_scaling_df = pd.read_csv('/home/cc/cocktail/bert-numModels.csv', header=0, index_col=False) 
+    model_scaling_df = pd.melt(model_scaling_df, id_vars=["Policy", "Query"],
+                      value_vars=["p50", "p90", "p99"],
+                      var_name="Percentile",
+                      value_name="#Models")
+    print(model_scaling_df) 
+    fig, ax = plt.subplots(figsize=(8, 4))
+    model1_scaling_df = model_scaling_df[model_scaling_df['Percentile']=="p50"]
+    g = sns.catplot(x="Query", y="#Models", hue="Policy", data=model1_scaling_df,
+                    height=6, kind="bar", palette= figs_normalized_cpalette, legend_out=False, aspect=2)
+    plt.legend( loc='upper center',
+                # bbox_to_anchor=(0.5, 1.1),
+                bbox_to_anchor=(0.5, 1.3),
+                ncol=4,
+                frameon=False,
+                fancybox=True, 
+                framealpha=0.4,
+                shadow=False,
+                edgecolor="black",
+                labelspacing=0,
+                columnspacing=0.1,
+                handletextpad=0.5
+                # labels=figs_normalized_barlabels
+                )
+    for i,thisbar in enumerate(g.ax.patches):
+        thisbar.set_hatch(hatches[i])           
+
+    close_fig(merged_pdf)
+
+
     sns.set_context("paper", font_scale=3)
     model2_scaling_df = model_scaling_df[model_scaling_df['Query']=="Constraint2"]
     g = sns.catplot(x="Percentile", y="#Models", hue="Policy", data=model2_scaling_df,
