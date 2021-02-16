@@ -1,0 +1,13 @@
+Policy,Query,p50,p90,p99
+Clipper,Constraint1,13,10,10
+Clipper,Constraint2,9,8,8
+Clipper,Constraint3,4,7,7
+Clipper-X,Constraint1,5.5,10,10
+Clipper-X,Constraint2,4.2,7,8
+Clipper-X,Constraint3,3.5,6,7
+Cocktail,Constraint1,4.4,7,10
+Cocktail,Constraint2,1.7,7,8
+Cocktail,Constraint3,2.8,6,7
+
+
+
