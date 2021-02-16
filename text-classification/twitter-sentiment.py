@@ -3,7 +3,7 @@ from transformers import AutoModelForSequenceClassification
 from transformers import AutoTokenizer
 import numpy as np
 from scipy.special import softmax
-import csv
+import csv,time
 import urllib.request
 
 # Preprocess text (username and link placeholders)
@@ -43,12 +43,13 @@ print(text)
 text = preprocess(text)
 sentences=['We are very happy to show you the 🤗 Transformers library.','thi is not good','im am really happy', ' he is a bad guy']
 for text in sentences:
+    s_time = time.time()
     print(text)
     encoded_input = tokenizer(text, return_tensors='pt')
     output = model(**encoded_input)
     scores = output[0][0].detach().numpy()
     scores = softmax(scores)
-
+    print(time.time()-s_time)
 # # TF
 # model = TFAutoModelForSequenceClassification.from_pretrained(MODEL)
 # model.save_pretrained(MODEL)

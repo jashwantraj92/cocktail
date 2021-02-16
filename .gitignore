@@ -5,3 +5,4 @@ pytorch-cifar100/checkpoint
 pytorch-cifar100/runs
 pytorch-cifar100/data
 CYAN/data
+text-classification/cardiffnlp/twitter-roberta-base-sentiment/pytorch_model.bin

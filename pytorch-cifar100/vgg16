@@ -1,0 +1,17 @@
+|---------------------------------------------------------------------------|
+| Active allocs         |     223    |     293    |   24254 K  |   24254 K  |
+|       from large pool |      36    |      70    |    9871 K  |    9871 K  |
+|       from small pool |     187    |     225    |   14383 K  |   14382 K  |
+|---------------------------------------------------------------------------|
+| GPU reserved segments |      24    |      24    |      24    |       0    |
+|       from large pool |      17    |      17    |      17    |       0    |
+|       from small pool |       7    |       7    |       7    |       0    |
+|---------------------------------------------------------------------------|
+| Non-releasable allocs |      18    |      32    |   14944 K  |   14944 K  |
+|       from large pool |       9    |      14    |    5365 K  |    5365 K  |
+|       from small pool |       9    |      22    |    9578 K  |    9578 K  |
+|===========================================================================|
+Evaluating Network.....
+Test set: Epoch: 200, Average loss: 0.0126, Accuracy: 0.7237, Time consumed:4.71s
+
+saving weights file to checkpoint/vgg16/Saturday_06_February_2021_21h_30m_54s/vgg16-200-regular.pth

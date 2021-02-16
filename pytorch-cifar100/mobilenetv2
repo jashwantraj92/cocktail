@@ -1,0 +1,13 @@
+|---------------------------------------------------------------------------|
+| GPU reserved segments |      73    |      73    |      73    |       0    |
+|       from large pool |      53    |      53    |      53    |       0    |
+|       from small pool |      20    |      20    |      20    |       0    |
+|---------------------------------------------------------------------------|
+| Non-releasable allocs |      58    |      71    |   47028 K  |   47028 K  |
+|       from large pool |       6    |      33    |   14799 K  |   14799 K  |
+|       from small pool |      52    |      65    |   32229 K  |   32229 K  |
+|===========================================================================|
+Evaluating Network.....
+Test set: Epoch: 200, Average loss: 0.0094, Accuracy: 0.6821, Time consumed:10.65s
+
+saving weights file to checkpoint/mobilenetv2/Saturday_06_February_2021_21h_33m_57s/mobilenetv2-200-regular.pth
