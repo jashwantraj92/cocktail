@@ -1,0 +1,5 @@
+"batchId ,",1.0,",overall_accuracy, ",0.0,",step_accuracy, ",0.0,",models, ","Counter({'densenet201': 1, 'resnext152': 1, 'vgg16': 1, 'squeezenet': 1})",",",4,",",
+"batchId ,",2.0,",overall_accuracy, ",0.0,",step_accuracy, ",0.0,",models, ","Counter({'densenet201': 1, 'resnext152': 1, 'vgg16': 1, 'squeezenet': 1})",",",4,",",
+"batchId ,",3.0,",overall_accuracy, ",0.0,",step_accuracy, ",0.0,",models, ","Counter({'densenet201': 1, 'resnext152': 1, 'vgg16': 1, 'squeezenet': 1})",",",4,",",
+"batchId ,",4.0,",overall_accuracy, ",0.0,",step_accuracy, ",0.0,",models, ","Counter({'densenet201': 1, 'resnext152': 1, 'vgg16': 1, 'squeezenet': 1})",",",4,",",
+"batchId ,",5.0,",overall_accuracy, ",0.0,",step_accuracy, ",0.0,",models, ","Counter({'densenet201': 1, 'resnext152': 1, 'vgg16': 1, 'squeezenet': 1})",",",4,",",

@@ -1,0 +1,3 @@
+"batchId ,",1.0,",overall_accuracy, ",81.2,",step_accuracy, ",81.2,",models, ","Counter({'squeezenet': 1, 'shufflenet': 1, 'mobilenetv2': 1, 'resnet50': 1, 'densenet121': 1, 'nasnet': 1, 'inceptionv4': 1, 'xception': 1})",",",8,",",None
+"batchId ,",2.0,",overall_accuracy, ",80.2,",step_accuracy, ",79.2,",models, ","Counter({'squeezenet': 1, 'shufflenet': 1, 'mobilenetv2': 1, 'resnet50': 1, 'densenet121': 1, 'nasnet': 1, 'inceptionv4': 1, 'xception': 1})",",",8,",",None
+"batchId ,",3.0,",overall_accuracy, ",80.26666666666667,",step_accuracy, ",80.4,",models, ","Counter({'squeezenet': 1, 'shufflenet': 1, 'mobilenetv2': 1, 'resnet50': 1, 'densenet121': 1, 'nasnet': 1, 'inceptionv4': 1, 'xception': 1})",",",8,",",None

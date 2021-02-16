@@ -1,0 +1,5 @@
+"batchId ,",1.0,",overall_accuracy, ",0.0,",step_accuracy, ",0.0,",models, ","Counter({'inceptionv4': 1, 'shufflenet': 1, 'mobilenetv2': 1, 'squeezenet': 1})",",",4,",",
+"batchId ,",2.0,",overall_accuracy, ",0.0,",step_accuracy, ",0.0,",models, ","Counter({'inceptionv4': 1, 'shufflenet': 1, 'mobilenetv2': 1, 'squeezenet': 1})",",",4,",",
+"batchId ,",3.0,",overall_accuracy, ",0.0,",step_accuracy, ",0.0,",models, ","Counter({'inceptionv4': 1, 'shufflenet': 1, 'mobilenetv2': 1, 'squeezenet': 1})",",",4,",",
+"batchId ,",4.0,",overall_accuracy, ",0.0,",step_accuracy, ",0.0,",models, ","Counter({'inceptionv4': 1, 'shufflenet': 1, 'mobilenetv2': 1, 'squeezenet': 1})",",",4,",",
+"batchId ,",5.0,",overall_accuracy, ",0.0,",step_accuracy, ",0.0,",models, ","Counter({'inceptionv4': 1, 'shufflenet': 1, 'mobilenetv2': 1, 'squeezenet': 1})",",",4,",",
